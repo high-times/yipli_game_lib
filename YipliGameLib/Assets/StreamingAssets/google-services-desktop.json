@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "700200099137",
+    "firebase_url": "https://yipli-project.firebaseio.com",
+    "project_id": "yipli-project",
+    "storage_bucket": "yipli-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700200099137:android:5087eee7b614c3166455c0",
+        "android_client_info": {
+          "package_name": "com.fitmat.eggcatcher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAceBtIqNZdErggHnZDuU12DfYrbBhe-T4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700200099137-p6iorpe58k8jpjj75m53in4a050hmt0r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fitmat.eggcatcher"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700200099137:android:455069a4c14b1a3a6455c0",
+        "android_client_info": {
+          "package_name": "com.yipli.gamelib"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700200099137-r2lj87rn2q0liep4i4qqj0mpr56bna9n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yipli.gamelib",
+            "certificate_hash": "9c76b2b2880dea36dc1ad35eacc2c418e8265cbd"
+          }
+        },
+        {
+          "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAceBtIqNZdErggHnZDuU12DfYrbBhe-T4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700200099137-p6iorpe58k8jpjj75m53in4a050hmt0r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fitmat.eggcatcher"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700200099137:android:1ab84351a7ab2c3e6455c0",
+        "android_client_info": {
+          "package_name": "org.hightimeshq.yipli"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700200099137-fphhmp759s4kg20npraeao4tg78766hf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.hightimeshq.yipli",
+            "certificate_hash": "fa223f85ebd3817df150f08a014ae09938bbfc8a"
+          }
+        },
+        {
+          "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAceBtIqNZdErggHnZDuU12DfYrbBhe-T4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700200099137-p6iorpe58k8jpjj75m53in4a050hmt0r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fitmat.eggcatcher"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
