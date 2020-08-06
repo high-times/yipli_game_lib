@@ -37,6 +37,14 @@ public class PlayerSelection : MonoBehaviour
     {
         //Read intents and Initialize defaults
         CheckIntentsAndInitializePlayerEnvironment();
+
+        /*
+         Flag to support mobile gamePlay. Initialize to MatMode by default.
+         If the mat is skipped later on with the 'Skip' button, 
+         the flag will be set to false, and game could be played with mobile touch.
+         */
+        currentYipliConfig.matPlayMode = true;
+
     }
 
     private void NoUserFoundInGameFlow()

@@ -512,6 +512,8 @@ public class PlayerSession : MonoBehaviour
     public string GetBleConnectionStatus()
     {
         Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getBLEStatus());
+        if (currentYipliConfig.matPlayMode == false)
+            return "connected";
         return InitBLE.getBLEStatus();
     }
 

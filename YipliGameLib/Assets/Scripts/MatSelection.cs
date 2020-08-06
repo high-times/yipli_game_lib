@@ -35,8 +35,9 @@ public class MatSelection : MonoBehaviour
         if (yipliMat != null && yipliMat.macAddress.Length > 0)
         {
             connectionState = InitBLE.getBLEStatus();
-            //uncomment below to to skip mat
-            //connectionState = "CONNECTED";
+
+            if (currentYipliConfig.matPlayMode == false)
+                connectionState = "connected";
 
             if (connectionState.Equals("CONNECTED", StringComparison.OrdinalIgnoreCase))
             {
@@ -70,6 +71,7 @@ public class MatSelection : MonoBehaviour
         if (inputPassword.text == "123456")
         {
             //load last Scene
+            currentYipliConfig.matPlayMode = false;
             StartCoroutine(LoadMainGameScene());
         }
         else
