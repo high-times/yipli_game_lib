@@ -136,6 +136,7 @@ public class PlayerSession : MonoBehaviour
         x.Add("intensity-level", intensityLevel.ToString());
         x.Add("player-action-counts", playerActionCounts);
         x.Add("mac-address", matMacAddress);
+        x.Add("timestamp", ServerValue.Timestamp);
         if (playerGameData != null)
         {
             if (playerGameData.Count > 0)
