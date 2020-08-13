@@ -269,17 +269,19 @@ public class PlayerSelection : MonoBehaviour
             try
             {
                 Quaternion spawnrotation = Quaternion.identity;
-                Vector3 NextPosition = PlayersContainer.transform.localPosition + new Vector3(0, 65, 0);
+                Vector3 playerTilePosition = PlayersContainer.transform.localPosition;
 
                 for (int i = 0; i < players.Count; i++)
                 {
-                    GameObject PlayerButton = Instantiate(PlayerButtonPrefab, NextPosition, spawnrotation) as GameObject;
+                    GameObject PlayerButton = Instantiate(PlayerButtonPrefab, playerTilePosition, spawnrotation) as GameObject;
                     generatedObjects.Add(PlayerButton);
                     PlayerButton.name = players[i].playerName;
                     PlayerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = players[i].playerName;
                     PlayerButton.transform.SetParent(PlayersContainer.transform, false);
                     PlayerButton.transform.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(SelectPlayer);
-                    NextPosition = new Vector3(PlayerButton.transform.localPosition.x, PlayerButton.transform.localPosition.y - 45, PlayerButton.transform.localPosition.z);
+                    
+                    //Removed position calculations as this is handled by grid layout group
+                    //NextPosition = new Vector3(PlayerButton.transform.localPosition.x, PlayerButton.transform.localPosition.y - 45, PlayerButton.transform.localPosition.z);
                 }
             }
             catch (Exception exp)
