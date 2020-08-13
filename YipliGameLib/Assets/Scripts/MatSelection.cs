@@ -85,7 +85,7 @@ public class MatSelection : MonoBehaviour
     IEnumerator LoadMainGameScene()
     {
         string strFmDriverVersion = InitBLE.getFMDriverVersion();
-        bleSuccessMsg.text = "Successfully Connected to the Mat.\nFmDriver Version : " + strFmDriverVersion;
+        bleSuccessMsg.text = "Successfully Connected to the Mat.\nFmDriver Version : " + strFmDriverVersion + "\nGame Version : " + Application.version;
         BluetoothSuccessPanel.SetActive(true);
         yield return new WaitForSeconds(2f);
 
