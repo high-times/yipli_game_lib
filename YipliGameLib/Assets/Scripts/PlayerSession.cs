@@ -11,8 +11,6 @@ using UnityEngine.UI;
 
 public class PlayerSession : MonoBehaviour
 {
-    //TODO : remove below:
-    string retStatus;
     private string userId = ""; // to be recieved from Yipli
     private string gameId = ""; // to be assigned to every game.
     private string playerId = ""; // to be recieved from Yipli for each game
@@ -37,17 +35,21 @@ public class PlayerSession : MonoBehaviour
     private GameObject instantiatedBleErrorPanel;
     private bool bIsBleConnectionCoroutineRunning = false;
 
+    /* 
+     * This class defines all the player actions to be recieved from the FmDriver.
+     * Add a new const string here, whenever a new action is added for the player in FmDriver.
+     */
     public class PlayerActions
     {
-        public static string LEFTMOVE = "left move";
-        public static string RIGHTMOVE = "right move";
-        public static string JUMP = "jumping";
-        public static string STOP = "stop";
-        public static string RUNNINGSTOPPED = "running stopped";
-        public static string RUNNING = "running";
-        public static string PAUSE = "pause";
-        public static string JUMPIN = "Jump In";
-        public static string JUMPOUT = "jump out";
+        public const string LEFTMOVE = "left move";
+        public const string RIGHTMOVE = "right move";
+        public const string JUMP = "jumping";
+        public const string STOP = "stop";
+        public const string RUNNINGSTOPPED = "running stopped";
+        public const string RUNNING = "running";
+        public const string PAUSE = "pause";
+        public const string JUMPIN = "jump in";
+        public const string JUMPOUT = "jump out";
     }
 
     [JsonIgnore]
@@ -105,6 +107,86 @@ public class PlayerSession : MonoBehaviour
         {
             Debug.Log("Exception is getting Cluster ID" + exp.Message);
         }
+    }
+
+    /* 
+     * This function returns Yipli Fitness points predeclared for every player Action.
+     * Add a new case here with its identified FPs, whenever a new player action.
+     * The values are mapped with the cloud functions algorithm to calculate the fitness points.
+     * Change this function, if the values in the cloud-function changes.
+     */
+    private float GetFitnessPointsPerAction(string playerAction)
+    {
+        Debug.Log("GetFitnessPointsPerAction() called for " + playerAction);
+        float fp = 0.0f;
+        switch (playerAction)
+        {
+            case PlayerActions.LEFTMOVE:
+                fp = 10.0f;
+                break;
+            case PlayerActions.RIGHTMOVE:
+                fp = 10.0f;
+                break;
+            case PlayerActions.JUMP:
+                fp = 10.0f;
+                break;
+            case PlayerActions.RUNNING:
+                fp = 4.0f;
+                break;
+            case PlayerActions.JUMPIN:
+                fp = 10.0f;
+                break;
+            case PlayerActions.JUMPOUT:
+                fp = 10.0f;
+                break;
+            case PlayerActions.STOP:
+                fp = 0.0f;
+                break;
+            default:
+                Debug.Log("Invalid action found while calculating the FP. FP returned would be 0.");
+                break;
+        }
+        return fp;
+    }
+
+    /* 
+     * This function returns calories predeclared for every player Action.
+     * Add a new case here with its identified calories burnt, whenever a new player action is added.
+     * The values are mapped with the cloud functions algorithm to calculate the calories.
+     * Change this function, if the values in the cloud-function changes.
+     */
+    private float GetCaloriesPerAction(string playerAction)
+    {
+        Debug.Log("GetCaloriesPerAction() called for " + playerAction);
+        float calories = 0.0f;
+        switch (playerAction)
+        {
+            case PlayerActions.LEFTMOVE:
+                calories = 0.1f;
+                break;
+            case PlayerActions.RIGHTMOVE:
+                calories = 0.1f;
+                break;
+            case PlayerActions.JUMP:
+                calories = 0.1f;
+                break;
+            case PlayerActions.RUNNING:
+                calories = 0.04f;
+                break;
+            case PlayerActions.JUMPIN:
+                calories = 0.1f;
+                break;
+            case PlayerActions.JUMPOUT:
+                calories = 0.1f;
+                break;
+            case PlayerActions.STOP:
+                calories = 0.1f;
+                break;
+            default:
+                Debug.Log("Invalid action found while calculating the calories. Calories returned would be 0.");
+                break;
+        }
+        return calories;
     }
 
     public string GetCurrentPlayer()
@@ -179,57 +261,86 @@ public class PlayerSession : MonoBehaviour
         return dataSnapShot ?? null;
     }
 
+    /* ******Gamification*******
+     * Function to be called after the gameplay for Report card screen for every game
+     * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
+     */
+    public float GetFitnessPoints(IDictionary<string, int> playerActionCounts)
+    {
+        float fp = 0.0f;
+        foreach(KeyValuePair<string, int> action in playerActionCounts)
+        {
+            fp += GetFitnessPointsPerAction(action.Key) * action.Value;
+        }
+        return fp;
+    }
+
+    /* ******Gamification*******
+     * Function to be called after the gameplay for Report card screen for every game
+     * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
+     */
+    public float GetCaloriesBurned(IDictionary<string, int> playerActionCounts)
+    {
+        float calories = 0.0f;
+        foreach (KeyValuePair<string, int> action in playerActionCounts)
+        {
+            calories += GetCaloriesPerAction(action.Key) * action.Value;
+        }
+        return calories;
+    }
 
     //Pass here name of the game
     //TODO: Shift this check to backend.
     public void SetYipliGameId(string strGameId)
     {
-        if (strGameId.Equals("unleash"))
+        switch (strGameId.ToLower())
         {
-            gameId = strGameId;
-            SetGameClusterId(2);
-            intensityLevel = "medium";
-        }
-        else if (strGameId.Equals("trapped"))
-        {
-            gameId = strGameId;
-            SetGameClusterId(1);
-            intensityLevel = "medium";
-        }
-        else if (strGameId.Equals("joyfuljumps"))
-        {
-            gameId = strGameId;
-            SetGameClusterId(1);
-            intensityLevel = "medium";
-        }
-        else if (strGameId.Equals("eggcatcher"))
-        {
-            gameId = strGameId;
-            SetGameClusterId(2);
-            intensityLevel = "low";
-        }
-        else if (strGameId.Equals("yiplirunner"))
-        {
-            gameId = strGameId;
-            SetGameClusterId(2);
-            intensityLevel = "medium";
-        }
-        else if (strGameId.Equals("rollingball"))
-        {
-            gameId = strGameId;
-            SetGameClusterId(2);
-            intensityLevel = "medium";
-        }
-        else if (strGameId.Equals("skater"))
-        {
-            gameId = strGameId;
-            SetGameClusterId(3);
-            intensityLevel = "medium";
-        }
-        else
-        {
-            gameId = "";
-            intensityLevel = "";
+            case "unleash":
+                gameId = strGameId;
+                SetGameClusterId(2);
+                intensityLevel = "medium";
+                break;
+
+            case "trapped":
+                gameId = strGameId;
+                SetGameClusterId(1);
+                intensityLevel = "medium";
+                break;
+
+            case "joyfuljumps":
+                gameId = strGameId;
+                SetGameClusterId(1);
+                intensityLevel = "medium";
+                break;
+
+            case "eggcatcher":
+                gameId = strGameId;
+                SetGameClusterId(2);
+                intensityLevel = "low";
+                break;
+
+            case "yiplirunner":
+                gameId = strGameId;
+                SetGameClusterId(2);
+                intensityLevel = "medium";
+                break;
+
+            case "rollingball":
+                gameId = strGameId;
+                SetGameClusterId(2);
+                intensityLevel = "medium";
+                break;
+
+            case "skater":
+                gameId = strGameId;
+                SetGameClusterId(3);
+                intensityLevel = "medium";
+                break;
+
+            default:
+                gameId = "";
+                intensityLevel = "";
+                break;
         }
     }
 
@@ -256,11 +367,11 @@ public class PlayerSession : MonoBehaviour
     //Call in case of exception while playing game.
     public void CloseSPSession()
     {
+        //Destroy current player session data
         endTime = DateTime.Now;
         points = 0;
         duration = 0;
         Debug.Log("Aborting current player session.");
-        //Destroy current player session object
     }
 
     public void StoreSPSession(float gamePoints)
