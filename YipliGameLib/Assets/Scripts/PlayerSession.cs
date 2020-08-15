@@ -8,11 +8,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using YipliFMDriverCummunication;
 
 public class PlayerSession : MonoBehaviour
 {
     private string userId = ""; // to be recieved from Yipli
-    private string gameId = ""; // to be assigned to every game.
+    public string gameId = ""; // to be assigned to every game.
     private string playerId = ""; // to be recieved from Yipli for each game
     private float points; // Game points / coins
     private string playerAge = ""; //Current age of the player
@@ -23,7 +24,7 @@ public class PlayerSession : MonoBehaviour
     private DateTime startTime;
     private DateTime endTime;
     private float duration;
-    private string intensityLevel = "low"; // to be decided by the game.
+    public string intensityLevel = ""; // to be decided by the game.
     private IDictionary<string, int> playerActionCounts; // to be updated by the player movements
     private IDictionary<string, string> playerGameData; // to be used to store the player gameData like Highscore, last played level etc.
 
@@ -41,6 +42,8 @@ public class PlayerSession : MonoBehaviour
      */
     public class PlayerActions
     {
+        public const string LEFT = "left";
+        public const string RIGHT = "right";
         public const string LEFTMOVE = "left move";
         public const string RIGHTMOVE = "right move";
         public const string JUMP = "jumping";
@@ -50,6 +53,7 @@ public class PlayerSession : MonoBehaviour
         public const string PAUSE = "pause";
         public const string JUMPIN = "jump in";
         public const string JUMPOUT = "jump out";
+        public const string ENTER = "enter";
     }
 
     [JsonIgnore]
@@ -189,6 +193,11 @@ public class PlayerSession : MonoBehaviour
         return calories;
     }
 
+    public IDictionary<string, int> getPlayerActionCounts()
+    {
+        return playerActionCounts;
+    }
+
     public string GetCurrentPlayer()
     {
         return currentYipliConfig.playerInfo.playerName;
@@ -289,61 +298,6 @@ public class PlayerSession : MonoBehaviour
         return calories;
     }
 
-    //Pass here name of the game
-    //TODO: Shift this check to backend.
-    public void SetYipliGameId(string strGameId)
-    {
-        switch (strGameId.ToLower())
-        {
-            case "unleash":
-                gameId = strGameId;
-                SetGameClusterId(2);
-                intensityLevel = "medium";
-                break;
-
-            case "trapped":
-                gameId = strGameId;
-                SetGameClusterId(1);
-                intensityLevel = "medium";
-                break;
-
-            case "joyfuljumps":
-                gameId = strGameId;
-                SetGameClusterId(1);
-                intensityLevel = "medium";
-                break;
-
-            case "eggcatcher":
-                gameId = strGameId;
-                SetGameClusterId(2);
-                intensityLevel = "low";
-                break;
-
-            case "yiplirunner":
-                gameId = strGameId;
-                SetGameClusterId(2);
-                intensityLevel = "medium";
-                break;
-
-            case "rollingball":
-                gameId = strGameId;
-                SetGameClusterId(2);
-                intensityLevel = "medium";
-                break;
-
-            case "skater":
-                gameId = strGameId;
-                SetGameClusterId(3);
-                intensityLevel = "medium";
-                break;
-
-            default:
-                gameId = "";
-                intensityLevel = "";
-                break;
-        }
-    }
-
     //First function to be called only once when the game starts()
     public void StartSPSession(string GameId)
     {
@@ -358,7 +312,7 @@ public class PlayerSession : MonoBehaviour
         duration = 0;
         bIsPaused = false;
         startTime = DateTime.Now;
-        SetYipliGameId(GameId);
+        ActionAndGameInfoManager.SetYipliGameInfo(GameId);
         matId = currentYipliConfig.matInfo.matId;
         matMacAddress = currentYipliConfig.matInfo.macAddress;
     }

@@ -452,9 +452,10 @@ public class PlayerSelection : MonoBehaviour
 
     public void OnGoToYipliPress()
     {
+        string bundleId = "org.hightimeshq.yipli"; //todo: Change this later
+#if UNITY_ANDROID
         try
         {
-            string bundleId = "org.hightimeshq.yipli"; //todo: Change this later
             AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
             AndroidJavaObject ca = up.GetStatic<AndroidJavaObject>("currentActivity");
             AndroidJavaObject packageManager = ca.Call<AndroidJavaObject>("getPackageManager");
@@ -466,8 +467,10 @@ public class PlayerSelection : MonoBehaviour
         catch (AndroidJavaException e)
         {
             Debug.Log(e);
-            zeroPlayersText.text = "Yipli App is not installed. Install Yipli from market place to continue playing.";
+            Application.OpenURL("market://details?id=" + bundleId);
+            //zeroPlayersText.text = "Yipli App is not installed. Install Yipli from market place to continue playing.";
         }
+#endif
     }
 
     public void OnBackButtonPress()

@@ -244,6 +244,8 @@ public class MatSelection : MonoBehaviour
     public void OnGoToYipliPress()
     {
         string bundleId = "org.hightimeshq.yipli"; //todo: Change this later
+
+#if UNITY_ANDROID
         AndroidJavaClass up = new AndroidJavaClass("com.unity3d.Mat.UnityMat");
         AndroidJavaObject ca = up.GetStatic<AndroidJavaObject>("currentActivity");
         AndroidJavaObject packageManager = ca.Call<AndroidJavaObject>("getPackageManager");
@@ -257,7 +259,11 @@ public class MatSelection : MonoBehaviour
         catch (AndroidJavaException e)
         {
             Debug.Log(e);
-            noMatText.text = "Yipli App is not installed. Please install Yipli from playstore to proceed.";
+            //noMatText.text = "Yipli App is not installed. Please install Yipli from playstore to proceed.";
+            Application.OpenURL("market://details?id=" + bundleId);
         }
+#else
+        noMatText.text = "Yipli App is not supported for your device.";
+#endif
     }
 }

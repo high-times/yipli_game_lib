@@ -4,7 +4,7 @@ public class InitBLE
 {
     static AndroidJavaClass _pluginClass;
     static AndroidJavaObject _pluginInstance;
-    const string driverPathName = "com.fitmat.fitmatdriver.Connection.DeviceControlActivity";
+    const string driverPathName = "com.fitmat.fitmatdriver.Producer.Connection.DeviceControlActivity";
     string FMResponseCount = "";
     static string BLEStatus = "";
     //STEP 3 - Create Unity Callback class
@@ -112,7 +112,7 @@ public class InitBLE
         catch (Exception e)
         {
             Debug.Log("Exception in getGameClusterID() : " + e.Message);
-            return 100;
+            return 1000;//1000 will be flagged as an invalid GameId on game side.
         }
     }
 
@@ -125,7 +125,7 @@ public class InitBLE
         catch (Exception exp)
         {
             Debug.Log("Exception in Driver Version" + exp.Message);
-            return "Exception";
+            return null;
         }
     }
 }
