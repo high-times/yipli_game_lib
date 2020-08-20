@@ -12,6 +12,7 @@ public class YipliPlayerInfo
     public string playerWeight; //Current height of the player
     //public string playerExpertyLevel;//The Experty level of the player at time of playing the game.
     public string gender;
+    public string profilePicUrl;
     //public string difficultyLevel; // to be decided by the game.
 
     public YipliPlayerInfo() { }
@@ -19,7 +20,7 @@ public class YipliPlayerInfo
     public YipliPlayerInfo(string playerId, string playerName, string playerDob, string playerHeight, string playerWeight, string gender = "")
     {
         this.playerId = playerId;
-        this.playerName = playerName;
+        this.playerName = char.ToUpper(playerName[0]) + playerName.Substring(1);
         this.playerDob = playerDob;
         if (playerDob == null || playerDob == "")
         {
@@ -44,6 +45,7 @@ public class YipliPlayerInfo
                 Debug.Log("filling the YipliPlayerInfo from Snapshot.");
                 playerId = key.ToString();
                 playerName = snapshot.Child("name").Value?.ToString() ?? "";
+                playerName = char.ToUpper(playerName[0]) + playerName.Substring(1);
                 playerWeight = snapshot.Child("weight").Value?.ToString() ?? "";
                 playerHeight = snapshot.Child("height").Value?.ToString() ?? "";
                 playerDob = snapshot.Child("dob").Value?.ToString() ?? "";
@@ -67,6 +69,9 @@ public class YipliPlayerInfo
                 {
                     playerId = null;
                 }
+
+                profilePicUrl = snapshot.Child("profile-pic-url").Value?.ToString() ?? "";
+
                 Debug.Log("Player Found with details :" + playerAge + " " + playerHeight + " " + playerId + " " + playerWeight + " " + playerName);
             }
             else

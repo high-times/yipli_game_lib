@@ -9,6 +9,8 @@ using System;
 
 public static class FirebaseDBHandler
 {
+    //static Firebase.Storage.StorageReference profilePicsRef =
+    //  FirebaseStorage.instance.ref ().child('profile-pics');
     static Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
     private const string projectId = "yipli-project"; //Taken from Firebase project settings
     //private static readonly string databaseURL = "https://yipli-project.firebaseio.com/"; // Taken from Firebase project settings
@@ -38,7 +40,7 @@ public static class FirebaseDBHandler
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
             string key = reference.Child("stage-bucket/player-sessions").Push().Key;
-            reference.Child("stage-bucket/player-sessions").Child(key).SetRawJsonValueAsync(JsonConvert.SerializeObject(session.GetJsonDic(), Formatting.None, new JsonSerializerSettings
+            reference.Child("stage-bucket/player-sessions").Child(key).SetRawJsonValueAsync(JsonConvert.SerializeObject(session.GetPlayerSessionDataJsonDic(), Formatting.None, new JsonSerializerSettings
             {
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             }));
@@ -64,7 +66,7 @@ public static class FirebaseDBHandler
                 newUser.DisplayName, newUser.UserId);
             FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-            await reference.Child("profiles/users/" + strUserId).Child("/players").Child(strPlayerId).Child("/activity-statistics/games-statistics").Child(strGameId).Child("/game-data").UpdateChildrenAsync(dGameData);
+            await reference.Child("profiles/users/" + strUserId).Child("players").Child(strPlayerId).Child("activity-statistics/games-statistics").Child(strGameId).Child("game-data").UpdateChildrenAsync(dGameData);
         });
     }
 
@@ -112,7 +114,7 @@ public static class FirebaseDBHandler
 
                 FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
                 DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-                snapshot = await reference.Child("profiles/users/" + userId).Child("/players").Child(playerId).Child("/activity-statistics/games-statistics").Child(gameId).Child("/game-data").GetValueAsync();
+                snapshot = await reference.Child("profiles/users/" + userId).Child("players").Child(playerId).Child("activity-statistics/games-statistics").Child(gameId).Child("game-data").GetValueAsync();
             }
             catch(Exception exp)
             {
@@ -141,7 +143,7 @@ public static class FirebaseDBHandler
 
                 FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
                 DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-                snapshot = await reference.Child("profiles/users/" + userId).Child("/players").GetValueAsync();
+                snapshot = await reference.Child("profiles/users/" + userId).Child("players").GetValueAsync();
 
                 foreach (var childSnapshot in snapshot.Children)
                 {
@@ -292,7 +294,7 @@ public static class FirebaseDBHandler
 
                 FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
                 DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-                snapshot = await reference.Child("/profiles/users/" + userId + "/mats").GetValueAsync();
+                snapshot = await reference.Child("profiles/users/" + userId + "/mats").GetValueAsync();
 
                 foreach (var childSnapshot in snapshot.Children)
                 {

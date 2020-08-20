@@ -8,7 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using YipliFMDriverCummunication;
+using YipliFMDriverCommunication;
 
 public class PlayerSession : MonoBehaviour
 {
@@ -35,26 +35,6 @@ public class PlayerSession : MonoBehaviour
     private GameObject LoadingScreen;
     private GameObject instantiatedBleErrorPanel;
     private bool bIsBleConnectionCoroutineRunning = false;
-
-    /* 
-     * This class defines all the player actions to be recieved from the FmDriver.
-     * Add a new const string here, whenever a new action is added for the player in FmDriver.
-     */
-    public class PlayerActions
-    {
-        public const string LEFT = "left";
-        public const string RIGHT = "right";
-        public const string LEFTMOVE = "left move";
-        public const string RIGHTMOVE = "right move";
-        public const string JUMP = "jumping";
-        public const string STOP = "stop";
-        public const string RUNNINGSTOPPED = "running stopped";
-        public const string RUNNING = "running";
-        public const string PAUSE = "pause";
-        public const string JUMPIN = "jump in";
-        public const string JUMPOUT = "jump out";
-        public const string ENTER = "enter";
-    }
 
     [JsonIgnore]
     public YipliConfig currentYipliConfig;
@@ -105,92 +85,12 @@ public class PlayerSession : MonoBehaviour
     {
         try
         {
-            Debug.Log("Game Cluster Id : " + GetGameClusterId());
+            Debug.Log("Game Cluster Id : " + YipliHelper.GetGameClusterId());
         }
         catch(Exception exp)
         {
             Debug.Log("Exception is getting Cluster ID" + exp.Message);
         }
-    }
-
-    /* 
-     * This function returns Yipli Fitness points predeclared for every player Action.
-     * Add a new case here with its identified FPs, whenever a new player action.
-     * The values are mapped with the cloud functions algorithm to calculate the fitness points.
-     * Change this function, if the values in the cloud-function changes.
-     */
-    private float GetFitnessPointsPerAction(string playerAction)
-    {
-        Debug.Log("GetFitnessPointsPerAction() called for " + playerAction);
-        float fp = 0.0f;
-        switch (playerAction)
-        {
-            case PlayerActions.LEFTMOVE:
-                fp = 10.0f;
-                break;
-            case PlayerActions.RIGHTMOVE:
-                fp = 10.0f;
-                break;
-            case PlayerActions.JUMP:
-                fp = 10.0f;
-                break;
-            case PlayerActions.RUNNING:
-                fp = 4.0f;
-                break;
-            case PlayerActions.JUMPIN:
-                fp = 10.0f;
-                break;
-            case PlayerActions.JUMPOUT:
-                fp = 10.0f;
-                break;
-            case PlayerActions.STOP:
-                fp = 0.0f;
-                break;
-            default:
-                Debug.Log("Invalid action found while calculating the FP. FP returned would be 0.");
-                break;
-        }
-        return fp;
-    }
-
-    /* 
-     * This function returns calories predeclared for every player Action.
-     * Add a new case here with its identified calories burnt, whenever a new player action is added.
-     * The values are mapped with the cloud functions algorithm to calculate the calories.
-     * Change this function, if the values in the cloud-function changes.
-     */
-    private float GetCaloriesPerAction(string playerAction)
-    {
-        Debug.Log("GetCaloriesPerAction() called for " + playerAction);
-        float calories = 0.0f;
-        switch (playerAction)
-        {
-            case PlayerActions.LEFTMOVE:
-                calories = 0.1f;
-                break;
-            case PlayerActions.RIGHTMOVE:
-                calories = 0.1f;
-                break;
-            case PlayerActions.JUMP:
-                calories = 0.1f;
-                break;
-            case PlayerActions.RUNNING:
-                calories = 0.04f;
-                break;
-            case PlayerActions.JUMPIN:
-                calories = 0.1f;
-                break;
-            case PlayerActions.JUMPOUT:
-                calories = 0.1f;
-                break;
-            case PlayerActions.STOP:
-                calories = 0.1f;
-                break;
-            default:
-                Debug.Log("Invalid action found while calculating the calories. Calories returned would be 0.");
-                break;
-        }
-        return calories;
     }
 
     public IDictionary<string, int> getPlayerActionCounts()
@@ -211,7 +111,7 @@ public class PlayerSession : MonoBehaviour
         SceneManager.LoadScene("yipli_lib_scene");
     }
 
-    public Dictionary<string, dynamic> GetJsonDic()
+    public Dictionary<string, dynamic> GetPlayerSessionDataJsonDic()
     {
         Dictionary<string, dynamic> x;
         x = new Dictionary<string, dynamic>();
@@ -268,34 +168,6 @@ public class PlayerSession : MonoBehaviour
             () => { Debug.Log("Got Game data successfully"); }
         );
         return dataSnapShot ?? null;
-    }
-
-    /* ******Gamification*******
-     * Function to be called after the gameplay for Report card screen for every game
-     * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
-     */
-    public float GetFitnessPoints(IDictionary<string, int> playerActionCounts)
-    {
-        float fp = 0.0f;
-        foreach(KeyValuePair<string, int> action in playerActionCounts)
-        {
-            fp += GetFitnessPointsPerAction(action.Key) * action.Value;
-        }
-        return fp;
-    }
-
-    /* ******Gamification*******
-     * Function to be called after the gameplay for Report card screen for every game
-     * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
-     */
-    public float GetCaloriesBurned(IDictionary<string, int> playerActionCounts)
-    {
-        float calories = 0.0f;
-        foreach (KeyValuePair<string, int> action in playerActionCounts)
-        {
-            calories += GetCaloriesPerAction(action.Key) * action.Value;
-        }
-        return calories;
     }
 
     //First function to be called only once when the game starts()
@@ -384,7 +256,7 @@ public class PlayerSession : MonoBehaviour
         Debug.Log("Pausing current player session.");
         bIsPaused = true; // only set the paused flat to true. Fixed update will take care of halting the time counter
                           //Ble check
-        if (!GetBleConnectionStatus().Equals("Connected", StringComparison.OrdinalIgnoreCase))
+        if (!YipliHelper.GetBleConnectionStatus().Equals("Connected", StringComparison.OrdinalIgnoreCase))
         {
             Debug.Log("In PauseSPSession : Ble disconnected");
             if (!BleErrorPanel.activeSelf)
@@ -421,7 +293,7 @@ public class PlayerSession : MonoBehaviour
             duration += Time.deltaTime;
         }
 
-        if (GetBleConnectionStatus().Equals("Connected", StringComparison.OrdinalIgnoreCase))
+        if (YipliHelper.GetBleConnectionStatus().Equals("Connected", StringComparison.OrdinalIgnoreCase))
         {
             Debug.Log("In UpdateDuration : Ble connected");
             if (BleErrorPanel.activeSelf)
@@ -432,40 +304,13 @@ public class PlayerSession : MonoBehaviour
         }
     }
 
-    public void GoToYipli()
-    {
-        try
-        {
-            Debug.Log("Go to Yipli Called");
-            string bundleId = "org.hightimeshq.yipli"; //to be changed later
-            AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject ca = up.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaObject packageManager = ca.Call<AndroidJavaObject>("getPackageManager");
-
-            AndroidJavaObject launchIntent = null;
-
-            launchIntent = packageManager.Call<AndroidJavaObject>("getLaunchIntentForPackage", bundleId);
-            ca.Call("startActivity", launchIntent);
-        }
-        catch (AndroidJavaException e)
-        {
-            //Todo: Redirect to playstore for Yipli App.
-            Debug.Log(e);
-        }
-    }
-
-    public void SetGameClusterId(int gameClusterId)
-    {
-        InitBLE.setGameClusterID(gameClusterId);
-    }
-
     private IEnumerator CheckBleRoutine()
     {
         int autoRetryBleConnectionCount = 10;
         while (true)
         {
             yield return new WaitForSecondsRealtime(.15f);
-            string retStatus = GetBleConnectionStatus();
+            string retStatus = YipliHelper.GetBleConnectionStatus();
             Debug.Log("Bluetooth Status : " + retStatus);
             if (!retStatus.Equals("Connected", StringComparison.OrdinalIgnoreCase))
             {
@@ -548,7 +393,7 @@ public class PlayerSession : MonoBehaviour
             Debug.Log("In ReconnectBleFromGame while : " + iTryCount);
             iTryCount--;
             yield return new WaitForSecondsRealtime(.25f);
-            string strStatus = GetBleConnectionStatus();
+            string strStatus = YipliHelper.GetBleConnectionStatus();
             if (strStatus.Equals("connected", StringComparison.OrdinalIgnoreCase))
             {
                 Debug.Log("Connected back");
@@ -575,27 +420,9 @@ public class PlayerSession : MonoBehaviour
         bIsBleConnectionCoroutineRunning = false;
     }
 
-    public string GetBleConnectionStatus()
-    {
-        Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getBLEStatus());
-        if (currentYipliConfig.matPlayMode == false)
-            return "connected";
-        return InitBLE.getBLEStatus();
-    }
-
     public void LoadingScreenSetActive(bool bOn)
     {
         Debug.Log("Loading Screen : " + bOn);
         LoadingScreen.SetActive(bOn);
-    }
-
-    public int GetGameClusterId()
-    {
-        return InitBLE.getGameClusterID();
-    }
-
-    public string GetFMDriverVersion()
-    {
-        return InitBLE.getFMDriverVersion();
     }
 }

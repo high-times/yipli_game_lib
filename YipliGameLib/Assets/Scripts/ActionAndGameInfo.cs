@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace YipliFMDriverCummunication
+namespace YipliFMDriverCommunication
 { 
     public static class ActionAndGameInfoManager
     {
@@ -27,7 +27,7 @@ namespace YipliFMDriverCummunication
                 case "running stopped":
                     return "7RCE";
 
-                case "jump":
+                case "jumping":
                     return "9D6O";
 
                 case "right move":
@@ -54,43 +54,43 @@ namespace YipliFMDriverCummunication
             {
                 case "unleash":
                     PlayerSession.Instance.gameId = strGameName;
-                    PlayerSession.Instance.SetGameClusterId(2);
+                    YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "trapped":
                     PlayerSession.Instance.gameId = strGameName;
-                    PlayerSession.Instance.SetGameClusterId(1);
+                    YipliHelper.SetGameClusterId(1);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "joyfuljumps":
                     PlayerSession.Instance.gameId = strGameName;
-                    PlayerSession.Instance.SetGameClusterId(1);
+                    YipliHelper.SetGameClusterId(1);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "eggcatcher":
                     PlayerSession.Instance.gameId = strGameName;
-                    PlayerSession.Instance.SetGameClusterId(2);
+                    YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "low";
                     break;
 
                 case "yiplirunner":
                     PlayerSession.Instance.gameId = strGameName;
-                    PlayerSession.Instance.SetGameClusterId(2);
+                    YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "rollingball":
                     PlayerSession.Instance.gameId = strGameName;
-                    PlayerSession.Instance.SetGameClusterId(2);
+                    YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "skater":
                     PlayerSession.Instance.gameId = strGameName;
-                    PlayerSession.Instance.SetGameClusterId(3);
+                    YipliHelper.SetGameClusterId(3);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
@@ -120,7 +120,7 @@ namespace YipliFMDriverCummunication
     [Serializable]
     public class FMResponse
     {
-        public string ation_id;          // Action ID-Unique ID for each action. Refer below table for all action IDs
+        public string action_id;          // Action ID-Unique ID for each action. Refer below table for all action IDs
         public string action_name;         //Action Name for debugging (Gamers should strictly check action ID)
         public string properties;          //Any properties action has - ex. Running could have Step Count, Speed
     }
