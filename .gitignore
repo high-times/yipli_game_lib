@@ -43,6 +43,7 @@ ExportedObj/
 *.pidb.meta
 *.pdb.meta
 *.mdb.meta
+*.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
@@ -55,8 +56,6 @@ sysinfo.txt
 crashlytics-build.properties
 YipliGameLib/Assets/Firebase/Plugins/x86_64/FirebaseCppApp-6_8_1.so
 YipliGameLib/Temp/UnityLockfile
-YipliGameLib/.vs/YipliGameLib/v15/Server/sqlite3/storage.ide
-YipliGameLib/Assets/fonts/AvenirLTStdBookSDFasset.asset
-YipliGameLib/Assets/fonts/Lato-Bold SDF.asset
-YipliGameLib/Assets/fonts/Lato-Black SDF.asset
-YipliGameLib/Assets/fonts/Lato-Regular SDF.asset
+YipliGameLib/Temp/UnityLockfile
+YipliGameLib/Library/ArtifactDB
+YipliGameLib/Library/SourceAssetDB
