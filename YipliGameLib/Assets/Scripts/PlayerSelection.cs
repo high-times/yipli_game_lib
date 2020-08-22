@@ -14,6 +14,7 @@ using UnityEngine.Networking;
 public class PlayerSelection : MonoBehaviour
 {
     public GameObject phoneHolderInfo;
+    public GameObject LaunchFromYipliAppPanel;
     public TextMeshProUGUI[] TextsToBeChanged;
     public GameObject playerSelectionPanel;
     public TextMeshProUGUI playerNameText;
@@ -21,7 +22,7 @@ public class PlayerSelection : MonoBehaviour
     public GameObject PlayersContainer;
     public GameObject switchPlayerPanel;
     public GameObject zeroPlayersPanel;
-    public GameObject NoUserPanel;
+    public GameObject GuestUserPanel;
     public TextMeshProUGUI zeroPlayersText;
     public YipliConfig currentYipliConfig;
     public GameObject PlayerButtonPrefab;
@@ -36,13 +37,13 @@ public class PlayerSelection : MonoBehaviour
     private string PlayerName;
     private YipliPlayerInfo defaultPlayer;
     private List<GameObject> generatedObjects = new List<GameObject>();
+    private bool bIsCheckingForIntents;
 
     // When the game starts
     public void Start()
     {
         //Read intents and Initialize defaults
         CheckIntentsAndInitializePlayerEnvironment();
-
         /*
          Flag to support mobile gamePlay. Initialize to MatMode by default.
          If the mat is skipped later on with the 'Skip' button, 
@@ -54,8 +55,32 @@ public class PlayerSelection : MonoBehaviour
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
+    //Whenever the Yipli App launches the game, the user will be found and next flow will be called automatically.
+    //No need to keep retrying.
+    //Start this coroutine to check for intents till a valid user is not found.
+    IEnumerator KeepCheckingForIntents()
+    {
+
+        Debug.Log("Started Coroutine : KeepCheckingForIntents");
+        while (true)
+        {
+            bIsCheckingForIntents = true;
+
+            //If the given panel is active, means the game is not launched from Yipli App.
+            //Keep checking after every .5f Seconds if the app is launched from Yipli App.
+            if (LaunchFromYipliAppPanel.activeSelf)
+            {
+                CheckIntentsAndInitializePlayerEnvironment();
+            }
+            yield return new WaitForSeconds(0.5f);
+
+            bIsCheckingForIntents = false;
+        }
+    }
+
     public void playPhoneHolderTutorial()
     {
+        Debug.Log("Starting PhoneHolder Tutorial for " + defaultPlayer.playerName);
         playerNameText.text = "Hi, " + defaultPlayer.playerName;
         playerNameText.gameObject.SetActive(true);
         phoneHolderInfo.SetActive(true);
@@ -75,42 +100,24 @@ public class PlayerSelection : MonoBehaviour
         }
     }
 
-   /* private IEnumerator AnimateObject(GameObject obj)
-    {
-        Transform originalTransform = obj.transform;
-
-        while (true)
-        {
-            //Animate the scale up down
-            for (int i = 0; i < 4; i++)
-            {
-                obj.transform.localScale *= 1.03f;
-                yield return new WaitForSecondsRealtime(.2f);
-            }
-
-            obj.transform.localScale = new Vector3(1, 1, 1) * 1.2f;
-
-            for (int j = 0; j < 4; j++)
-            {
-                obj.transform.localScale *= 0.95f;
-                yield return new WaitForSecondsRealtime(0.25f);
-            }
-
-            obj.transform.localScale = new Vector3(1, 1, 1);
-
-            yield return new WaitForSecondsRealtime(0.25f);
-        }
-    }*/
-
     private void NoUserFoundInGameFlow()
     {
         //Go to Yipli Panel
-        switchPlayerPanel.SetActive(false);
-        playerSelectionPanel.SetActive(false);
-        onlyOnePlayerPanel.SetActive(false);
-        zeroPlayersPanel.SetActive(false);
+        TurnOffAllPanels();
+
         playerNameText.gameObject.SetActive(false);
-        NoUserPanel.SetActive(true);
+
+        //Depending upon if Main Yipli App is installed or not, take a decision to show No user panel / or Guest User Panel
+        if (false == YipliHelper.IsYipliAppInstalled())
+            GuestUserPanel.SetActive(true);
+        else
+        {
+            //Currently User isnt found. Start a coroutine which keeps on checking for the user details.
+            if (false == bIsCheckingForIntents)
+                StartCoroutine(KeepCheckingForIntents());
+
+            LaunchFromYipliAppPanel.SetActive(true);
+        }
     }
 
     //Here default player object is filled with the intents passed.
@@ -155,7 +162,8 @@ public class PlayerSelection : MonoBehaviour
 
     private void InitializeUserId()
     {
-        try {
+        try
+        {
 
             if (currentYipliConfig.userId != "")
             {
@@ -188,7 +196,7 @@ public class PlayerSelection : MonoBehaviour
         AndroidJavaObject extras = intent.Call<AndroidJavaObject>("getExtras");
 
         currentYipliConfig.userId = extras.Call<string>("getString", "uId");
-        if(currentYipliConfig.userId == null)
+        if (currentYipliConfig.userId == null)
         {
             Debug.Log("Returning from readIntents as no userId found.");
             return;
@@ -229,7 +237,8 @@ public class PlayerSelection : MonoBehaviour
         onlyOnePlayerPanel.SetActive(false);
         zeroPlayersPanel.SetActive(false);
         noNetworkPanel.SetActive(false);
-        NoUserPanel.SetActive(false);
+        GuestUserPanel.SetActive(false);
+        LaunchFromYipliAppPanel.SetActive(false);
     }
 
     private void CheckIntentsAndInitializePlayerEnvironment()
@@ -245,9 +254,8 @@ public class PlayerSelection : MonoBehaviour
             Debug.Log(exp.Message);
             //defaultPlayer = null;
 
-            //currentYipliConfig.userId = null;
-            //defaultPlayer = null;
-            //currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B"); */
+            currentYipliConfig.userId = null;
+            defaultPlayer = null;
 
             /*currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
             defaultPlayer = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49");
@@ -274,7 +282,13 @@ public class PlayerSelection : MonoBehaviour
             // Initiate the mat Connection in advance as it takes time to connect.
             matSelectionScript.ValidateAndConnectMat(); //This async call is not awaited, hence mat connection runs in the background.
 
-            playPhoneHolderTutorial();
+            //Stop the Coroutine which keep schecking for the intents.
+            StopCoroutine(KeepCheckingForIntents());
+
+            if (false == currentYipliConfig.bIsMatIntroDone)
+                playPhoneHolderTutorial();
+            else
+                SwitchPlayerFlow();
         }
     }
 
@@ -356,7 +370,7 @@ public class PlayerSelection : MonoBehaviour
                     PlayerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = players[i].playerName;
                     PlayerButton.transform.SetParent(PlayersContainer.transform, false);
                     PlayerButton.transform.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(SelectPlayer);
-                    
+
                     //Removed position calculations as this is handled by grid layout group
                     //NextPosition = new Vector3(PlayerButton.transform.localPosition.x, PlayerButton.transform.localPosition.y - 45, PlayerButton.transform.localPosition.z);
                 }
@@ -425,7 +439,7 @@ public class PlayerSelection : MonoBehaviour
         Debug.Log("Continue Pressed.");
         TurnOffAllPanels();
 
-        if(defaultPlayer != null)
+        if (defaultPlayer != null)
         {
             if (defaultPlayer.playerId.Equals(currentYipliConfig.playerInfo.playerId))
             {
@@ -460,6 +474,7 @@ public class PlayerSelection : MonoBehaviour
 
     public void OnJumpOnMat()
     {
+        currentYipliConfig.bIsMatIntroDone = true;
         phoneHolderInfo.SetActive(false);
         StopCoroutine(ChangeTextMessage());
         SwitchPlayerFlow();
@@ -565,20 +580,5 @@ public class PlayerSelection : MonoBehaviour
                 Debug.Log("could not enable the bluetooth automatically");
             }
         }
-    }
-
-    IEnumerator loadImageFromBackend(string imageUrl)
-    {
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(imageUrl);
-        yield return request.SendWebRequest();
-
-        if (request.isNetworkError || request.isHttpError)
-            Debug.Log(request.error);
-        else
-        {
-
-            //profilePicImageCanvasUI.sprite.texture = ((DownloadHandlerTexture)request.downloadHandler).texture;
-        }
-          
     }
 }

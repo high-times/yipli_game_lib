@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScaleUpdaownAnimation : MonoBehaviour
+public class ScaleUpdownAnimation : MonoBehaviour
 {
     // Start is called before the first frame update
 
@@ -11,7 +11,7 @@ public class ScaleUpdaownAnimation : MonoBehaviour
     public void Update()
     {
         if(bIsCoroutineInProgress==false)
-        StartCoroutine(AnimateScaleUpDown());
+            StartCoroutine(AnimateScaleUpDown());
     }
 
     private void OnEnable()

@@ -17,4 +17,7 @@ public class YipliConfig : ScriptableObject
     public string userId;
 
     public bool matPlayMode;
+
+    [HideInInspector]
+    public bool bIsMatIntroDone;
 }
