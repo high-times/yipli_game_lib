@@ -94,7 +94,7 @@ public class PlayerSelection : MonoBehaviour
         Debug.Log("Is profilePicLoaded = " + bIsProfilePicLoaded);
         if (!bIsProfilePicLoaded)
         {
-            bIsProfilePicLoaded = await loadImageFromBackendAsync(profilePicImage, defaultPlayer.profilePicUrl);
+            bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
         }
         playerNameText.text = "Hi, " + defaultPlayer.playerName;
         playerNameText.gameObject.SetActive(true);
@@ -331,7 +331,7 @@ public class PlayerSelection : MonoBehaviour
 
             //Activate the PlayerName and Image display object
             if (!bIsProfilePicLoaded)
-                bIsProfilePicLoaded = await loadImageFromBackendAsync(profilePicImage, defaultPlayer.profilePicUrl);
+                bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
             playerNameText.text = "Hi, " + defaultPlayer.playerName;
             playerNameText.gameObject.SetActive(true);
 
@@ -351,7 +351,7 @@ public class PlayerSelection : MonoBehaviour
                 //In this case we need to call the player change screen and not the player selection screen
                 //continueOrSwitchPlayerText.text = "Press continue to play as " + currentYipliConfig.playerInfo.playerName + ".\nIf not " + currentYipliConfig.playerInfo.playerName + ", you can switch player.";
                 if (!bIsProfilePicLoaded)
-                    bIsProfilePicLoaded = await loadImageFromBackendAsync(profilePicImage, defaultPlayer.profilePicUrl);
+                    bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
 
                 playerNameText.text = "Hi, " + currentYipliConfig.playerInfo.playerName;
                 switchPlayerPanel.SetActive(true);
@@ -425,7 +425,7 @@ public class PlayerSelection : MonoBehaviour
         //Changing the currentSelected player in the Scriptable object
         //No Making this player persist in the device. This will be done on continue press.
         defaultPlayer = GetPlayerInfoFromPlayerName(PlayerName);
-        bIsProfilePicLoaded = await loadImageFromBackendAsync(profilePicImage, defaultPlayer.profilePicUrl);
+        bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
         playerNameText.text = "Hi, " + PlayerName;
 
         TurnOffAllPanels();
@@ -600,7 +600,7 @@ public class PlayerSelection : MonoBehaviour
         }
     }
 
-    async private Task<bool> loadImageFromBackendAsync(Image gameObj, string profilePicUrl)
+    async private Task<bool> loadProfilePicAsync(Image gameObj, string profilePicUrl)
     {
         if (profilePicUrl == null || profilePicUrl == "" || gameObj == null)
         {
@@ -609,40 +609,21 @@ public class PlayerSelection : MonoBehaviour
             gameObj.sprite = defaultProfilePicSprite;
         }
         else
-        {
-            string profilePicRootUrl = "gs://yipli-project.appspot.com/profile-pics/";
+        {   
             // Create local filesystem URL
-            string local_url = Application.persistentDataPath + "/" + profilePicUrl;
-
-            Debug.Log("Local path : " + local_url);
-
-            // Get a reference to the storage service, using the default Firebase App
-            Firebase.Storage.FirebaseStorage yipliStorage1 = Firebase.Storage.FirebaseStorage.DefaultInstance;
-            Firebase.Storage.StorageReference storage_ref = yipliStorage1.GetReferenceFromUrl(profilePicRootUrl + profilePicUrl);
-
-            Debug.Log("File download started.");
-
-            try
+            string onDeviceProfilePicPath = Application.persistentDataPath + "/" + profilePicUrl;
+            Sprite downloadedSprite = await FirebaseDBHandler.GetImageAsync(profilePicUrl, onDeviceProfilePicPath);
+            if (downloadedSprite != null)
             {
-                // Start downloading a file and store it at local_url path
-                await storage_ref.GetFileAsync(local_url);
-                byte[] bytes = System.IO.File.ReadAllBytes(local_url);
-                Texture2D texture = new Texture2D(1, 1);
-                texture.LoadImage(bytes);
-                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                //var sprite = Resources.Load<Sprite>(local_url) as Sprite;
-
-                gameObj.sprite = sprite;
-                Debug.Log("Profile image downloaded.");
+                gameObj.sprite = downloadedSprite;
                 return true;
             }
-            catch(Exception exp)
+            else
             {
-                Debug.Log("Failed to download Profile image : " + exp.Message);
-                return false;
+                //Actual profile pic in the backend
+                gameObj.sprite = defaultProfilePicSprite;
             }
         }
         return false;
     }
-
 }

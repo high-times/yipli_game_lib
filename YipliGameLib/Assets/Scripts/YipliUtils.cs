@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class YipliPlayerActivity
+public class YipliUtils
 {
      /* ******Gamification*******
      * Function to be called after the gameplay for Report card screen for every game
      * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
      */
-    public static float GetFitnessPoints(IDictionary<string, int> playerActionCounts)
+    public static float GetFitnessPoints(IDictionary<PlayerActions, int> playerActionCounts)
     {
         float fp = 0.0f;
-        foreach (KeyValuePair<string, int> action in playerActionCounts)
+        foreach (KeyValuePair<PlayerActions, int> action in playerActionCounts)
         {
             fp += GetFitnessPointsPerAction(action.Key) * action.Value;
         }
@@ -22,23 +22,23 @@ public class YipliPlayerActivity
      * Function to be called after the gameplay for Report card screen for every game
      * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
      */
-    public static float GetCaloriesBurned(IDictionary<string, int> playerActionCounts)
+    public static float GetCaloriesBurned(IDictionary<PlayerActions, int> playerActionCounts)
     {
         float calories = 0.0f;
-        foreach (KeyValuePair<string, int> action in playerActionCounts)
+        foreach (KeyValuePair<PlayerActions, int> action in playerActionCounts)
         {
             calories += GetCaloriesPerAction(action.Key) * action.Value;
         }
         return calories;
     }
 
-    /* 
+ /* 
   * This function returns Yipli Fitness points predeclared for every player Action.
   * Add a new case here with its identified FPs, whenever a new player action.
   * The values are mapped with the cloud functions algorithm to calculate the fitness points.
   * Change this function, if the values in the cloud-function changes.
   */
-    private static float GetFitnessPointsPerAction(string playerAction)
+    private static float GetFitnessPointsPerAction(PlayerActions playerAction)
     {
         Debug.Log("GetFitnessPointsPerAction() called for " + playerAction);
         float fp = 0.0f;
@@ -72,26 +72,26 @@ public class YipliPlayerActivity
         return fp;
     }
 
-     /* 
-     * This class defines all the player actions to be recieved from the FmDriver.
-     * Add a new const string here, whenever a new action is added for the player in FmDriver.
-     */
-    public static class PlayerActions
-    {
-        public const string LEFT = "left";
-        public const string RIGHT = "right";
-        public const string LEFTMOVE = "left move";
-        public const string RIGHTMOVE = "right move";
-        public const string JUMP = "jumping";
-        public const string STOP = "stop";
-        public const string RUNNINGSTOPPED = "running stopped";
-        public const string RUNNING = "running";
-        public const string PAUSE = "pause";
-        public const string JUMPIN = "jump in";
-        public const string JUMPOUT = "jump out";
-        public const string ENTER = "enter";
-    }
 
+    /* 
+    * This class defines all the player actions to be recieved from the FmDriver.
+    * Add a new const string here, whenever a new action is added for the player in FmDriver.
+    */
+    public enum PlayerActions
+    {
+        LEFT,
+        RIGHT,
+        ENTER,
+        LEFTMOVE,
+        RIGHTMOVE,
+        JUMP,
+        STOP,
+        RUNNINGSTOPPED,
+        RUNNING,
+        PAUSE,
+        JUMPIN,
+        JUMPOUT
+    }
 
     /* 
      * This function returns calories predeclared for every player Action.
@@ -99,7 +99,7 @@ public class YipliPlayerActivity
      * The values are mapped with the cloud functions algorithm to calculate the calories.
      * Change this function, if the values in the cloud-function changes.
      */
-    private static float GetCaloriesPerAction(string playerAction)
+    private static float GetCaloriesPerAction(PlayerActions playerAction)
     {
         Debug.Log("GetCaloriesPerAction() called for " + playerAction);
         float calories = 0.0f;

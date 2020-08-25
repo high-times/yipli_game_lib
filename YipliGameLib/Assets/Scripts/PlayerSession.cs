@@ -25,7 +25,7 @@ public class PlayerSession : MonoBehaviour
     private DateTime endTime;
     private float duration;
     public string intensityLevel = ""; // to be decided by the game.
-    private IDictionary<string, int> playerActionCounts; // to be updated by the player movements
+    private IDictionary<YipliUtils.PlayerActions, int> playerActionCounts; // to be updated by the player movements
     private IDictionary<string, string> playerGameData; // to be used to store the player gameData like Highscore, last played level etc.
 
 
@@ -93,7 +93,7 @@ public class PlayerSession : MonoBehaviour
         }
     }
 
-    public IDictionary<string, int> getPlayerActionCounts()
+    public IDictionary<YipliUtils.PlayerActions, int> getPlayerActionCounts()
     {
         return playerActionCounts;
     }
@@ -179,7 +179,7 @@ public class PlayerSession : MonoBehaviour
         playerAge = currentYipliConfig.playerInfo.playerAge ?? "";
         playerHeight = currentYipliConfig.playerInfo.playerHeight ?? "";
         playerWeight = currentYipliConfig.playerInfo.playerWeight ?? "";
-        playerActionCounts = new Dictionary<string, int>();
+        playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
         points = 0;
         duration = 0;
         bIsPaused = false;
@@ -275,13 +275,13 @@ public class PlayerSession : MonoBehaviour
     }
 
     //to be called from all the player movment actions handled script
-    public void AddPlayerAction(string action, int steps = 1)
+    public void AddPlayerAction(YipliUtils.PlayerActions action, int count = 1)
     {
         Debug.Log("Adding action in current player session.");
         if (playerActionCounts.ContainsKey(action))
-            playerActionCounts[action] = playerActionCounts[action] + steps;
+            playerActionCounts[action] = playerActionCounts[action] + count;
         else
-            playerActionCounts.Add(action, steps);
+            playerActionCounts.Add(action, count);
     }
 
     //To be called from GameObject FixedUpdate

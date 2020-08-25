@@ -13,7 +13,8 @@ public static class FirebaseDBHandler
 {
     // Get a reference to the storage service, using the default Firebase App
     static Firebase.Storage.FirebaseStorage yipliStorage = Firebase.Storage.FirebaseStorage.DefaultInstance;
-    public static Firebase.Storage.StorageReference storage_ref = yipliStorage.GetReferenceFromUrl("gs://yipli-project.appspot.com/");
+    public static Firebase.Storage.StorageReference profilepic_storage_ref = yipliStorage.GetReferenceFromUrl("gs://yipli-project.appspot.com/profile-pics/");
+    private static string profilePicRootUrl = "gs://yipli-project.appspot.com/profile-pics/";
 
     static Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
     private const string projectId = "yipli-project"; //Taken from Firebase project settings
@@ -320,4 +321,38 @@ public static class FirebaseDBHandler
         }
         return mats;
     }
+
+
+    /*
+     * profilePicUrl : Player profile pic property stored already 
+     * onDeviceProfilePicPath : Path to store the image locally
+     */
+    public static async Task<Sprite> GetImageAsync(string profilePicUrl, string onDeviceProfilePicPath)
+    {
+        Debug.Log("Local path : " + onDeviceProfilePicPath);
+
+        // Get a reference to the storage service, using the default Firebase App
+        Firebase.Storage.StorageReference storage_ref = yipliStorage.GetReferenceFromUrl(profilePicRootUrl + profilePicUrl);
+
+        Debug.Log("File download started.");
+
+        try
+        {
+            // Start downloading a file and store it at local_url path
+            await storage_ref.GetFileAsync(onDeviceProfilePicPath);
+            byte[] bytes = System.IO.File.ReadAllBytes(onDeviceProfilePicPath);
+            Texture2D texture = new Texture2D(1, 1);
+            texture.LoadImage(bytes);
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+            
+            Debug.Log("Profile image downloaded.");
+            return sprite;
+        }
+        catch (Exception exp)
+        {
+            Debug.Log("Failed to download Profile image : " + exp.Message);
+            return null;
+        }
+    }
+
 }
