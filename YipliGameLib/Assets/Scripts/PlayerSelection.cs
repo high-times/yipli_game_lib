@@ -10,6 +10,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Audio;
 using UnityEngine.Networking;
+using System.Threading.Tasks;
+using System.Threading;
+using Firebase.Storage;
 
 public class PlayerSelection : MonoBehaviour
 {
@@ -31,14 +34,21 @@ public class PlayerSelection : MonoBehaviour
     public GameObject noNetworkPanel;
     public TextMeshProUGUI noNetworkPanelText;
     public MatSelection matSelectionScript;
-    public SpriteRenderer profilePicImageCanvasUI;
+    public Image profilePicImage;
+                
 
     private List<YipliPlayerInfo> players;
     private string PlayerName;
     private YipliPlayerInfo defaultPlayer;
     private List<GameObject> generatedObjects = new List<GameObject>();
     private bool bIsCheckingForIntents;
+    private bool bIsProfilePicLoaded = false;
+    private Sprite defaultProfilePicSprite;
 
+    public void OnEnable()
+    {
+        defaultProfilePicSprite = profilePicImage.sprite;
+    }
     // When the game starts
     public void Start()
     {
@@ -78,9 +88,14 @@ public class PlayerSelection : MonoBehaviour
         }
     }
 
-    public void playPhoneHolderTutorial()
+    async public void playPhoneHolderTutorial()
     {
         Debug.Log("Starting PhoneHolder Tutorial for " + defaultPlayer.playerName);
+        Debug.Log("Is profilePicLoaded = " + bIsProfilePicLoaded);
+        if (!bIsProfilePicLoaded)
+        {
+            bIsProfilePicLoaded = await loadImageFromBackendAsync(profilePicImage, defaultPlayer.profilePicUrl);
+        }
         playerNameText.text = "Hi, " + defaultPlayer.playerName;
         playerNameText.gameObject.SetActive(true);
         phoneHolderInfo.SetActive(true);
@@ -254,12 +269,12 @@ public class PlayerSelection : MonoBehaviour
             Debug.Log(exp.Message);
             //defaultPlayer = null;
 
-            currentYipliConfig.userId = null;
-            defaultPlayer = null;
+            /*currentYipliConfig.userId = null;
+            defaultPlayer = null;*/
 
-            /*currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
+            currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
             defaultPlayer = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49");
-            currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");*/
+            currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
         }
 
         //Setting User Id in the scriptable Object
@@ -315,8 +330,10 @@ public class PlayerSelection : MonoBehaviour
             UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
 
             //Activate the PlayerName and Image display object
-            playerNameText.gameObject.SetActive(true);
+            if (!bIsProfilePicLoaded)
+                bIsProfilePicLoaded = await loadImageFromBackendAsync(profilePicImage, defaultPlayer.profilePicUrl);
             playerNameText.text = "Hi, " + defaultPlayer.playerName;
+            playerNameText.gameObject.SetActive(true);
 
             //Initiate the player change flow
             switchPlayerPanel.SetActive(true);
@@ -333,6 +350,9 @@ public class PlayerSelection : MonoBehaviour
                 //This means we already have the Current Player info.
                 //In this case we need to call the player change screen and not the player selection screen
                 //continueOrSwitchPlayerText.text = "Press continue to play as " + currentYipliConfig.playerInfo.playerName + ".\nIf not " + currentYipliConfig.playerInfo.playerName + ", you can switch player.";
+                if (!bIsProfilePicLoaded)
+                    bIsProfilePicLoaded = await loadImageFromBackendAsync(profilePicImage, defaultPlayer.profilePicUrl);
+
                 playerNameText.text = "Hi, " + currentYipliConfig.playerInfo.playerName;
                 switchPlayerPanel.SetActive(true);
             }
@@ -370,9 +390,6 @@ public class PlayerSelection : MonoBehaviour
                     PlayerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = players[i].playerName;
                     PlayerButton.transform.SetParent(PlayersContainer.transform, false);
                     PlayerButton.transform.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(SelectPlayer);
-
-                    //Removed position calculations as this is handled by grid layout group
-                    //NextPosition = new Vector3(PlayerButton.transform.localPosition.x, PlayerButton.transform.localPosition.y - 45, PlayerButton.transform.localPosition.z);
                 }
             }
             catch (Exception exp)
@@ -387,12 +404,12 @@ public class PlayerSelection : MonoBehaviour
         {
             Debug.Log("No player found from firebase.");
             TurnOffAllPanels();
-            zeroPlayersText.text = "No players found. Create a player from the YIPLI app to continue playing.";
+            //zeroPlayersText.text = "No players found. Create a player from the YIPLI app to continue playing.";
             zeroPlayersPanel.SetActive(true);
         }
     }
 
-    public void SelectPlayer()
+    async public void SelectPlayer()
     {
         FindObjectOfType<YipliAudioManager>().Play("ButtonClick");
         PlayerName = EventSystem.current.currentSelectedGameObject.name;
@@ -404,11 +421,12 @@ public class PlayerSelection : MonoBehaviour
         }
         Debug.Log("Player Selected :  " + PlayerName);
 
-        //continueOrSwitchPlayerText.text = "Press continue to play as " + PlayerName + ".\nIf not " + PlayerName + ", you can switch player.";
-        playerNameText.text = "Hi, " + PlayerName;
+
         //Changing the currentSelected player in the Scriptable object
         //No Making this player persist in the device. This will be done on continue press.
         defaultPlayer = GetPlayerInfoFromPlayerName(PlayerName);
+        bIsProfilePicLoaded = await loadImageFromBackendAsync(profilePicImage, defaultPlayer.profilePicUrl);
+        playerNameText.text = "Hi, " + PlayerName;
 
         TurnOffAllPanels();
         switchPlayerPanel.SetActive(true);
@@ -493,14 +511,14 @@ public class PlayerSelection : MonoBehaviour
             //If default player also not available, then show no players panel.
             if (defaultPlayer != null)
             {
-                noNetworkPanelText.text = "No active network connection. Cannot switch player. Press continue to play as " + defaultPlayer.playerName;
+                //noNetworkPanelText.text = "No active network connection. Cannot switch player. Press continue to play as " + defaultPlayer.playerName;
                 noNetworkPanel.SetActive(true);
             }
             else
             {
                 //Default player is not there.
                 //Ask to open app from app
-                zeroPlayersText.text = "No network connection. Can't find players. Try with an active network connection or launch the game from Yipli App.";
+                //zeroPlayersText.text = "No network connection. Can't find players. Try with an active network connection or launch the game from Yipli App.";
                 zeroPlayersPanel.SetActive(true);
             }
 
@@ -527,7 +545,7 @@ public class PlayerSelection : MonoBehaviour
                 else // If No then throw a new panel to tell the Gamer that there is no player found
                 {
                     TurnOffAllPanels();
-                    zeroPlayersText.text = "No players found.Create a player from the YIPLI app to continue playing.";
+                    //zeroPlayersText.text = "No players found.Create a player from the YIPLI app to continue playing.";
                     zeroPlayersPanel.SetActive(true);
                 }
             }
@@ -541,7 +559,7 @@ public class PlayerSelection : MonoBehaviour
                 else // If No then throw a new panel to tell the Gamer that there is only 1 player currently
                 {
                     TurnOffAllPanels();
-                    onlyOnePlayerText.text = "Only 1 player found.\nAdd more players from Yipli Hub and come back.";
+                    //onlyOnePlayerText.text = "Only 1 player found.\nAdd more players from Yipli Hub and come back.";
                     onlyOnePlayerPanel.SetActive(true);
                 }
             }
@@ -581,4 +599,50 @@ public class PlayerSelection : MonoBehaviour
             }
         }
     }
+
+    async private Task<bool> loadImageFromBackendAsync(Image gameObj, string profilePicUrl)
+    {
+        if (profilePicUrl == null || profilePicUrl == "" || gameObj == null)
+        {
+            Debug.Log("Something went wrong. Returning.");
+            //Set the profile pic to a default one.
+            gameObj.sprite = defaultProfilePicSprite;
+        }
+        else
+        {
+            string profilePicRootUrl = "gs://yipli-project.appspot.com/profile-pics/";
+            // Create local filesystem URL
+            string local_url = Application.persistentDataPath + "/" + profilePicUrl;
+
+            Debug.Log("Local path : " + local_url);
+
+            // Get a reference to the storage service, using the default Firebase App
+            Firebase.Storage.FirebaseStorage yipliStorage1 = Firebase.Storage.FirebaseStorage.DefaultInstance;
+            Firebase.Storage.StorageReference storage_ref = yipliStorage1.GetReferenceFromUrl(profilePicRootUrl + profilePicUrl);
+
+            Debug.Log("File download started.");
+
+            try
+            {
+                // Start downloading a file and store it at local_url path
+                await storage_ref.GetFileAsync(local_url);
+                byte[] bytes = System.IO.File.ReadAllBytes(local_url);
+                Texture2D texture = new Texture2D(1, 1);
+                texture.LoadImage(bytes);
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+                //var sprite = Resources.Load<Sprite>(local_url) as Sprite;
+
+                gameObj.sprite = sprite;
+                Debug.Log("Profile image downloaded.");
+                return true;
+            }
+            catch(Exception exp)
+            {
+                Debug.Log("Failed to download Profile image : " + exp.Message);
+                return false;
+            }
+        }
+        return false;
+    }
+
 }

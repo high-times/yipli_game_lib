@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
-using Firebase;
-using Firebase.Unity.Editor;
 using Firebase.Database;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
+using Firebase;
+using Firebase.Unity.Editor;
+using UnityEngine.Windows;
+using UnityEngine.UI;
 
 public static class FirebaseDBHandler
 {
-    //static Firebase.Storage.StorageReference profilePicsRef =
-    //  FirebaseStorage.instance.ref ().child('profile-pics');
+    // Get a reference to the storage service, using the default Firebase App
+    static Firebase.Storage.FirebaseStorage yipliStorage = Firebase.Storage.FirebaseStorage.DefaultInstance;
+    public static Firebase.Storage.StorageReference storage_ref = yipliStorage.GetReferenceFromUrl("gs://yipli-project.appspot.com/");
+
     static Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
     private const string projectId = "yipli-project"; //Taken from Firebase project settings
     //private static readonly string databaseURL = "https://yipli-project.firebaseio.com/"; // Taken from Firebase project settings

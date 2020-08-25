@@ -96,23 +96,5 @@ public static class YipliHelper
          return false;
 #endif
     }
-
-    static IEnumerator loadImageFromBackend(SpriteRenderer gameObj, string playerId)
-    {
-        string imageUrl = "" + playerId;
-
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(imageUrl);
-        yield return request.SendWebRequest();
-
-        if (request.isNetworkError || request.isHttpError)
-            Debug.Log(request.error);
-        else
-        {
-            Texture2D tex = ((DownloadHandlerTexture)request.downloadHandler).texture;
-            Sprite mySprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1.0f);
-            gameObj.sprite = mySprite;
-        }
-    }
-
 }
 

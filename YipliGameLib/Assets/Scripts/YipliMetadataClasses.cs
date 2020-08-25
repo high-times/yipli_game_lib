@@ -64,15 +64,15 @@ public class YipliPlayerInfo
                 }
                 gender = snapshot.Child("gender").Value?.ToString() ?? "";
 
+                profilePicUrl = snapshot.Child("profile-pic-url").Value?.ToString() ?? "";
+
                 //If playername is not found, set PlayerId to null
                 if (playerName== "")
                 {
                     playerId = null;
                 }
 
-                profilePicUrl = snapshot.Child("profile-pic-url").Value?.ToString() ?? "";
-
-                Debug.Log("Player Found with details :" + playerAge + " " + playerHeight + " " + playerId + " " + playerWeight + " " + playerName);
+                Debug.Log("Player Found with details :" + playerAge + " " + playerHeight + " " + playerId + " " + playerWeight + " " + playerName + " ProfilePicUrl:" + profilePicUrl);
             }
             else
             {
