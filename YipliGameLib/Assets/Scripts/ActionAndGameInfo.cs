@@ -5,41 +5,41 @@ namespace YipliFMDriverCommunication
 { 
     public static class ActionAndGameInfoManager
     {
-        public static string getActionIDFromActionName(string actionName)
+        public static string getActionIDFromActionName(YipliUtils.PlayerActions actionName)
         {
-            switch (actionName.ToLower())
+            switch (actionName)
             {
-                case "left":
+                case YipliUtils.PlayerActions.LEFT:
                     return "9GO5";
 
-                case "right":
+                case YipliUtils.PlayerActions.RIGHT:
                     return "3KWN";
 
-                case "enter":
+                case YipliUtils.PlayerActions.ENTER:
                     return "PLW3";
 
-                case "pause":
+                case YipliUtils.PlayerActions.PAUSE:
                     return "UDH0";
 
-                case "running":
+                case YipliUtils.PlayerActions.RUNNING:
                     return "SWLO";
 
-                case "running stopped":
+                case YipliUtils.PlayerActions.RUNNINGSTOPPED:
                     return "7RCE";
 
-                case "jumping":
+                case YipliUtils.PlayerActions.JUMP:
                     return "9D6O";
 
-                case "right move":
+                case YipliUtils.PlayerActions.RIGHTMOVE:
                     return "DMEY";
 
-                case "left move":
+                case YipliUtils.PlayerActions.LEFTMOVE:
                     return "38UF";
 
-                case "jump in":
+                case YipliUtils.PlayerActions.JUMPIN:
                     return "EUOA";
 
-                case "jump out":
+                case YipliUtils.PlayerActions.JUMPOUT:
                     return "QRTY";
             }
 
@@ -105,8 +105,8 @@ namespace YipliFMDriverCommunication
     [Serializable]
     public class FmDriverResponseInfo
     {
-        public int response_count;
-        public double response_timestamp;
+        public int count;
+        public double timestamp;
         public PlayerData[] playerdata;
     }
 

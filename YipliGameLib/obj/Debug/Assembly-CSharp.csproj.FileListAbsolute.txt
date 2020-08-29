@@ -7,7 +7,6 @@ C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\Firebase.Functions.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\Firebase.Platform.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\Firebase.TaskExtension.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\Google.MiniJson.dll
-C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\Google.Sharpen.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\Microsoft.Win32.Primitives.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\mscorlib.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\netstandard.dll
@@ -313,3 +312,4 @@ C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\UnityEditor.iOS.Extensions.X
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\UnityEditor.iOS.Extensions.Common.pdb
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\UnityEditor.TestRunner.pdb
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\UnityEngine.TestRunner.pdb
+C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\Firebase.Storage.dll

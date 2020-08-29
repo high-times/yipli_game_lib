@@ -32,7 +32,7 @@ public class PlayerSession : MonoBehaviour
     public TextMeshProUGUI bleErrorText;
 
     public GameObject BleErrorPanel;
-    private GameObject LoadingScreen;
+    public GameObject LoadingScreen;
     private GameObject instantiatedBleErrorPanel;
     private bool bIsBleConnectionCoroutineRunning = false;
 

@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\ActionAndGameInfo.cs" />
     <Compile Include="Assets\Scripts\BLEControllerEventHandler.cs" />
     <Compile Include="Assets\Scripts\FirebaseDBHandler.cs" />
     <Compile Include="Assets\Scripts\GamelibSounds.cs" />
@@ -69,10 +70,12 @@
     <Compile Include="Assets\Scripts\MatSelection.cs" />
     <Compile Include="Assets\Scripts\PlayerSelection.cs" />
     <Compile Include="Assets\Scripts\PlayerSession.cs" />
+    <Compile Include="Assets\Scripts\ScaleUpdownAnimation.cs" />
     <Compile Include="Assets\Scripts\UserDataPersistence.cs" />
     <Compile Include="Assets\Scripts\YipliAudioManager.cs" />
     <Compile Include="Assets\Scripts\YipliConfig.cs" />
     <Compile Include="Assets\Scripts\YipliMetadataClasses.cs" />
+    <Compile Include="Assets\Scripts\YipliUtils.cs" />
     <Compile Include="Assets\Scripts\helper.cs" />
     <Compile Include="Assets\loadingBar\scripts\Loading.cs" />
     <Compile Include="Assets\loadingBar\scripts\YipliLoaderEx.cs" />
@@ -82,24 +85,20 @@
     <Compile Include="Assets\loadingBar\scripts\rotatetotate.cs" />
     <Compile Include="Assets\loadingBar\scripts\simplerotate.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
-    <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-functions-unity\maven-metadata.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\JsonDotNet\link.xml" />
-    <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-app-unity\maven-metadata.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />
     <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
-    <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-auth-unity\maven-metadata.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Following Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
-    <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-database-unity\maven-metadata.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
@@ -337,38 +336,38 @@
     <Reference Include="UnityEngine.XRModule">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll</HintPath>
     </Reference>
-    <Reference Include="Firebase.App">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.App.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Auth">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Auth.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Database">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Database.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Functions">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Functions.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Platform">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.TaskExtension">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.TaskExtension.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.MiniJson">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Google.MiniJson.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.Sharpen">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Google.Sharpen.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Firebase.App">
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.app@6.15.2/Firebase/Plugins/Firebase.App.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Platform">
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.app@6.15.2/Firebase/Plugins/Firebase.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.TaskExtension">
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.app@6.15.2/Firebase/Plugins/Firebase.TaskExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.MiniJson">
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.app@6.15.2/Firebase/Plugins/Google.MiniJson.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Compat">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Parse/Plugins/dotNet45/Unity.Compat.dll</HintPath>
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.app@6.15.2/Parse/Plugins/dotNet45/Unity.Compat.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Tasks">
-      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Assets/Parse/Plugins/dotNet45/Unity.Tasks.dll</HintPath>
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.app@6.15.2/Parse/Plugins/dotNet45/Unity.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Auth">
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.auth@6.15.2/Firebase/Plugins/Firebase.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Database">
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.database@6.15.2/Firebase/Plugins/Firebase.Database.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Functions">
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.functions@6.15.2/Firebase/Plugins/Firebase.Functions.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Storage">
+      <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.storage@6.15.2/Firebase/Plugins/Firebase.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Analytics.Editor">
       <HintPath>C:/Yipli/yipli_game_lib/YipliGameLib/Library/PackageCache/com.unity.analytics@3.3.5/Unity.Analytics.Editor.dll</HintPath>

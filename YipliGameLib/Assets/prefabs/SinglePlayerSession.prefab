@@ -560,7 +560,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 55f9a028c17843c4e820efe01c7198c8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fb1ac5d9abeaece478443b02c4b80744, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1012,7 +1012,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 55f9a028c17843c4e820efe01c7198c8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fb1ac5d9abeaece478443b02c4b80744, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1067,9 +1067,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22ce8f9f0c6e5240ba0be79633432f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameId: 
+  intensityLevel: 
   bleErrorText: {fileID: 3559847490837272204}
   BleErrorPanel: {fileID: 3004118512226563790}
-  LoadingPanel: {fileID: 5361826215088768511}
+  LoadingScreen: {fileID: 5361826215088768511}
   currentYipliConfig: {fileID: 11400000, guid: 4f87967ea03eb1743a90e503a6dc0a22, type: 2}
 --- !u!1 &7735226193415373379
 GameObject:
