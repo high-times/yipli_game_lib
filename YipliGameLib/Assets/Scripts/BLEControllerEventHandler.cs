@@ -7,6 +7,9 @@
 
     public class BLEControllerEventHandler : MonoBehaviour
     {
+
+
+
         //native events
         public delegate void OnBleDidConnectEventDelegate(string error);
         public static event OnBleDidConnectEventDelegate OnBleDidConnectEvent;
@@ -23,6 +26,7 @@
         public delegate void OnBleDidCompletePeripheralScanEventDelegate(List<object> peripherals, string error);
         public static event OnBleDidCompletePeripheralScanEventDelegate OnBleDidCompletePeripheralScanEvent;
 
+
         //Instance methods used by iOS Unity Send Message
         void OnBleDidInitializeMessage(string message)
         {
@@ -34,6 +38,7 @@
             string errorMessage = message != "Success" ? message : null;
             OnBleDidInitializeEvent?.Invoke(errorMessage);
         }
+
 
         void OnBleDidConnectMessage(string message)
         {

@@ -319,7 +319,7 @@ public class PlayerSession : MonoBehaviour
                     Debug.Log("Mat is disconnected. Trying to connect back : " + currentYipliConfig.matInfo.macAddress);
                     try
                     {
-                        InitBLE.InitBLEFramework(currentYipliConfig.matInfo.macAddress);
+                        InitBLE.InitBLEFramework(currentYipliConfig.matInfo.macAddress,0);
                     }
                     catch (Exception exp)
                     {
@@ -376,7 +376,7 @@ public class PlayerSession : MonoBehaviour
 
         try
         {
-            InitBLE.InitBLEFramework(currentYipliConfig.matInfo.macAddress);
+            InitBLE.InitBLEFramework(currentYipliConfig.matInfo.macAddress, 0);
         }
         catch (Exception exp)
         {

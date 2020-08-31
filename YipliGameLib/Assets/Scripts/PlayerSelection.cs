@@ -90,6 +90,7 @@ public class PlayerSelection : MonoBehaviour
 
     async public void playPhoneHolderTutorial()
     {
+        TurnOffAllPanels();
         Debug.Log("Starting PhoneHolder Tutorial for " + defaultPlayer.playerName);
         Debug.Log("Is profilePicLoaded = " + bIsProfilePicLoaded);
         if (!bIsProfilePicLoaded)
@@ -300,8 +301,7 @@ public class PlayerSelection : MonoBehaviour
             //Stop the Coroutine which keep schecking for the intents.
             StopCoroutine(KeepCheckingForIntents());
 
-            currentYipliConfig.bIsMatIntroDone = false;
-            if (!currentYipliConfig.bIsMatIntroDone)
+            if (!currentYipliConfig.bIsMatIntroDone && defaultPlayer != null)
                 playPhoneHolderTutorial();
             else
                 SwitchPlayerFlow();

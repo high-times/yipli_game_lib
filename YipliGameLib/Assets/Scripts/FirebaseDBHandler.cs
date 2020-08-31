@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System;
 using Firebase;
 using Firebase.Unity.Editor;
-using UnityEngine.Windows;
-using UnityEngine.UI;
 
 public static class FirebaseDBHandler
 {

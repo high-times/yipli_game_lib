@@ -124,6 +124,25 @@ namespace YipliFMDriverCommunication
         public string action_name;         //Action Name for debugging (Gamers should strictly check action ID)
         public string properties;          //Any properties action has - ex. Running could have Step Count, Speed
     }
+
+    #region Multiplayer Classes
+
+    [Serializable]
+    public class FmDriverResponseInfoMP
+    {
+        public int count;
+        public double timestamp;
+        public MultiPlayerData[] playerdata;
+    }
+    [Serializable]
+    public class MultiPlayerData
+    {
+        public int id;
+        public int count;
+        public FMResponse fmresponse;
+    }
+
+    #endregion
 }
 
 

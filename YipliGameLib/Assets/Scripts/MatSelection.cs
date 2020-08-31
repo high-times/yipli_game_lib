@@ -85,6 +85,7 @@ public class MatSelection : MonoBehaviour
 
     IEnumerator LoadMainGameScene()
     {
+        Debug.Log("Your Fitmat is connected.Taking you to the game.");
         bleSuccessMsg.text = "Your Fitmat is connected.\nTaking you to the game.";
         BluetoothSuccessPanel.SetActive(true);
         yield return new WaitForSeconds(2f);
@@ -93,12 +94,15 @@ public class MatSelection : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         tick.SetActive(true);
         yield return new WaitForSeconds(0.35f);
+        Debug.Log("Starting the Coroutine LoadSceneAfterDisplayingDriverAndGameVersion()");
         StartCoroutine(LoadSceneAfterDisplayingDriverAndGameVersion());
     }
 
     IEnumerator LoadSceneAfterDisplayingDriverAndGameVersion()
     {
         //TODO : Comment following lines for production build
+        Debug.Log("FmDriver Version : " + YipliHelper.GetFMDriverVersion());
+        Debug.Log("Game Version: " + Application.version);
         bleSuccessMsg.text = "FmDriver Version : " + YipliHelper.GetFMDriverVersion() + "\n  Game Version : " + Application.version;
         yield return new WaitForSeconds(1.5f);
 
@@ -226,7 +230,7 @@ public class MatSelection : MonoBehaviour
                     {
                         Debug.Log("connecting to : " + yipliMat.matName);
                         //Initiate the connection with the mat.
-                        InitBLE.InitBLEFramework(yipliMat.macAddress);
+                        InitBLE.InitBLEFramework(yipliMat.macAddress, 0);
                         return "success";
                     }
                     else

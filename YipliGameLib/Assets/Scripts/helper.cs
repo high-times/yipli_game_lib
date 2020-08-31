@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public static class YipliHelper
 {
@@ -21,6 +18,12 @@ public static class YipliHelper
     public static void SetGameClusterId(int gameClusterId)
     {
         InitBLE.setGameClusterID(gameClusterId);
+    }
+
+    public static void SetGameMode(int gameMode)
+    {
+        Debug.Log("GameMode: " + gameMode);
+        InitBLE.setGameMode(gameMode);
     }
 
     public static bool checkInternetConnection()
