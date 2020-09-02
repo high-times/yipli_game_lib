@@ -255,6 +255,7 @@ public class PlayerSelection : MonoBehaviour
         noNetworkPanel.SetActive(false);
         GuestUserPanel.SetActive(false);
         LaunchFromYipliAppPanel.SetActive(false);
+        LoadingPanel.SetActive(false);
     }
 
     private void CheckIntentsAndInitializePlayerEnvironment()
@@ -300,7 +301,7 @@ public class PlayerSelection : MonoBehaviour
 
             //Stop the Coroutine which keep schecking for the intents.
             StopCoroutine(KeepCheckingForIntents());
-
+            //currentYipliConfig.bIsMatIntroDone = false;
             if (!currentYipliConfig.bIsMatIntroDone && defaultPlayer != null)
                 playPhoneHolderTutorial();
             else
@@ -331,8 +332,10 @@ public class PlayerSelection : MonoBehaviour
             UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
 
             //Activate the PlayerName and Image display object
+            LoadingPanel.SetActive(true);
             if (!bIsProfilePicLoaded)
                 bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
+            LoadingPanel.SetActive(false);
             playerNameText.text = "Hi, " + defaultPlayer.playerName;
             playerNameText.gameObject.SetActive(true);
 
@@ -351,9 +354,10 @@ public class PlayerSelection : MonoBehaviour
                 //This means we already have the Current Player info.
                 //In this case we need to call the player change screen and not the player selection screen
                 //continueOrSwitchPlayerText.text = "Press continue to play as " + currentYipliConfig.playerInfo.playerName + ".\nIf not " + currentYipliConfig.playerInfo.playerName + ", you can switch player.";
+                LoadingPanel.SetActive(true);
                 if (!bIsProfilePicLoaded)
                     bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
-
+                LoadingPanel.SetActive(false);
                 playerNameText.text = "Hi, " + currentYipliConfig.playerInfo.playerName;
                 playerNameText.gameObject.SetActive(true);
                 switchPlayerPanel.SetActive(true);
@@ -427,7 +431,9 @@ public class PlayerSelection : MonoBehaviour
         //Changing the currentSelected player in the Scriptable object
         //No Making this player persist in the device. This will be done on continue press.
         defaultPlayer = GetPlayerInfoFromPlayerName(PlayerName);
+        LoadingPanel.SetActive(true);
         bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
+        LoadingPanel.SetActive(false);
         playerNameText.text = "Hi, " + PlayerName;
         playerNameText.gameObject.SetActive(true);
 
@@ -495,6 +501,7 @@ public class PlayerSelection : MonoBehaviour
 
     public void OnJumpOnMat()
     {
+        LoadingPanel.SetActive(true);
         currentYipliConfig.bIsMatIntroDone = true;
         phoneHolderInfo.SetActive(false);
         StopCoroutine(ChangeTextMessage());

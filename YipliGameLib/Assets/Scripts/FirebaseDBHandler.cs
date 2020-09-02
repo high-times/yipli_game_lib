@@ -42,6 +42,8 @@ public static class FirebaseDBHandler
             FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
+            Debug.Log("Pushing data to backend: " + session.GetPlayerSessionDataJsonDic());
+
             string key = reference.Child("stage-bucket/player-sessions").Push().Key;
             reference.Child("stage-bucket/player-sessions").Child(key).SetRawJsonValueAsync(JsonConvert.SerializeObject(session.GetPlayerSessionDataJsonDic(), Formatting.None, new JsonSerializerSettings
             {

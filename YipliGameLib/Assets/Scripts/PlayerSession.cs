@@ -24,6 +24,8 @@ public class PlayerSession : MonoBehaviour
     private DateTime startTime;
     private DateTime endTime;
     private float duration;
+    private float calories;
+    private float fitnesssPoints;
     public string intensityLevel = ""; // to be decided by the game.
     private IDictionary<YipliUtils.PlayerActions, int> playerActionCounts; // to be updated by the player movements
     private IDictionary<string, string> playerGameData; // to be used to store the player gameData like Highscore, last played level etc.
@@ -128,6 +130,8 @@ public class PlayerSession : MonoBehaviour
         x.Add("player-action-counts", playerActionCounts);
         x.Add("mac-address", matMacAddress);
         x.Add("timestamp", ServerValue.Timestamp);
+        x.Add("calories", calories);
+        x.Add("fitness-points", calories);
         if (playerGameData != null)
         {
             if (playerGameData.Count > 0)
@@ -195,6 +199,8 @@ public class PlayerSession : MonoBehaviour
     {
         //Destroy current player session data
         endTime = DateTime.Now;
+        calories = 0;
+        fitnesssPoints = 0;
         points = 0;
         duration = 0;
         Debug.Log("Aborting current player session.");
@@ -206,6 +212,9 @@ public class PlayerSession : MonoBehaviour
         points = gamePoints;
 
         endTime = DateTime.Now;
+
+        calories = YipliUtils.GetCaloriesBurned(getPlayerActionCounts());
+        fitnesssPoints = YipliUtils.GetFitnessPoints(getPlayerActionCounts());
 
         if (0 == ValidateSessionBeforePosting())
         {
