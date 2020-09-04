@@ -90,7 +90,8 @@ public class YipliUtils
         RUNNING,
         PAUSE,
         JUMPIN,
-        JUMPOUT
+        JUMPOUT,
+        INVALID_ACTION
     }
 
     /* 

@@ -42,7 +42,7 @@ public static class FirebaseDBHandler
             FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
-            Debug.Log("Pushing data to backend: " + session.GetPlayerSessionDataJsonDic());
+            Debug.Log("Pushing data to backend: " + JsonConvert.SerializeObject(session.GetPlayerSessionDataJsonDic()));
 
             string key = reference.Child("stage-bucket/player-sessions").Push().Key;
             reference.Child("stage-bucket/player-sessions").Child(key).SetRawJsonValueAsync(JsonConvert.SerializeObject(session.GetPlayerSessionDataJsonDic(), Formatting.None, new JsonSerializerSettings
@@ -355,4 +355,36 @@ public static class FirebaseDBHandler
         }
     }
 
+    //Test Harness code
+    // Adds a PlayerSession to the Firebase Database
+    public static void _T_PostDummyPlayerSession(Dictionary<string, dynamic> tempData)
+    {
+        auth.SignInAnonymouslyAsync().ContinueWith(task => {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SignInAnonymouslyAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
+                return;
+            }
+
+            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                newUser.DisplayName, newUser.UserId);
+
+            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+
+            Debug.Log("Pushing data to backend: " + JsonConvert.SerializeObject(tempData));
+
+            string key = reference.Child("stage-bucket/player-sessions").Push().Key;
+            reference.Child("stage-bucket/player-sessions").Child(key).SetRawJsonValueAsync(JsonConvert.SerializeObject(tempData, Formatting.None, new JsonSerializerSettings
+            {
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            }));    
+        });
+    }
 }

@@ -69,7 +69,8 @@ public class PlayerSession : MonoBehaviour
             _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
             Debug.Log("Updating the callBackLevel Value to :" + _instance.currentYipliConfig.callbackLevel);
             Debug.Log("Loading Yipli scene for player Selection...");
-            SceneManager.LoadScene("yipli_lib_scene");
+            if (!_instance.currentYipliConfig.callbackLevel.Equals("Yipli_Testing_harness"))
+                SceneManager.LoadScene("yipli_lib_scene");
         }
         else
         {
@@ -80,7 +81,8 @@ public class PlayerSession : MonoBehaviour
     public void Start()
     {
         Debug.Log("Starting the BLE routine check in PlayerSession Start()");
-        StartCoroutine(CheckBleRoutine());
+        if (!_instance.currentYipliConfig.callbackLevel.Equals("Yipli_Testing_harness"))
+            StartCoroutine(CheckBleRoutine());
     }
 
     public void Update()
@@ -129,9 +131,17 @@ public class PlayerSession : MonoBehaviour
         x.Add("intensity-level", intensityLevel.ToString());
         x.Add("player-action-counts", playerActionCounts);
         x.Add("mac-address", matMacAddress);
-        x.Add("timestamp", ServerValue.Timestamp);
+        try
+        {
+            Debug.Log("Timestamp is : " + ServerValue.Timestamp);
+            x.Add("timestamp", DateTime.UtcNow.Second);
+        }
+        catch(Exception exp)
+        {
+            Debug.Log("Exception in TimeStamp : " + exp.Message);
+        }
         x.Add("calories", calories);
-        x.Add("fitness-points", calories);
+        x.Add("fitness-points", fitnesssPoints);
         if (playerGameData != null)
         {
             if (playerGameData.Count > 0)
