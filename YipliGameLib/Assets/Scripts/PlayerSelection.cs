@@ -95,7 +95,9 @@ public class PlayerSelection : MonoBehaviour
         Debug.Log("Is profilePicLoaded = " + bIsProfilePicLoaded);
         if (!bIsProfilePicLoaded)
         {
+            LoadingPanel.SetActive(true);
             bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
+            LoadingPanel.SetActive(true);
         }
         playerNameText.text = "Hi, " + defaultPlayer.playerName;
         playerNameText.gameObject.SetActive(true);
@@ -301,6 +303,8 @@ public class PlayerSelection : MonoBehaviour
 
             //Stop the Coroutine which keep schecking for the intents.
             StopCoroutine(KeepCheckingForIntents());
+
+            //Uncomment following line to always start the flow from phoneHolder panel
             //currentYipliConfig.bIsMatIntroDone = false;
             if (!currentYipliConfig.bIsMatIntroDone && defaultPlayer != null)
                 playPhoneHolderTutorial();
@@ -417,6 +421,7 @@ public class PlayerSelection : MonoBehaviour
 
     async public void SelectPlayer()
     {
+        playerSelectionPanel.SetActive(false);
         FindObjectOfType<YipliAudioManager>().Play("ButtonClick");
         PlayerName = EventSystem.current.currentSelectedGameObject.name;
 

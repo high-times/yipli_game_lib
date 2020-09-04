@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\PlayerSelection.cs" />
     <Compile Include="Assets\Scripts\PlayerSession.cs" />
     <Compile Include="Assets\Scripts\PostPlayerSessions.cs" />
+    <Compile Include="Assets\Scripts\SacaleOutApprearance.cs" />
     <Compile Include="Assets\Scripts\ScaleUpdownAnimation.cs" />
     <Compile Include="Assets\Scripts\UserDataPersistence.cs" />
     <Compile Include="Assets\Scripts\YipliAudioManager.cs" />
