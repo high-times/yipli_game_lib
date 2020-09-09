@@ -21,8 +21,6 @@ public class PlayerSession : MonoBehaviour
     private string playerWeight = ""; //Current height of the player
     private string matId = "";
     private string matMacAddress;
-    private DateTime startTime;
-    private DateTime endTime;
     private float duration;
     private float calories;
     private float fitnesssPoints;
@@ -121,27 +119,18 @@ public class PlayerSession : MonoBehaviour
         x = new Dictionary<string, dynamic>();
         x.Add("game-id", gameId);
         x.Add("user-id", userId);
-        x.Add("player-id", playerId);
-        x.Add("age", playerAge);
-        x.Add("points", points.ToString());
-        x.Add("player-height", playerHeight);
-        x.Add("start-time", startTime);
-        x.Add("end-time", endTime);
-        x.Add("duration", Convert.ToInt32(duration).ToString());
-        x.Add("intensity-level", intensityLevel.ToString());
-        x.Add("player-action-counts", playerActionCounts);
+        x.Add("mat-id", matId);
         x.Add("mac-address", matMacAddress);
-        try
-        {
-            Debug.Log("Timestamp is : " + ServerValue.Timestamp);
-            x.Add("timestamp", DateTime.UtcNow.Second);
-        }
-        catch(Exception exp)
-        {
-            Debug.Log("Exception in TimeStamp : " + exp.Message);
-        }
-        x.Add("calories", calories);
-        x.Add("fitness-points", fitnesssPoints);
+        x.Add("player-id", playerId);
+        x.Add("age", int.Parse(playerAge));
+        x.Add("points", (int)points);
+        x.Add("height", playerHeight);
+        x.Add("duration", (int)duration);
+        x.Add("intensity", intensityLevel);
+        x.Add("player-actions", playerActionCounts);
+        x.Add("timestamp", ServerValue.Timestamp);
+        x.Add("calories", (int)calories);
+        x.Add("fitness-points", (int)fitnesssPoints);
         if (playerGameData != null)
         {
             if (playerGameData.Count > 0)
@@ -158,7 +147,6 @@ public class PlayerSession : MonoBehaviour
             Debug.Log("Game-data is null");
         }
 
-        x.Add("mat-id", matId);
         return x;
     }
 
@@ -197,7 +185,6 @@ public class PlayerSession : MonoBehaviour
         points = 0;
         duration = 0;
         bIsPaused = false;
-        startTime = DateTime.Now;
         ActionAndGameInfoManager.SetYipliGameInfo(GameId);
         matId = currentYipliConfig.matInfo.matId;
         matMacAddress = currentYipliConfig.matInfo.macAddress;
@@ -208,7 +195,6 @@ public class PlayerSession : MonoBehaviour
     public void CloseSPSession()
     {
         //Destroy current player session data
-        endTime = DateTime.Now;
         calories = 0;
         fitnesssPoints = 0;
         points = 0;
@@ -220,9 +206,7 @@ public class PlayerSession : MonoBehaviour
     {
         Debug.Log("Storing current player session to backend database.");
         points = gamePoints;
-
-        endTime = DateTime.Now;
-
+        
         calories = YipliUtils.GetCaloriesBurned(getPlayerActionCounts());
         fitnesssPoints = YipliUtils.GetFitnessPoints(getPlayerActionCounts());
 

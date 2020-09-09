@@ -84,10 +84,10 @@ public class PostPlayerSessions : MonoBehaviour
             dummyPlayerGameSessionData.Add("player-id", validPlayerIds[UnityEngine.Random.Range(0, validPlayerIds.Length - 1)]);
             dummyPlayerGameSessionData.Add("age", UnityEngine.Random.Range(6, 60));
             dummyPlayerGameSessionData.Add("points", UnityEngine.Random.Range(0, 500));
-            dummyPlayerGameSessionData.Add("player-height", UnityEngine.Random.Range(120, 200));
+            dummyPlayerGameSessionData.Add("player", UnityEngine.Random.Range(120, 200));
             dummyPlayerGameSessionData.Add("duration", UnityEngine.Random.Range(60, 500));
-            dummyPlayerGameSessionData.Add("intensity-level", UnityEngine.Random.Range(1, 3));
-            dummyPlayerGameSessionData.Add("player-action-counts", _T_getDummyPlayerActions(inputAction));
+            dummyPlayerGameSessionData.Add("intensity", UnityEngine.Random.Range(1, 3));
+            dummyPlayerGameSessionData.Add("player-actions", _T_getDummyPlayerActions(inputAction));
             dummyPlayerGameSessionData.Add("mac-address", "-MGDS-zCTSVHfd4JWB2H");
             dummyPlayerGameSessionData.Add("calories", UnityEngine.Random.Range(10, 100));
             dummyPlayerGameSessionData.Add("fitness-points", UnityEngine.Random.Range(500, 20000));

@@ -125,6 +125,18 @@ namespace YipliFMDriverCommunication
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
+                case "penguinpop":
+                    PlayerSession.Instance.gameId = strGameName;
+                    YipliHelper.SetGameClusterId(1);
+                    PlayerSession.Instance.intensityLevel = "easy";
+                    break;
+
+                case "treewarrior":
+                    PlayerSession.Instance.gameId = strGameName;
+                    YipliHelper.SetGameClusterId(2);
+                    PlayerSession.Instance.intensityLevel = "medium";
+                    break;
+
                 default:
                     PlayerSession.Instance.gameId = "";
                     PlayerSession.Instance.intensityLevel = "";
