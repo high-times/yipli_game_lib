@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Yipli_Testing_harness.unity
+- path: Assets/yipli_lib_scene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

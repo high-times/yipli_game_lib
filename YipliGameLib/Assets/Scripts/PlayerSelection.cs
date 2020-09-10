@@ -54,6 +54,7 @@ public class PlayerSelection : MonoBehaviour
     {
         //Read intents and Initialize defaults
         CheckIntentsAndInitializePlayerEnvironment();
+
         /*
          Flag to support mobile gamePlay. Initialize to MatMode by default.
          If the mat is skipped later on with the 'Skip' button, 
@@ -70,8 +71,9 @@ public class PlayerSelection : MonoBehaviour
     //Start this coroutine to check for intents till a valid user is not found.
     IEnumerator KeepCheckingForIntents()
     {
-
         Debug.Log("Started Coroutine : KeepCheckingForIntents");
+        yield return new WaitForSeconds(0.1f);
+#if UNITY_ANDROID
         while (true)
         {
             bIsCheckingForIntents = true;
@@ -86,18 +88,19 @@ public class PlayerSelection : MonoBehaviour
 
             bIsCheckingForIntents = false;
         }
+#endif
     }
 
     async public void playPhoneHolderTutorial()
     {
-        TurnOffAllPanels();
+        TurnOffAllPanelsExceptLoading();
         Debug.Log("Starting PhoneHolder Tutorial for " + defaultPlayer.playerName);
         Debug.Log("Is profilePicLoaded = " + bIsProfilePicLoaded);
         if (!bIsProfilePicLoaded)
         {
             LoadingPanel.SetActive(true);
             bIsProfilePicLoaded = await loadProfilePicAsync(profilePicImage, defaultPlayer.profilePicUrl);
-            LoadingPanel.SetActive(true);
+            LoadingPanel.SetActive(false);
         }
         playerNameText.text = "Hi, " + defaultPlayer.playerName;
         playerNameText.gameObject.SetActive(true);
@@ -205,7 +208,7 @@ public class PlayerSelection : MonoBehaviour
         }
     }
 
-    private void ReadIntents()
+    private void ReadAndroidIntents()
     {
         Debug.Log("Reading intents.");
         AndroidJavaClass UnityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -260,26 +263,42 @@ public class PlayerSelection : MonoBehaviour
         LoadingPanel.SetActive(false);
     }
 
+    private void TurnOffAllPanelsExceptLoading()
+    {
+        phoneHolderInfo.SetActive(false);
+        switchPlayerPanel.SetActive(false);
+        playerSelectionPanel.SetActive(false);
+        onlyOnePlayerPanel.SetActive(false);
+        zeroPlayersPanel.SetActive(false);
+        noNetworkPanel.SetActive(false);
+        GuestUserPanel.SetActive(false);
+        LaunchFromYipliAppPanel.SetActive(false);
+    }
+
     private void CheckIntentsAndInitializePlayerEnvironment()
     {
         try
         {
             Debug.Log("In player Selection Start()");
-            ReadIntents();
+#if UNITY_ANDROID
+            ReadAndroidIntents();
+#endif
         }
         catch (System.Exception exp)// handling of game directing opening, without yipli app
         {
             Debug.Log("Exception occured in GetIntent!!!");
             Debug.Log(exp.Message);
-            //defaultPlayer = null;
 
-            //currentYipliConfig.userId = null;
-            //defaultPlayer = null;
-
-            /*currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
-            defaultPlayer = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49");
-            currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");*/
+            currentYipliConfig.userId = null;
+            defaultPlayer = null;
         }
+
+//Fill dummy data in user/player, for testing from Editor
+#if UNITY_EDITOR
+        currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
+        defaultPlayer = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49");
+        currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
+#endif
 
         //Setting User Id in the scriptable Object
         InitializeUserId();

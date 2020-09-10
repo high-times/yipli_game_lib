@@ -61,7 +61,6 @@ public static class YipliHelper
         {
             Debug.Log(e);
             Application.OpenURL("market://details?id=" + yipliAppBundleId);
-            //zeroPlayersText.text = "Yipli App is not installed. Install Yipli from market place to continue playing.";
         }
 #endif
     }
