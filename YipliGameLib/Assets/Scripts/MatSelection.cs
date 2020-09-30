@@ -57,6 +57,10 @@ public class MatSelection : MonoBehaviour
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
             Debug.Log("No Mat found in cache.");
             NoMatPanel.SetActive(true);
+#if UNITY_EDITOR
+            currentYipliConfig.matPlayMode = false;
+            StartCoroutine(LoadMainGameScene());
+#endif
         }
     }
     public void SkipMat()

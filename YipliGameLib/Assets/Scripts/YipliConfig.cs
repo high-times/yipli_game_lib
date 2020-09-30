@@ -20,4 +20,7 @@ public class YipliConfig : ScriptableObject
 
     [HideInInspector]
     public bool bIsMatIntroDone;
+
+    [HideInInspector]
+    public string gameMode;
 }

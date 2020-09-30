@@ -322,6 +322,30 @@ public static class FirebaseDBHandler
         return mats;
     }
 
+    /* The function to store game data to backend without gamePlay. 
+     * This is to be called by your games shop manager module.*/
+    public static async Task UpdateStoreData(string strUserId, string strPlayerId, string strGameId, Dictionary<string, object> dStoreData, PostUserCallback callback)
+    {
+        await auth.SignInAnonymouslyAsync().ContinueWith(async task =>
+        {
+            if (task.IsCanceled)
+            {
+                Debug.LogError("SignInAnonymouslyAsync was canceled.");
+                return;
+            }
+            if (task.IsFaulted)
+            {
+                Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
+                return;
+            }
+            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                newUser.DisplayName, newUser.UserId);
+            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+            await reference.Child("profiles/users/" + strUserId).Child("players").Child(strPlayerId).Child("activity-statistics/games-statistics").Child(strGameId).Child("game-data").UpdateChildrenAsync(dStoreData);
+        });
+    }
 
     /*
      * profilePicUrl : Player profile pic property stored already 

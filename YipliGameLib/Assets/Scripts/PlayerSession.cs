@@ -105,6 +105,11 @@ public class PlayerSession : MonoBehaviour
         return currentYipliConfig.playerInfo.playerName;
     }
 
+    public string GetCurrentPlayerId()
+    {
+        return currentYipliConfig.playerInfo.playerId;
+    }   
+
     public void ChangePlayer()
     {
         _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
@@ -421,6 +426,18 @@ public class PlayerSession : MonoBehaviour
         }
         Debug.Log("Setting bIsBleConnectionCoroutineRunning to false");
         bIsBleConnectionCoroutineRunning = false;
+    }
+
+    // Update store data witout gameplay. To be called by games Shop Manager.
+    public async Task UpdateStoreData(string gameId, Dictionary<string, object> dStoreData)
+    {
+        await FirebaseDBHandler.UpdateStoreData(
+            currentYipliConfig.userId,
+            currentYipliConfig.playerInfo.playerId,
+            gameId,
+            dStoreData,
+            () => { Debug.Log("Got Game data successfully"); }
+        );
     }
 
     public void LoadingScreenSetActive(bool bOn)
