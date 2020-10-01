@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class YipliHelper
 {
-    private static string yipliAppBundleId = "org.hightimeshq.yipli"; //todo: Change this later
+    private static string yipliAppBundleId = "org.yipli.app"; //todo: Change this later
 
     public static int GetGameClusterId()
     {
