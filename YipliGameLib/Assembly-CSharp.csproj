@@ -67,7 +67,10 @@
     <Compile Include="Assets\Scripts\FirebaseDBHandler.cs" />
     <Compile Include="Assets\Scripts\GamelibSounds.cs" />
     <Compile Include="Assets\Scripts\InitBLE.cs" />
+    <Compile Include="Assets\Scripts\MP_GameStateManager.cs" />
     <Compile Include="Assets\Scripts\MatSelection.cs" />
+    <Compile Include="Assets\Scripts\MultiPlayerData.cs" />
+    <Compile Include="Assets\Scripts\MultiPlayerSelection.cs" />
     <Compile Include="Assets\Scripts\PlayerSelection.cs" />
     <Compile Include="Assets\Scripts\PlayerSession.cs" />
     <Compile Include="Assets\Scripts\PostPlayerSessions.cs" />

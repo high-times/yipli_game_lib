@@ -127,14 +127,55 @@ namespace YipliFMDriverCommunication
 
                 case "penguinpop":
                     PlayerSession.Instance.gameId = strGameName;
-                    YipliHelper.SetGameClusterId(1);
-                    PlayerSession.Instance.intensityLevel = "easy";
+                    YipliHelper.SetGameClusterId(4);
+                    PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "treewarrior":
                     PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
+                    break;
+
+                case "tugofwar":
+                    PlayerSession.Instance.gameId = strGameName;
+                    YipliHelper.SetGameClusterId(4);
+                    PlayerSession.Instance.intensityLevel = "medium";
+                    break;
+
+                default:
+                    PlayerSession.Instance.gameId = "";
+                    PlayerSession.Instance.intensityLevel = "";
+                    break;
+            }
+        }
+        public static void SetYipliMultiplayerGameInfo(string strGameName)
+        {
+            switch (strGameName.ToLower())
+            {
+                
+                case "penguinpop":
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.gameId = strGameName;
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.gameId = strGameName;
+                    YipliHelper.SetGameClusterId(4);
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.intensityLevel = "medium";
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.intensityLevel = "medium";
+                    break;
+
+                case "treewarrior":
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.gameId = strGameName;
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.gameId = strGameName;
+                    YipliHelper.SetGameClusterId(2);
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.intensityLevel = "medium";
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.intensityLevel = "medium";
+                    break;
+
+                case "tugofwar":
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.gameId = strGameName;
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.gameId = strGameName;
+                    YipliHelper.SetGameClusterId(4);
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.intensityLevel = "medium";
+                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.intensityLevel = "medium";
                     break;
 
                 default:

@@ -22,5 +22,5 @@ public class YipliConfig : ScriptableObject
     public bool bIsMatIntroDone;
 
     [HideInInspector]
-    public string gameMode;
+    public MP_GameStateManager MP_GameStateManager;
 }
