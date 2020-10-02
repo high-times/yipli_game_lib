@@ -338,13 +338,13 @@ public class PlayerSelection : MonoBehaviour
 
         TurnOffAllPanels();
 
-        if (YipliHelper.checkInternetConnection())
-        {
-            LoadingPanel.SetActive(true);
-            //Get Current player details from userId
-            defaultPlayer = await FirebaseDBHandler.GetCurrentPlayerdetails(currentYipliConfig.userId, () => { Debug.Log("Got the current player details from db."); });
-            LoadingPanel.SetActive(false);
-        }
+        //if (YipliHelper.checkInternetConnection())
+        //{
+        //    LoadingPanel.SetActive(true);
+        //    //Get Current player details from userId
+        //    defaultPlayer = await FirebaseDBHandler.GetCurrentPlayerdetails(currentYipliConfig.userId, () => { Debug.Log("Got the current player details from db."); });
+        //    LoadingPanel.SetActive(false);
+        //}
 
         if (defaultPlayer != null)
         {
