@@ -93,9 +93,13 @@ public static class YipliHelper
         }
           
         return true;
+
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+        Debug.Log("Yipli App validation for windows isnt required. Returning true");
+        return true;
 #else
         Debug.Log("OS not supported. Returnin false.");
-         return false;
+        return false;
 #endif
     }
 }

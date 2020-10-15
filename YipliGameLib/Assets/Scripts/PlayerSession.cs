@@ -24,6 +24,7 @@ public class PlayerSession : MonoBehaviour
     private float duration;
     private float calories;
     private float fitnesssPoints;
+    private int xp;
     public string intensityLevel = ""; // to be decided by the game.
     private IDictionary<YipliUtils.PlayerActions, int> playerActionCounts; // to be updated by the player movements
     private IDictionary<string, string> playerGameData; // to be used to store the player gameData like Highscore, last played level etc.
@@ -314,6 +315,13 @@ public class PlayerSession : MonoBehaviour
 
     #region Single Player Session Functions
 
+    public void ReInitializeSPSession(string GameId)
+    {
+        points = 0;
+        duration = 0;
+        bIsPaused = false;
+        ActionAndGameInfoManager.SetYipliGameInfo(GameId);
+    }
 
     public IDictionary<YipliUtils.PlayerActions, int> getPlayerActionCounts()
     {
@@ -378,6 +386,7 @@ public class PlayerSession : MonoBehaviour
 
         calories = YipliUtils.GetCaloriesBurned(getPlayerActionCounts());
         fitnesssPoints = YipliUtils.GetFitnessPoints(getPlayerActionCounts());
+        xp = YipliUtils.GetXP(Math.Ceiling(duration));
 
         if (0 == ValidateSessionBeforePosting())
         {
@@ -395,7 +404,7 @@ public class PlayerSession : MonoBehaviour
         if (gameId == null || gameId == "")
         {
             Debug.Log("gameId is not set");
-            return -1;
+            return -1;  
         }
         if (playerId == null || playerId == "")
         {
@@ -477,6 +486,7 @@ public class PlayerSession : MonoBehaviour
         x.Add("mp-session-id", mpSessionUUID);
         x.Add("calories", (int)playerDetails.calories);
         x.Add("fitness-points", (int)playerDetails.fitnesssPoints);
+        x.Add("xp", xp);
         if (playerGameData != null)
         {
             if (playerGameData.Count > 0)

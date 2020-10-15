@@ -19,6 +19,15 @@ public class YipliUtils
     }
 
     /* ******Gamification*******
+    * Function to be called after the gameplay for Experience Points for every game
+    * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
+    */
+    public static int GetXP(double secs)
+    {
+        return (int)secs/10;
+    }
+
+    /* ******Gamification*******
      * Function to be called after the gameplay for Report card screen for every game
      * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
      */

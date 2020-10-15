@@ -20,6 +20,30 @@ public static class FirebaseDBHandler
 
     public delegate void PostUserCallback();
 
+    /* The function call to be allowed only if network is available */
+    public static async Task<string> GetUserIdFromCode(string code)
+    {
+        string userId = "";
+        DataSnapshot snapshot = null;
+        try
+        {
+            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+            newUser.DisplayName, newUser.UserId);
+
+            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+            snapshot = await reference.Child("remoteCodes").Child(code).GetValueAsync();
+            userId = snapshot.Child("user-id").Value.ToString();
+        }
+        catch (Exception exp)
+        {
+            Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
+        }
+
+        return userId;
+    }
+
     // Adds a PlayerSession to the Firebase Database
     public static void PostPlayerSession(PlayerSession session, PostUserCallback callback)
     {
@@ -106,31 +130,31 @@ public static class FirebaseDBHandler
         });
     }
 
-    public static void ChangeCurrentPlayerInBackend(string strUserId, string strPlayerId, PostUserCallback callback)
-    {
-        auth.SignInAnonymouslyAsync().ContinueWith(task =>
-        {
-            if (task.IsCanceled)
-            {
-                Debug.LogError("SignInAnonymouslyAsync was canceled.");
-                return;
-            }
-            if (task.IsFaulted)
-            {
-                Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
-                return;
-            }
+    //public static void ChangeCurrentPlayerInBackend(string strUserId, string strPlayerId, PostUserCallback callback)
+    //{
+    //    auth.SignInAnonymouslyAsync().ContinueWith(task =>
+    //    {
+    //        if (task.IsCanceled)
+    //        {
+    //            Debug.LogError("SignInAnonymouslyAsync was canceled.");
+    //            return;
+    //        }
+    //        if (task.IsFaulted)
+    //        {
+    //            Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
+    //            return;
+    //        }
 
-            Firebase.Auth.FirebaseUser newUser = task.Result;
-            Debug.LogFormat("User signed in successfully: {0} ({1})",
-                newUser.DisplayName, newUser.UserId);
+    //        Firebase.Auth.FirebaseUser newUser = task.Result;
+    //        Debug.LogFormat("User signed in successfully: {0} ({1})",
+    //            newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+    //        FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //        DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
-            reference.Child("profiles/users").Child(strUserId).Child("current-player-id").SetValueAsync(strPlayerId);
-        });
-    }
+    //        reference.Child("profiles/users").Child(strUserId).Child("current-player-id").SetValueAsync(strPlayerId);
+    //    });
+    //}
 
     /* The function call to be allowed only if network is available */
     public static async Task<DataSnapshot> GetGameData(string userId, string playerId, string gameId, PostUserCallback callback)
@@ -203,60 +227,60 @@ public static class FirebaseDBHandler
         return players;
     }
 
-    /* The function call to be allowed only if network is available */
-    public static async Task<YipliPlayerInfo> GetCurrentPlayerdetails(string userId, PostUserCallback callback)
-    {
-        Debug.Log("Getting the Default player from backend");
+    ///* The function call to be allowed only if network is available */
+    //public static async Task<YipliPlayerInfo> GetCurrentPlayerdetails(string userId, PostUserCallback callback)
+    //{
+    //    Debug.Log("Getting the Default player from backend");
 
-        DataSnapshot snapshot = null;
-        YipliPlayerInfo defaultPlayer = new YipliPlayerInfo();//Cant return null defaultPlayer. Initialze the default player.
+    //    DataSnapshot snapshot = null;
+    //    YipliPlayerInfo defaultPlayer = new YipliPlayerInfo();//Cant return null defaultPlayer. Initialze the default player.
 
-        if (userId.Equals(null) || userId.Equals(""))
-        {
-            Debug.Log("User ID not found");
-        }
-        else
-        {
-            try
-            {
-                Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
-                Debug.LogFormat("User signed in successfully: {0} ({1})",
-                newUser.DisplayName, newUser.UserId);
+    //    if (userId.Equals(null) || userId.Equals(""))
+    //    {
+    //        Debug.Log("User ID not found");
+    //    }
+    //    else
+    //    {
+    //        try
+    //        {
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Debug.LogFormat("User signed in successfully: {0} ({1})",
+    //            newUser.DisplayName, newUser.UserId);
 
-                FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
-                DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
-                //First get the current player id from user Id
-                snapshot = await reference.Child("profiles/users").Child(userId).GetValueAsync();
-                string playerId = snapshot.Child("current-player-id").Value?.ToString() ?? "";
+    //            //First get the current player id from user Id
+    //            snapshot = await reference.Child("profiles/users").Child(userId).GetValueAsync();
+    //            string playerId = snapshot.Child("current-player-id").Value?.ToString() ?? "";
 
-                //Now get the complete player details from Player Id
-                DataSnapshot defaultPlayerSnapshot = await reference.Child("profiles/users/" + userId + "/players/" + playerId).GetValueAsync();
+    //            //Now get the complete player details from Player Id
+    //            DataSnapshot defaultPlayerSnapshot = await reference.Child("profiles/users/" + userId + "/players/" + playerId).GetValueAsync();
 
-                defaultPlayer = new YipliPlayerInfo(defaultPlayerSnapshot, defaultPlayerSnapshot.Key);
+    //            defaultPlayer = new YipliPlayerInfo(defaultPlayerSnapshot, defaultPlayerSnapshot.Key);
 
-                if (defaultPlayer.playerId != null)
-                {
-                    //Do Nothing
-                    Debug.Log("Found Default player : " + defaultPlayer.playerId);
-                }
-                else
-                {
-                    //Case to handle if the default player object doesnt exist in backend/or is corrupted
-                    Debug.Log("Default Player Not found. Returning null.");
-                    return null;
-                }
-            }
-            catch(Exception exp)
-            {
-                //If couldnt get defualt player details from the backend, return null.
-                Debug.Log("Failed to GetAllPlayerdetails: " + exp.Message);
-                return null;
-            }
-        }
+    //            if (defaultPlayer.playerId != null)
+    //            {
+    //                //Do Nothing
+    //                Debug.Log("Found Default player : " + defaultPlayer.playerId);
+    //            }
+    //            else
+    //            {
+    //                //Case to handle if the default player object doesnt exist in backend/or is corrupted
+    //                Debug.Log("Default Player Not found. Returning null.");
+    //                return null;
+    //            }
+    //        }
+    //        catch(Exception exp)
+    //        {
+    //            //If couldnt get defualt player details from the backend, return null.
+    //            Debug.Log("Failed to GetAllPlayerdetails: " + exp.Message);
+    //            return null;
+    //        }
+    //    }
 
-        return defaultPlayer;
-    }
+    //    return defaultPlayer;
+    //}
 
 
     // Mat related queries
