@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f40c8c606cc173f4eb200ee27aa3e131, type: 3}
   m_Name: Yipli Config
   m_EditorClassIdentifier: 
-  callbackLevel: 
+  callbackLevel: DemoGameScene
   userId: F9zyHSRJUCb0Ctc15F9xkLFSH5f1
-  matPlayMode: 1
+  gameId: default
+  bIsMatIntroDone: 1
+  onlyMatPlayMode: 1

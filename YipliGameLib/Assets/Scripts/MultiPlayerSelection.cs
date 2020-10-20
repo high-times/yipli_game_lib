@@ -37,26 +37,16 @@ public class MultiPlayerSelection : MonoBehaviour
     public GameObject PlayerButtonPrefab;
     private List<GameObject> generatedObjects = new List<GameObject>();
     private List<Button> playerButtons = new List<Button>();
-
-    public List<YipliPlayerInfo> players;
-
+    
     private GameObject playerOneButton, playerTwoButton, computerPlayerButton;
     private int playerOneIndex, playerTwoIndex;
 
     public bool isSwitchingPlayerOne, isSwitchingPlayerTwo;
 
-    private async void Start()
+    private void Start()
     {
-        await GetPlayersListAsync();
         isSwitchingPlayerOne = false;
         isSwitchingPlayerTwo = false;
-    }
-
-
-
-    public async System.Threading.Tasks.Task GetPlayersListAsync()
-    {
-        players = await FirebaseDBHandler.GetAllPlayerdetails(currentYipliConfig.userId, () => { Debug.Log("Got the player details from db"); });
     }
 
     public void CreatePlayersList(int switchingPlayer)
@@ -71,15 +61,15 @@ public class MultiPlayerSelection : MonoBehaviour
 
         Quaternion spawnrotation = Quaternion.identity;
         Vector3 playerTilePosition = PlayersContainer.transform.localPosition;
-        for (int i = 0; i < players.Count; i++)
+        for (int i = 0; i < currentYipliConfig.allPlayersInfo.Count; i++)
         {
-            PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Add(players[i].playerName);
+            PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Add(currentYipliConfig.allPlayersInfo[i].playerName);
             playerButton = Instantiate(PlayerButtonPrefab, playerTilePosition, spawnrotation) as GameObject;
-            playerButton.name = players[i].playerName;
-            playerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = players[i].playerName;
+            playerButton.name = currentYipliConfig.allPlayersInfo[i].playerName;
+            playerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = currentYipliConfig.allPlayersInfo[i].playerName;
             playerButton.transform.SetParent(PlayersContainer.transform, false);
 
-            if (players[i].playerName == PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
+            if (currentYipliConfig.allPlayersInfo[i].playerName == PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
             {
                 playerOneIndex = i;
                 playerOneButton = playerButton;
@@ -89,7 +79,7 @@ public class MultiPlayerSelection : MonoBehaviour
                     continue;
                 }
             }
-            else if (players[i].playerName == PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerTwo)
+            else if (currentYipliConfig.allPlayersInfo[i].playerName == PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerTwo)
             {
                 playerTwoIndex = i;
                 playerTwoButton = playerButton;

@@ -36,12 +36,22 @@ public static class YipliHelper
         return bIsNetworkAvailable;
     }
 
+    
+    //TODO : to be removed
     public static string GetBleConnectionStatus()
     {
-        Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getBLEStatus());
-        if (PlayerSession.Instance.currentYipliConfig.matPlayMode == false)
+        Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getMatConnectionStatus());
+        if (!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
             return "connected";
-        return InitBLE.getBLEStatus();
+        return InitBLE.getMatConnectionStatus();
+    }
+
+    public static string GetMatConnectionStatus()
+    {
+        if (!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
+            return "connected";
+        Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getMatConnectionStatus());
+        return InitBLE.getMatConnectionStatus();
     }
 
     public static void GoToYipli()

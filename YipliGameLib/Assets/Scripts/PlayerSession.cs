@@ -7,20 +7,11 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using YipliFMDriverCommunication;
 
 public class PlayerSession : MonoBehaviour
 {
-    private string userId = ""; // to be recieved from Yipli
-    public string gameId = ""; // to be assigned to every game.
-    private string playerId = ""; // to be recieved from Yipli for each game
-    private float points; // Game points / coins
-    private string playerAge = ""; //Current age of the player
-    private string playerHeight = ""; //Current height of the player
-    private string playerWeight = ""; //Current height of the player
-    private string matId = "";
-    private string matMacAddress;
+    private float gamePoints; // Game points / coins.
     private float duration;
     private float calories;
     private float fitnesssPoints;
@@ -49,8 +40,15 @@ public class PlayerSession : MonoBehaviour
     [JsonIgnore]
     public static PlayerSession Instance { get { return _instance; } }
 
+
+    //Delegates for Firebase Listeners
+    public delegate void OnPlayerFound();
+    public static event OnPlayerFound NewPlayerFound;
+
     private void Awake()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
         if (_instance != null && _instance != this)
         {
             Debug.Log("Destroying current instance of playersession and reinitializing");
@@ -79,22 +77,34 @@ public class PlayerSession : MonoBehaviour
 
     public void Start()
     {
+        //You are here, means PlayerInfo is found.
+        //Invoke the player found event, to get the player data.
+        if (currentYipliConfig.gameId.Length > 1)
+        {
+            NewPlayerFound();
+        }
+        else
+        {
+            Debug.LogError("Game Id not Set");
+        }
+        
         Debug.Log("Starting the BLE routine check in PlayerSession Start()");
         if (!_instance.currentYipliConfig.callbackLevel.Equals("Yipli_Testing_harness"))
             StartCoroutine(CheckBleRoutine());
     }
 
-    public void Update()
-    {
-        try
-        {
-            Debug.Log("Game Cluster Id : " + YipliHelper.GetGameClusterId());
-        }
-        catch(Exception exp)
-        {
-            Debug.Log("Exception is getting Cluster ID" + exp.Message);
-        }
-    }
+    //public void Update()
+    //{
+    //    try
+    //    {
+    //        Debug.Log("Game Cluster Id : " + YipliHelper.GetGameClusterId());
+    //    }
+    //    catch(Exception exp)
+    //    {
+    //        Debug.Log("Exception is getting Cluster ID" + exp.Message);
+    //    }
+    //}
+
     public string GetCurrentPlayer()
     {
         return currentYipliConfig.playerInfo.playerName;
@@ -105,12 +115,12 @@ public class PlayerSession : MonoBehaviour
         return currentYipliConfig.playerInfo.playerId;
     }
 
-
     public void ChangePlayer()
     {
         _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
         Debug.Log("Updating the callBackLevel Value to :" + _instance.currentYipliConfig.callbackLevel);
         Debug.Log("Loading Yipli scene for player Selection...");
+        currentYipliConfig.bIsChangePlayerCalled = true;
         SceneManager.LoadScene("yipli_lib_scene");
     }
 
@@ -124,16 +134,16 @@ public class PlayerSession : MonoBehaviour
         }
     }
 
-    // Get player game data
-    public async Task<DataSnapshot> GetGameData(string gameId)
+    //To be called from void awake/start of the games 1st scene
+    public void SetGameId(string gameName)
     {
-        DataSnapshot dataSnapShot = await FirebaseDBHandler.GetGameData(
-            currentYipliConfig.userId,
-            currentYipliConfig.playerInfo.playerId,
-            gameId,
-            () => { Debug.Log("Got Game data successfully"); }
-        );
-        return dataSnapShot ?? null;
+        currentYipliConfig.gameId = gameName;
+    }
+
+    // Get player game data
+    public DataSnapshot GetGameData()
+    {
+        return currentYipliConfig.gameDataForCurrentPlayer ?? null;
     }
 
     //First function to be called only once when the game starts()
@@ -144,17 +154,10 @@ public class PlayerSession : MonoBehaviour
         //Destroy current player session data
         calories = 0;
         fitnesssPoints = 0;
-        points = 0;
+        gamePoints = 0;
         duration = 0;
         Debug.Log("Aborting current player session.");
     }
-
-
-
-    //Function to validate all the session parameters before writing to DB
-    //To be called from GamePause function
-    //To be called from GameResume function
-
 
     //to be called from all the player movment actions handled script
     //To be called from GameObject FixedUpdate
@@ -300,45 +303,45 @@ public class PlayerSession : MonoBehaviour
     }
 
     // Update store data witout gameplay. To be called by games Shop Manager.
-    public async Task UpdateStoreData(string gameId, Dictionary<string, object> dStoreData)
+    public async Task UpdateStoreData(Dictionary<string, object> dStoreData)
     {
         await FirebaseDBHandler.UpdateStoreData(
             currentYipliConfig.userId,
             currentYipliConfig.playerInfo.playerId,
-            gameId,
+            currentYipliConfig.gameId,
             dStoreData,
             () => { Debug.Log("Got Game data successfully"); }
         );
     }
 
-
-
     #region Single Player Session Functions
 
-    public void ReInitializeSPSession(string GameId)
+    public void ReInitializeSPSession()
     {
-        points = 0;
+        gamePoints = 0;
         duration = 0;
         bIsPaused = false;
-        ActionAndGameInfoManager.SetYipliGameInfo(GameId);
+        ActionAndGameInfoManager.SetYipliGameInfo(currentYipliConfig.gameId);
     }
 
     public IDictionary<YipliUtils.PlayerActions, int> getPlayerActionCounts()
     {
         return playerActionCounts;
     }
+
+
     public Dictionary<string, dynamic> GetPlayerSessionDataJsonDic()
     {
         Dictionary<string, dynamic> x;
         x = new Dictionary<string, dynamic>();
-        x.Add("game-id", gameId);
-        x.Add("user-id", userId);
-        x.Add("mat-id", matId);
-        x.Add("mac-address", matMacAddress);
-        x.Add("player-id", playerId);
-        x.Add("age", int.Parse(playerAge));
-        x.Add("points", (int)points);
-        x.Add("height", playerHeight);
+        x.Add("game-id", currentYipliConfig.gameId);
+        x.Add("user-id", currentYipliConfig.userId);
+        x.Add("mat-id", currentYipliConfig.matInfo.matId);
+        x.Add("mac-address", currentYipliConfig.matInfo.macAddress);
+        x.Add("player-id", currentYipliConfig.playerInfo.playerId);
+        x.Add("age", int.Parse(currentYipliConfig.playerInfo.playerAge));
+        x.Add("points", (int)gamePoints);
+        x.Add("height", currentYipliConfig.playerInfo.playerHeight);
         x.Add("duration", (int)duration);
         x.Add("intensity", intensityLevel);
         x.Add("player-actions", playerActionCounts);
@@ -363,26 +366,21 @@ public class PlayerSession : MonoBehaviour
 
         return x;
     }
-    public void StartSPSession(string GameId)
+
+    public void StartSPSession()
     {
         Debug.Log("Starting current player session.");
-        userId = currentYipliConfig.userId ?? "";
-        playerId = currentYipliConfig.playerInfo.playerId;
-        playerAge = currentYipliConfig.playerInfo.playerAge ?? "";
-        playerHeight = currentYipliConfig.playerInfo.playerHeight ?? "";
-        playerWeight = currentYipliConfig.playerInfo.playerWeight ?? "";
         playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
-        points = 0;
+        gamePoints = 0;
         duration = 0;
         bIsPaused = false;
-        ActionAndGameInfoManager.SetYipliGameInfo(GameId);
-        matId = currentYipliConfig.matInfo.matId;
-        matMacAddress = currentYipliConfig.matInfo.macAddress;
+        ActionAndGameInfoManager.SetYipliGameInfo(currentYipliConfig.gameId);
     }
+
     public void StoreSPSession(float gamePoints)
     {
         Debug.Log("Storing current player session to backend database.");
-        points = gamePoints;
+        this.gamePoints = gamePoints;
 
         calories = YipliUtils.GetCaloriesBurned(getPlayerActionCounts());
         fitnesssPoints = YipliUtils.GetFitnessPoints(getPlayerActionCounts());
@@ -399,14 +397,19 @@ public class PlayerSession : MonoBehaviour
             Debug.Log("Session not posted : Validation failed for sessoin data.");
         }
     }
+
+
+    //Function to validate all the session parameters before writing to DB
+    //To be called from GamePause function
+    //To be called from GameResume function
     private int ValidateSessionBeforePosting()
     {
-        if (gameId == null || gameId == "")
+        if (currentYipliConfig.gameId == null || currentYipliConfig.gameId == "")
         {
             Debug.Log("gameId is not set");
             return -1;  
         }
-        if (playerId == null || playerId == "")
+        if (currentYipliConfig.playerInfo.playerId == null || currentYipliConfig.playerInfo.playerId == "")
         {
             Debug.Log("playerId is not set");
             return -1;
@@ -505,13 +508,12 @@ public class PlayerSession : MonoBehaviour
 
         return x;
     }
-    public void StartMPSession(string GameId)
+    public void StartMPSession()
     {
         Debug.Log("Starting multi player session.");
-        userId = currentYipliConfig.userId ?? "";
         playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
 
-        ActionAndGameInfoManager.SetYipliMultiplayerGameInfo(GameId);
+        ActionAndGameInfoManager.SetYipliMultiplayerGameInfo(currentYipliConfig.gameId);
 
         currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.points = 0;
         currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.points = 0;
@@ -521,11 +523,6 @@ public class PlayerSession : MonoBehaviour
         duration = 0;
 
         bIsPaused = false;
-
-
-        matId = currentYipliConfig.matInfo.matId;
-        matMacAddress = currentYipliConfig.matInfo.macAddress;
-
     }
     public void StoreMPSession(float playerOneGamePoints, float playerTwoGamePoints)
     {

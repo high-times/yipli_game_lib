@@ -63,3 +63,4 @@ YipliGameLib/Library/SourceAssetDB
 *.meta
 *.meta
 YipliGameLib/Temp/UnityLockfile
+YipliGameLib/Assets/Plugins/Windows/PCFMDriver/ikvm-native-win32-x86.dll.meta

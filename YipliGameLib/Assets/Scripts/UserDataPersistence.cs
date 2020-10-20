@@ -25,6 +25,9 @@ public static class UserDataPersistence
         SavePropertyValue("player-dob", playerInfo.playerDob);
         SavePropertyValue("player-height", playerInfo.playerHeight);
         SavePropertyValue("player-weight", playerInfo.playerWeight);
+
+        if(playerInfo.profilePicUrl != null)
+        SavePropertyValue("player-profilePicUrl", playerInfo.profilePicUrl);
         PlayerPrefs.Save();
     }
 
@@ -36,7 +39,8 @@ public static class UserDataPersistence
                 GetPropertyValue("player-name"),
                 GetPropertyValue("player-dob"), 
                 GetPropertyValue("player-height"), 
-                GetPropertyValue("player-weight"));
+                GetPropertyValue("player-weight"),
+                GetPropertyValue("player-profilePicUrl"));
 
         Debug.Log("Return null for GetSavedPlayer");
         return null;

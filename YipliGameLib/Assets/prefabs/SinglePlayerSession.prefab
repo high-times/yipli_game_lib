@@ -1032,6 +1032,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5910944439154140264}
   - component: {fileID: 5910944439154140265}
+  - component: {fileID: 5172037731901429760}
   m_Layer: 0
   m_Name: SinglePlayerSession
   m_TagString: Untagged
@@ -1067,11 +1068,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22ce8f9f0c6e5240ba0be79633432f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameId: 
   intensityLevel: 
   bleErrorText: {fileID: 3559847490837272204}
   BleErrorPanel: {fileID: 3004118512226563790}
   LoadingScreen: {fileID: 5361826215088768511}
+  currentYipliConfig: {fileID: 11400000, guid: 4f87967ea03eb1743a90e503a6dc0a22, type: 2}
+  GameName: default
+--- !u!114 &5172037731901429760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5910944439154140262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8fd368864828d4d827f8e8b5b3d8de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   currentYipliConfig: {fileID: 11400000, guid: 4f87967ea03eb1743a90e503a6dc0a22, type: 2}
 --- !u!1 &7735226193415373379
 GameObject:

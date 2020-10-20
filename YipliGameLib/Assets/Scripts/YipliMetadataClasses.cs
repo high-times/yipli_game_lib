@@ -17,7 +17,7 @@ public class YipliPlayerInfo
 
     public YipliPlayerInfo() { }
 
-    public YipliPlayerInfo(string playerId, string playerName, string playerDob, string playerHeight, string playerWeight, string gender = "")
+    public YipliPlayerInfo(string playerId, string playerName, string playerDob, string playerHeight, string playerWeight, string profilePicUrl = null, string gender = "")
     {
         this.playerId = playerId;
         this.playerName = char.ToUpper(playerName[0]) + playerName.Substring(1);
@@ -34,6 +34,7 @@ public class YipliPlayerInfo
         this.playerHeight = playerHeight;
         this.playerWeight = playerWeight;
         this.gender = gender;
+        this.profilePicUrl = profilePicUrl;
     }
 
     public YipliPlayerInfo(DataSnapshot snapshot, string key)

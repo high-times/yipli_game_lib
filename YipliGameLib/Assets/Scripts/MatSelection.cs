@@ -16,15 +16,31 @@ public class MatSelection : MonoBehaviour
     public TextMeshProUGUI passwordErrorText;
     public InputField inputPassword;
     public GameObject loadingPanel;
-    private YipliMatInfo yipliMat;
     public GameObject BluetoothSuccessPanel;
 
     public GameObject NoMatPanel;
+    public GameObject SkipMatButton;
     public GameObject secretEntryPanel;
     public YipliConfig currentYipliConfig;
     private string connectionState;
     private int checkMatStatusCount;
     public GameObject tick;
+
+    private void Start()
+    {
+#if UNITY_EDITOR
+        currentYipliConfig.onlyMatPlayMode = false;
+#endif
+        if (currentYipliConfig.onlyMatPlayMode == false)
+        {
+            // Make the Skip button visible
+            SkipMatButton.SetActive(true);
+        }
+        else
+        {
+            SkipMatButton.SetActive(false);
+        }
+    }
 
     public void MatConnectionFlow()
     {
@@ -33,11 +49,10 @@ public class MatSelection : MonoBehaviour
         NoMatPanel.SetActive(false);
 
         string connectionState = "";
-        if (yipliMat != null && yipliMat.macAddress.Length > 0)
+        if (currentYipliConfig.matInfo != null && currentYipliConfig.matInfo.macAddress.Length > 0)
         {
-            connectionState = InitBLE.getBLEStatus();
-
-            if (currentYipliConfig.matPlayMode == false)
+            connectionState = InitBLE.getMatConnectionStatus();
+            if (currentYipliConfig.onlyMatPlayMode == false)
                 connectionState = "connected";
 
             if (connectionState.Equals("CONNECTED", StringComparison.OrdinalIgnoreCase))
@@ -58,7 +73,8 @@ public class MatSelection : MonoBehaviour
             Debug.Log("No Mat found in cache.");
             NoMatPanel.SetActive(true);
 #if UNITY_EDITOR
-            currentYipliConfig.matPlayMode = false;
+            secretEntryPanel.SetActive(false);  
+            NoMatPanel.SetActive(false);
             StartCoroutine(LoadMainGameScene());
 #endif
         }
@@ -76,7 +92,7 @@ public class MatSelection : MonoBehaviour
         if (inputPassword.text == "123456")
         {
             //load last Scene
-            currentYipliConfig.matPlayMode = false;
+            currentYipliConfig.onlyMatPlayMode = false;
             StartCoroutine(LoadMainGameScene());
         }
         else
@@ -112,6 +128,7 @@ public class MatSelection : MonoBehaviour
 
 
         BluetoothSuccessPanel.SetActive(false);
+ 
         //load last Scene
         SceneManager.LoadScene(currentYipliConfig.callbackLevel); 
     }
@@ -122,25 +139,25 @@ public class MatSelection : MonoBehaviour
         NoMatPanel.SetActive(true);
     }
 
-    public async void ReCheckMatConnection()
+    public void ReCheckMatConnection()
     {
         Debug.Log("Checking Mat.");
         NoMatPanel.SetActive(false);
         string result = "failure";
         //To handle the case of No mats registered
-        if ((yipliMat == null) || (yipliMat.macAddress.Length == 0))
+        if ((currentYipliConfig.matInfo == null) || (currentYipliConfig.matInfo.macAddress.Length == 0))
         {
             loadingPanel.SetActive(true);
-            result = await ValidateAndConnectMat();
+            result = ValidateAndConnectMat();
             loadingPanel.SetActive(false);
         }
 
         string connectionState = "";
-        if ((yipliMat != null) || (result == "success"))
+        if ((currentYipliConfig.matInfo != null) || (result == "success"))
         {
             try
             {
-                connectionState = InitBLE.getBLEStatus();
+                connectionState = InitBLE.getMatConnectionStatus();
             }
             catch (Exception exp)
             {
@@ -159,8 +176,8 @@ public class MatSelection : MonoBehaviour
                 try
                 {
                     loadingPanel.SetActive(true);
-                    string res = await ValidateAndConnectMat();
-                    connectionState = InitBLE.getBLEStatus();
+                    string res = ValidateAndConnectMat();
+                    connectionState = InitBLE.getMatConnectionStatus();
                     loadingPanel.SetActive(false);
 
                     if (res == "success")
@@ -196,7 +213,7 @@ public class MatSelection : MonoBehaviour
         }
     }
 
-    public async Task<string> ValidateAndConnectMat()
+    public string ValidateAndConnectMat()
     {
         Debug.Log("Starting mat connection");
         try
@@ -204,11 +221,9 @@ public class MatSelection : MonoBehaviour
             if (YipliHelper.checkInternetConnection())
             {
                 //Allow backent Get calls only if network is reachable
-                yipliMat = await FirebaseDBHandler.GetCurrentMatDetails(currentYipliConfig.userId, () => { Debug.Log("Got the Mat details from db"); });
-                if(yipliMat != null)
+                if (currentYipliConfig.matInfo != null)
                 {
-                    currentYipliConfig.matInfo = yipliMat;
-                    UserDataPersistence.SaveMatToDevice(yipliMat);
+                    UserDataPersistence.SaveMatToDevice(currentYipliConfig.matInfo);
                 }
             }
             else
@@ -216,25 +231,21 @@ public class MatSelection : MonoBehaviour
                 //No Network case handling
                 Debug.Log("Network not reachable");
                 //Take the default mat info stored in the Config
-                if (currentYipliConfig.matInfo != null)
+                if (currentYipliConfig.matInfo == null)
                 {
-                    yipliMat = currentYipliConfig.matInfo;
-                }
-                else
-                {
-                    yipliMat = UserDataPersistence.GetSavedMat();
+                    currentYipliConfig.matInfo = UserDataPersistence.GetSavedMat();
                 }
             }
 
-            if (yipliMat != null)
+            if (currentYipliConfig.matInfo != null)
             {
                 try
                 {
-                    if (yipliMat.macAddress.Length > 1)
+                    if (currentYipliConfig.matInfo.macAddress.Length > 1)
                     {
-                        Debug.Log("connecting to : " + yipliMat.matName);
+                        Debug.Log("connecting to : " + currentYipliConfig.matInfo.matName);
                         //Initiate the connection with the mat.
-                        InitBLE.InitBLEFramework(yipliMat.macAddress, 0);
+                        InitBLE.InitBLEFramework(currentYipliConfig.matInfo.macAddress, 0);
                         return "success";
                     }
                     else

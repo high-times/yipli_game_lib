@@ -84,67 +84,57 @@ namespace YipliFMDriverCommunication
             switch (strGameName.ToLower())
             {
                 case "unleash":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "trapped":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(1);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "joyfuljumps":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(1);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "eggcatcher":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "low";
                     break;
 
                 case "yiplirunner":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "rollingball":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "skater":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(3);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "penguinpop":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(4);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "treewarrior":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 case "tugofwar":
-                    PlayerSession.Instance.gameId = strGameName;
                     YipliHelper.SetGameClusterId(4);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
                 default:
-                    PlayerSession.Instance.gameId = "";
+                    YipliHelper.SetGameClusterId(0);
                     PlayerSession.Instance.intensityLevel = "";
                     break;
             }
@@ -179,7 +169,6 @@ namespace YipliFMDriverCommunication
                     break;
 
                 default:
-                    PlayerSession.Instance.gameId = "";
                     PlayerSession.Instance.intensityLevel = "";
                     break;
             }

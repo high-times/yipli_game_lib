@@ -75,6 +75,7 @@ public static class FirebaseDBHandler
             }));
         });
     }
+
     // Adds a PlayerSession to the Firebase Database
     public static void PostMultiPlayerSession(PlayerSession session,PlayerDetails playerDetails,string mpSessionUUID, PostUserCallback callback)
     {
@@ -157,75 +158,75 @@ public static class FirebaseDBHandler
     //}
 
     /* The function call to be allowed only if network is available */
-    public static async Task<DataSnapshot> GetGameData(string userId, string playerId, string gameId, PostUserCallback callback)
-    {
-        DataSnapshot snapshot = null;
-        if (userId.Equals(null) || playerId.Equals(null) || gameId.Equals(null))
-        {
-            Debug.Log("User ID not found");
-        }
-        else
-        {
-            try
-            {
-                Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
-                Debug.LogFormat("User signed in successfully: {0} ({1})",
-                newUser.DisplayName, newUser.UserId);
+    //public static async Task<DataSnapshot> GetGameData(string userId, string playerId, string gameId, PostUserCallback callback)
+    //{
+    //    DataSnapshot snapshot = null;
+    //    if (userId.Equals(null) || playerId.Equals(null) || gameId.Equals(null))
+    //    {
+    //        Debug.Log("User ID not found");
+    //    }
+    //    else
+    //    {
+    //        try
+    //        {
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Debug.LogFormat("User signed in successfully: {0} ({1})",
+    //            newUser.DisplayName, newUser.UserId);
 
-                FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
-                DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-                snapshot = await reference.Child("profiles/users/" + userId).Child("players").Child(playerId).Child("activity-statistics/games-statistics").Child(gameId).Child("game-data").GetValueAsync();
-            }
-            catch(Exception exp)
-            {
-                Debug.Log("Failed to GetGameData : " + exp.Message);
-            }
-        }
-        return snapshot;
-    }
+    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+    //            snapshot = await reference.Child("profiles/users/" + userId).Child("players").Child(playerId).Child("activity-statistics/games-statistics").Child(gameId).Child("game-data").GetValueAsync();
+    //        }
+    //        catch(Exception exp)
+    //        {
+    //            Debug.Log("Failed to GetGameData : " + exp.Message);
+    //        }
+    //    }
+    //    return snapshot;
+    //}
 
     /* The function call to be allowed only if network is available */
-    public static async Task<List<YipliPlayerInfo>> GetAllPlayerdetails(string userId, PostUserCallback callback)
-    {
-        List<YipliPlayerInfo> players = new List<YipliPlayerInfo>();
-        DataSnapshot snapshot = null;
-        if (userId.Equals(null))
-        {
-            Debug.Log("User ID not found");
-        }
-        else
-        {
-            try
-            {
-                Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
-                Debug.LogFormat("User signed in successfully: {0} ({1})",
-                newUser.DisplayName, newUser.UserId);
+    //public static async Task<List<YipliPlayerInfo>> GetAllPlayerdetails(string userId, PostUserCallback callback)
+    //{
+    //    List<YipliPlayerInfo> players = new List<YipliPlayerInfo>();
+    //    DataSnapshot snapshot = null;
+    //    if (userId.Equals(null))
+    //    {
+    //        Debug.Log("User ID not found");
+    //    }
+    //    else
+    //    {
+    //        try
+    //        {
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Debug.LogFormat("User signed in successfully: {0} ({1})",
+    //            newUser.DisplayName, newUser.UserId);
 
-                FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
-                DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-                snapshot = await reference.Child("profiles/users/" + userId).Child("players").GetValueAsync();
+    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+    //            snapshot = await reference.Child("profiles/users/" + userId).Child("players").GetValueAsync();
 
-                foreach (var childSnapshot in snapshot.Children)
-                {
-                    YipliPlayerInfo playerInstance = new YipliPlayerInfo(childSnapshot, childSnapshot.Key);
-                    if(playerInstance.playerId != null)
-                    {
-                        players.Add(playerInstance);
-                    }
-                    else
-                    {
-                        Debug.Log("Skipping this instance of player, backend seems corrupted.");
-                    }
-                }
-            }
-            catch(Exception exp)
-            {
-                Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
-                return null;
-            }
-        }
-        return players;
-    }
+    //            foreach (var childSnapshot in snapshot.Children)
+    //            {
+    //                YipliPlayerInfo playerInstance = new YipliPlayerInfo(childSnapshot, childSnapshot.Key);
+    //                if(playerInstance.playerId != null)
+    //                {
+    //                    players.Add(playerInstance);
+    //                }
+    //                else
+    //                {
+    //                    Debug.Log("Skipping this instance of player, backend seems corrupted.");
+    //                }
+    //            }
+    //        }
+    //        catch(Exception exp)
+    //        {
+    //            Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
+    //            return null;
+    //        }
+    //    }
+    //    return players;
+    //}
 
     ///* The function call to be allowed only if network is available */
     //public static async Task<YipliPlayerInfo> GetCurrentPlayerdetails(string userId, PostUserCallback callback)
@@ -286,96 +287,96 @@ public static class FirebaseDBHandler
     // Mat related queries
     
     /* The function call to be allowed only if network is available */
-    public static async Task<YipliMatInfo> GetCurrentMatDetails(string userId, PostUserCallback callback)
-    {
-        Debug.Log("Getting the Default mat from backend");
-        DataSnapshot snapshot = null;
-        YipliMatInfo defaultMat = new YipliMatInfo();
+    //public static async Task<YipliMatInfo> GetCurrentMatDetails(string userId, PostUserCallback callback)
+    //{
+    //    Debug.Log("Getting the Default mat from backend");
+    //    DataSnapshot snapshot = null;
+    //    YipliMatInfo defaultMat = new YipliMatInfo();
 
-        if (userId.Equals(null) || userId.Equals(""))
-        {
-            Debug.Log("User ID not found");
-        }
-        else
-        {
-            try
-            {
-                Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
-                Debug.LogFormat("User signed in successfully: {0} ({1})",
-                newUser.DisplayName, newUser.UserId);
+    //    if (userId.Equals(null) || userId.Equals(""))
+    //    {
+    //        Debug.Log("User ID not found");
+    //    }
+    //    else
+    //    {
+    //        try
+    //        {
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Debug.LogFormat("User signed in successfully: {0} ({1})",
+    //            newUser.DisplayName, newUser.UserId);
 
-                FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
-                DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
-                //First get the current player id from user Id
-                snapshot = await reference.Child("profiles/users").Child(userId).GetValueAsync();
+    //            //First get the current mat id from user Id
+    //            snapshot = await reference.Child("profiles/users").Child(userId).GetValueAsync();
 
-                string matId = snapshot.Child("current-mat-id").Value?.ToString() ?? "";
-                //Now get the complete player details from Player Id
-                DataSnapshot defaultMatSnapshot = await reference.Child("profiles/users/" + userId + "/mats/" + matId).GetValueAsync();
-                defaultMat = new YipliMatInfo(defaultMatSnapshot, defaultMatSnapshot.Key);
+    //            string matId = snapshot.Child("current-mat-id").Value?.ToString() ?? "";
+    //            //Now get the complete player details from Player Id
+    //            DataSnapshot defaultMatSnapshot = await reference.Child("profiles/users/" + userId + "/mats/" + matId).GetValueAsync();
+    //            defaultMat = new YipliMatInfo(defaultMatSnapshot, defaultMatSnapshot.Key);
 
-                if (defaultMat.matId != null)
-                {
-                    //Do Nothing
-                    Debug.Log("Found Default mat : " + defaultMat.matId);
-                }
-                else
-                {
-                    //Case to handle if the default mat object doesnt exist in backend/or is corrupted
-                    return null;
-                }
-            }
-            catch(Exception exp)
-            {
-                Debug.Log("Failed to GetAllMatdetails : " + exp.Message);
-                return null;
-            }
-        }
-        return defaultMat;
-    }
+    //            if (defaultMat.matId != null)
+    //            {
+    //                //Do Nothing
+    //                Debug.Log("Found Default mat : " + defaultMat.matId);
+    //            }
+    //            else
+    //            {
+    //                //Case to handle if the default mat object doesnt exist in backend/or is corrupted
+    //                return null;
+    //            }
+    //        }
+    //        catch(Exception exp)
+    //        {
+    //            Debug.Log("Failed to GetAllMatdetails : " + exp.Message);
+    //            return null;
+    //        }
+    //    }
+    //    return defaultMat;
+    //}
 
     /* The function call to be allowed only if network is available */
-    public static async Task<List<YipliMatInfo>> GetAllMatDetails(string userId, PostUserCallback callback)
-    {
-        List<YipliMatInfo> mats = new List<YipliMatInfo>();
-        DataSnapshot snapshot = null;
-        if (userId.Equals(null) || userId.Equals(""))
-        {
-            Debug.Log("User ID not found");
-        }
-        else
-        {
-            try
-            {
-                Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
-                Debug.LogFormat("User signed in successfully: {0} ({1})",
-                newUser.DisplayName, newUser.UserId);
+    //public static async Task<List<YipliMatInfo>> GetAllMatDetails(string userId, PostUserCallback callback)
+    //{
+    //    List<YipliMatInfo> mats = new List<YipliMatInfo>();
+    //    DataSnapshot snapshot = null;
+    //    if (userId.Equals(null) || userId.Equals(""))
+    //    {
+    //        Debug.Log("User ID not found");
+    //    }
+    //    else
+    //    {
+    //        try
+    //        {
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Debug.LogFormat("User signed in successfully: {0} ({1})",
+    //            newUser.DisplayName, newUser.UserId);
 
-                FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
-                DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-                snapshot = await reference.Child("profiles/users/" + userId + "/mats").GetValueAsync();
+    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+    //            snapshot = await reference.Child("profiles/users/" + userId + "/mats").GetValueAsync();
 
-                foreach (var childSnapshot in snapshot.Children)
-                {
-                    YipliMatInfo matInstance = new YipliMatInfo(childSnapshot, childSnapshot.Key);
-                    if(matInstance.matId != null)
-                    {
-                        mats.Add(matInstance);
-                    }
-                    else
-                    {
-                        Debug.Log("Skipping this instance of mat, backend seems corrupted.");
-                    }
-                }
-            }
-            catch(Exception exp)
-            {
-                Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
-            }
-        }
-        return mats;
-    }
+    //            foreach (var childSnapshot in snapshot.Children)
+    //            {
+    //                YipliMatInfo matInstance = new YipliMatInfo(childSnapshot, childSnapshot.Key);
+    //                if(matInstance.matId != null)
+    //                {
+    //                    mats.Add(matInstance);
+    //                }
+    //                else
+    //                {
+    //                    Debug.Log("Skipping this instance of mat, backend seems corrupted.");
+    //                }
+    //            }
+    //        }
+    //        catch(Exception exp)
+    //        {
+    //            Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
+    //        }
+    //    }
+    //    return mats;
+    //}
 
 
     /*
@@ -435,7 +436,7 @@ public static class FirebaseDBHandler
         });
     }
 
-    //Test Harness code
+    //************************ Test Harness code. Do Not modify (- Saurabh) ***************************
     // Adds a PlayerSession to the Firebase Database
     public static void _T_PostDummyPlayerSession(Dictionary<string, dynamic> tempData)
     {
