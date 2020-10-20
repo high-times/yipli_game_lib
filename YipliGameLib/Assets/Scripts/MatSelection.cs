@@ -73,7 +73,7 @@ public class MatSelection : MonoBehaviour
             Debug.Log("No Mat found in cache.");
             NoMatPanel.SetActive(true);
 #if UNITY_EDITOR
-            secretEntryPanel.SetActive(false);  
+            secretEntryPanel.SetActive(false);
             NoMatPanel.SetActive(false);
             StartCoroutine(LoadMainGameScene());
 #endif

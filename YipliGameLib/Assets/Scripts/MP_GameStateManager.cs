@@ -50,9 +50,9 @@ public class MP_GameStateManager
 
     private YipliPlayerInfo GetPlayerInfoFromPlayerName(string playerName)
     {
-        if (MultiPlayerSelection.instance.players.Count > 0)
+        if (MultiPlayerSelection.instance.currentYipliConfig.allPlayersInfo.Count > 0)
         {
-            foreach (YipliPlayerInfo player in MultiPlayerSelection.instance.players)
+            foreach (YipliPlayerInfo player in MultiPlayerSelection.instance.currentYipliConfig.allPlayersInfo)
             {
                 Debug.Log("Found player : " + player.playerName);
                 if (player.playerName == playerName)
