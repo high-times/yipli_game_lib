@@ -521,6 +521,7 @@ public class PlayerSelection : MonoBehaviour
         TurnOffAllPanels();
         switchPlayerPanel.SetActive(true);
     }
+
     private YipliPlayerInfo GetPlayerInfoFromPlayerName(string playerName)
     {
         if (currentYipliConfig.allPlayersInfo.Count > 0)
@@ -549,36 +550,15 @@ public class PlayerSelection : MonoBehaviour
 
         if (currentYipliConfig.playerInfo != null)
         {
-            //if (currentYipliConfig.playerInfo.playerId.Equals(currentYipliConfig.playerInfo.playerId))
-            //{
-            //    //No need to change player in the backend, as its already the default player there.
-            //    Debug.Log("Continuing as " + currentYipliConfig.playerInfo.playerName);
-            //    Debug.Log("Not changing the default player in the backend, as it is the same");
-            //}
-            //else
-            //{
             UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
             if (currentYipliConfig.matInfo != null)
                 matSelectionScript.MatConnectionFlow();
             else
                 Debug.Log("Mat not found");
-            //Make new default player persist to the backend as well, so that it gets reflected in the Yipli App as well.
-            //if (YipliHelper.checkInternetConnection())
-            //{
-            //    Debug.Log("Chaning the defualt player in the backend to " + currentYipliConfig.playerInfo.playerName);
-            //    FirebaseDBHandler.ChangeCurrentPlayerInBackend(currentYipliConfig.userId, currentYipliConfig.playerInfo.playerId, () => { Debug.Log("Changed the default player in the backend"); });
-            //}
-            //}
         }
         else
         {
             Debug.Log("Current player is null");
-            //Debug.Log("Chaning the defualt player in the backend to " + currentYipliConfig.playerInfo.playerName);
-            ////Make new default player persist to the backend as well, so that it gets reflected in the Yipli App as well.
-            //if (YipliHelper.checkInternetConnection())
-            //{
-            //    FirebaseDBHandler.ChangeCurrentPlayerInBackend(currentYipliConfig.userId, currentYipliConfig.playerInfo.playerId, () => { Debug.Log("Changed the default player in the backend"); });
-            //}
         }
     }
 

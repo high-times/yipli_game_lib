@@ -76,7 +76,6 @@ public class PlayerSession : MonoBehaviour
     public void Start()
     {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
         //You are here, means PlayerInfo is found.
         //Invoke the player found event, to get the player data.
         if (currentYipliConfig.gameId.Length > 1)
@@ -186,7 +185,7 @@ public class PlayerSession : MonoBehaviour
         {
             yield return new WaitForSecondsRealtime(.15f);
             string retStatus = YipliHelper.GetBleConnectionStatus();
-            Debug.Log("Bluetooth Status : " + retStatus);
+            //Debug.Log("Bluetooth Status : " + retStatus);
             if (!retStatus.Equals("Connected", StringComparison.OrdinalIgnoreCase))
             {
                 if (autoRetryBleConnectionCount > 0)
