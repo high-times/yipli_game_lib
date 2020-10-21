@@ -1,5 +1,4 @@
-﻿//#if UNITY_ANDROID
-using Firebase.Database;
+﻿using Firebase.Database;
 using Firebase.Unity.Editor;
 using System;
 using System.Collections;
@@ -18,6 +17,8 @@ public enum GetPlayersQueryStatus
 public class firebaseDBListenersAndHandlers : MonoBehaviour
 {
     public YipliConfig currentYipliConfig;
+
+    //Track if the query exection is completed or not
     private static GetPlayersQueryStatus getAllPlayersQureyStatus = global::GetPlayersQueryStatus.NotStarted;
 
     public static GetPlayersQueryStatus GetPlayersQueryStatus()
@@ -35,6 +36,22 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 
         PlayerSession.NewPlayerFound += addGameDataListener;
         PlayerSelection.DefaultPlayerChanged += addGameDataListener;
+
+        StartCoroutine(TrackNetworkConnectivity());
+    }
+
+    private IEnumerator TrackNetworkConnectivity()
+    {
+        yield return anonAuthenticate();
+        FirebaseDatabase.DefaultInstance.GetReference(".info/connected").ValueChanged += HandleConnectedChanged;
+        //FirebaseDatabase.DefaultInstance.GetReference(".info/serverTimeOffset").ValueChanged += HandleServerTimeOffsetChanged;
+    }
+
+    private void HandleConnectedChanged(object sender, ValueChangedEventArgs e)
+    {
+        Debug.Log("Network : " + e.Snapshot.Value);
+        //if(e.Snapshot.Value == "true")
+        currentYipliConfig.bIsInternetConnected = e.Snapshot.Value.Equals(true);
     }
 
     void OnDisable()
@@ -146,4 +163,3 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         currentYipliConfig.gameDataForCurrentPlayer = args.Snapshot;
     }
 }
-//#endif
