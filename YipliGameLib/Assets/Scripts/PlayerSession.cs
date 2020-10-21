@@ -47,8 +47,6 @@ public class PlayerSession : MonoBehaviour
 
     private void Awake()
     {
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-
         if (_instance != null && _instance != this)
         {
             Debug.Log("Destroying current instance of playersession and reinitializing");
@@ -77,6 +75,8 @@ public class PlayerSession : MonoBehaviour
 
     public void Start()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
         //You are here, means PlayerInfo is found.
         //Invoke the player found event, to get the player data.
         if (currentYipliConfig.gameId.Length > 1)
@@ -123,8 +123,7 @@ public class PlayerSession : MonoBehaviour
         currentYipliConfig.bIsChangePlayerCalled = true;
         SceneManager.LoadScene("yipli_lib_scene");
     }
-
-    //Pass here name of the game
+    
     public void UpdateGameData(Dictionary<string, string> update)
     {
         if (update != null)
