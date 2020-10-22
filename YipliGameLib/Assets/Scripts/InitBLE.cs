@@ -103,8 +103,12 @@ public class InitBLE
     public static void reconnectMat()
     {
         try
-        { 
+        {
 #if UNITY_ANDROID
+            System.Action<string> callback = ((string message) =>
+            {
+                BLEFramework.Unity.BLEControllerEventHandler.OnBleDidInitialize(message);
+            });
             PluginInstance.Call("_InitBLEFramework", new object[] { new UnityCallback(callback) });
 #elif UNITY_STANDALONE_WIN
         DeviceControlActivity._reconnectDevice();

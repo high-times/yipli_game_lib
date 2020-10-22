@@ -37,5 +37,6 @@ public class YipliConfig : ScriptableObject
 
     public bool onlyMatPlayMode;
 
+    [HideInInspector]
     public bool bIsInternetConnected;
 }

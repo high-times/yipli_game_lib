@@ -185,7 +185,6 @@ public class PlayerSession : MonoBehaviour
         {
             yield return new WaitForSecondsRealtime(.15f);
             string retStatus = YipliHelper.GetBleConnectionStatus();
-            //Debug.Log("Bluetooth Status : " + retStatus);
             if (!retStatus.Equals("Connected", StringComparison.OrdinalIgnoreCase))
             {
                 if (autoRetryBleConnectionCount > 0)

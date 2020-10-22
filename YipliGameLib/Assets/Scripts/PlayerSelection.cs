@@ -48,25 +48,13 @@ public class PlayerSelection : MonoBehaviour
     public delegate void OnPlayerChanged();
     public static event OnPlayerChanged DefaultPlayerChanged;
 
-    public void Awake()
-    {
-        // Disable screen dimming
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
-    }
-
     public void OnEnable()
     {
         defaultProfilePicSprite = profilePicImage.sprite;
     }
     // When the game starts
     public void Start()
-    {
-        //Read intents and Initialize defaults
-        CheckIntents();
-
-        //Trigger the database listeners as sson as the user is found
-        NewUserFound();
-
+    {       
         /*
          Flag to support mobile gamePlay. Initialize to MatMode by default.
          If the mat is skipped later on with the 'Skip' button, 
@@ -74,7 +62,7 @@ public class PlayerSelection : MonoBehaviour
          */
         currentYipliConfig.onlyMatPlayMode = true;
 
-        StartCoroutine(InitializeAndStartPlayerSelection());
+        CheckIntentsAndInitializePlayerEnvironment();
     }
 
     //Whenever the Yipli App launches the game, the user will be found and next flow will be called automatically.
@@ -83,19 +71,29 @@ public class PlayerSelection : MonoBehaviour
     IEnumerator KeepCheckingForIntents()
     {
         Debug.Log("Started Coroutine : KeepCheckingForIntents");
-        yield return new WaitForSeconds(0.1f);
 #if UNITY_ANDROID
-        while (true)
+        while (currentYipliConfig.userId.Length < 1)
         {
-            //If the given panel is active, means the game is not launched from Yipli App.
-            //Keep checking after every .5f Seconds if the app is launched from Yipli App.
+            //Keep checking after every .1f Seconds if the app is launched from Yipli App.
             if (bIsRedirectedToYipliApp)
             {
                 CheckIntentsAndInitializePlayerEnvironment();
             }
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForSeconds(0.1f);
         }
+        bIsRedirectedToYipliApp = false;
 #endif
+    }
+
+    private void CheckIntentsAndInitializePlayerEnvironment()
+    {
+        // Read intents and Initialize defaults
+        CheckIntents();
+
+        //Trigger the database listeners as sson as the user is found
+        NewUserFound();
+
+        StartCoroutine(InitializeAndStartPlayerSelection());
     }
 
     public void playPhoneHolderTutorial()
@@ -138,11 +136,11 @@ public class PlayerSelection : MonoBehaviour
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR
             RemotePlayCodePanel.SetActive(true);
 #elif UNITY_ANDROID
-            //Automatically redirect to Yipli App
-            StartCoroutine(RedirectToYipliAppForNoUserFound());
-
             //Currently User isnt found. Start a coroutine which keeps on checking for the user details.
             StartCoroutine(KeepCheckingForIntents());
+
+            //Automatically redirect to Yipli App
+            StartCoroutine(RedirectToYipliAppForNoUserFound());
 #endif
         }
     }
@@ -368,7 +366,6 @@ public class PlayerSelection : MonoBehaviour
         if (currentYipliConfig.userId == null || currentYipliConfig.userId == "")
         {
             //This code block will be called when the game App is not launched from the Yipli app even once.
-            bIsRedirectedToYipliApp = false;
             NoUserFoundInGameFlow();
         }
         else
@@ -388,7 +385,7 @@ public class PlayerSelection : MonoBehaviour
                     Debug.Log("Mat info is null");
                 }
                 //Stop the Coroutine which keep schecking for the intents.
-                StopCoroutine(KeepCheckingForIntents());
+                //StopCoroutine(KeepCheckingForIntents());
 
                 //Uncomment following line to always start the flow from phoneHolder panel
                 if (!currentYipliConfig.bIsMatIntroDone && currentYipliConfig.playerInfo != null)
@@ -406,14 +403,6 @@ public class PlayerSelection : MonoBehaviour
 
         TurnOffAllPanels();
 
-        //if (YipliHelper.checkInternetConnection())
-        //{
-        //    LoadingPanel.SetActive(true);
-        //    //Get Current player details from userId
-        //    defaultPlayer = await FirebaseDBHandler.GetCurrentPlayerdetails(currentYipliConfig.userId, () => { Debug.Log("Got the current player details from db."); });
-        //    LoadingPanel.SetActive(false);
-        //}
-
         if (currentYipliConfig.playerInfo != null)
         {
             //This means we have the default Player info from backend.
@@ -425,8 +414,6 @@ public class PlayerSelection : MonoBehaviour
 
             //Since default player is there, directly go to the mat selection flow
             matSelectionScript.MatConnectionFlow();
-            //Initiate the player change flow
-            //switchPlayerPanel.SetActive(true);
         }
         else //Current player not found in Db.
         {

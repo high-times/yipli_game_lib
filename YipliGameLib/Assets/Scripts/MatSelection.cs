@@ -71,6 +71,7 @@ public class MatSelection : MonoBehaviour
         {
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
             Debug.Log("No Mat found in cache.");
+            noMatText.text = "Register the YIPLI fitness mat from Yipli Hub to continue playing.";
             NoMatPanel.SetActive(true);
 #if UNITY_EDITOR
             secretEntryPanel.SetActive(false);
@@ -220,7 +221,7 @@ public class MatSelection : MonoBehaviour
         {
             if (YipliHelper.checkInternetConnection())
             {
-                //Allow backent Get calls only if network is reachable
+                //Allow backend Get calls only if network is reachable
                 if (currentYipliConfig.matInfo != null)
                 {
                     UserDataPersistence.SaveMatToDevice(currentYipliConfig.matInfo);
