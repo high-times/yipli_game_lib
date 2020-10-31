@@ -259,15 +259,15 @@ PlayerSettings:
   AndroidTargetArchitectures: 5
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: C:/Users/nadgi/Desktop/gamelibKeyStore.keystore
-  AndroidKeyaliasName: yipligamelib
+  AndroidKeystoreName: C:/Yipli/Keystores/jjGames/joyfuljumps_key.keystore
+  AndroidKeyaliasName: unitygames
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
   androidEnableBanner: 1
   androidUseLowAccuracyLocation: 0
-  androidUseCustomKeystore: 1
+  androidUseCustomKeystore: 0
   m_AndroidBanners:
   - width: 320
     height: 180
@@ -624,7 +624,7 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
-    Collab: 0
+    Collab: 1
     UNet: 1
   luminIcon:
     m_Name: 
@@ -641,7 +641,7 @@ PlayerSettings:
   cloudProjectId: a878f443-e760-45b8-a84e-ec55aab58e62
   framebufferDepthMemorylessMode: 0
   projectName: YipliGameLib
-  organizationId: vadapav
+  organizationId: anandoswal
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

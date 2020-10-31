@@ -43,7 +43,7 @@ public class InitBLE
         try
         {
 #if UNITY_ANDROID
-                return InitBLE.PluginClass.CallStatic<string>("_getFMResponse");
+                return PluginClass.CallStatic<string>("_getFMResponse");
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR
             return DeviceControlActivity._getFMResponse();
 #endif

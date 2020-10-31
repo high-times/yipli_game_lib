@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class YipliHelper
 {
-    private static string yipliAppBundleId = "org.yipli.app"; //todo: Change this later
+    private static string yipliAppBundleId = "com.yipli.app"; //todo: Change this later
 
     public static int GetGameClusterId()
     {
@@ -36,16 +36,6 @@ public static class YipliHelper
         return bIsNetworkAvailable;
     }
 
-    
-    //TODO : to be removed
-    public static string GetBleConnectionStatus()
-    {
-        //Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getMatConnectionStatus());
-        if (!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
-            return "connected";
-        return InitBLE.getMatConnectionStatus();
-    }
-
     public static string GetMatConnectionStatus()
     {
         if (!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
@@ -72,6 +62,8 @@ public static class YipliHelper
             Debug.Log(e);
             Application.OpenURL("market://details?id=" + yipliAppBundleId);
         }
+#else
+        Debug.Log("Unsupported os");
 #endif
     }
 
@@ -101,7 +93,8 @@ public static class YipliHelper
             Debug.Log("Yipli app is not installed.");
             return false;
         }
-          
+
+        Debug.Log("Yipli App is Installed. Returning true.");
         return true;
 
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR

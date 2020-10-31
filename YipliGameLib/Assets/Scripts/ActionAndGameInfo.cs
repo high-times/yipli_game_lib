@@ -31,6 +31,8 @@ namespace YipliFMDriverCommunication
                     return YipliUtils.PlayerActions.JUMPIN;
                 case "QRTY":
                     return YipliUtils.PlayerActions.JUMPOUT;
+                case "TIL3":
+                    return YipliUtils.PlayerActions.TILES;
             }
             Debug.Log("Invalid action. Returning null Action ID.");
             return YipliUtils.PlayerActions.INVALID_ACTION;
@@ -72,6 +74,9 @@ namespace YipliFMDriverCommunication
 
                 case YipliUtils.PlayerActions.JUMPOUT:
                     return "QRTY";
+
+                case YipliUtils.PlayerActions.TILES:
+                    return "TIL3";
             }
 
             Debug.Log("Invalid action. Returning null Action ID.");
@@ -80,7 +85,7 @@ namespace YipliFMDriverCommunication
 
         //Pass here name of the game
         public static void SetYipliGameInfo(string strGameName)
-        {
+        {            
             switch (strGameName.ToLower())
             {
                 case "unleash":
@@ -130,6 +135,11 @@ namespace YipliFMDriverCommunication
 
                 case "tugofwar":
                     YipliHelper.SetGameClusterId(4);
+                    PlayerSession.Instance.intensityLevel = "medium";
+                    break;
+
+                case "matbeats":
+                    YipliHelper.SetGameClusterId(5);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 

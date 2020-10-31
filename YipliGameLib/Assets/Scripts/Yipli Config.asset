@@ -18,3 +18,4 @@ MonoBehaviour:
   bIsMatIntroDone: 1
   bIsChangePlayerCalled: 0
   onlyMatPlayMode: 1
+  bIsInternetConnected: 1

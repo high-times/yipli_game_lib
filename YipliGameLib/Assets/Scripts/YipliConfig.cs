@@ -21,7 +21,7 @@ public class YipliConfig : ScriptableObject
     public string gameId;
 
     [HideInInspector]
-    public bool bIsMatIntroDone;
+    public bool bIsMatIntroDone = false;
 
     [HideInInspector]
     public MP_GameStateManager MP_GameStateManager;
@@ -35,7 +35,7 @@ public class YipliConfig : ScriptableObject
     [HideInInspector]
     public bool bIsChangePlayerCalled;
 
-    public bool onlyMatPlayMode;
+    public bool onlyMatPlayMode = true;
 
     [HideInInspector]
     public bool bIsInternetConnected;

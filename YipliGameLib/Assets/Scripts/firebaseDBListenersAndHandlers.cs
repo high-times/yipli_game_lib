@@ -6,10 +6,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public enum GetPlayersQueryStatus
+public enum QueryStatus
 {
     NotStarted,
-    Starting,
     InProgress,
     Completed
 };
@@ -19,13 +18,20 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     public YipliConfig currentYipliConfig;
 
     //Track if the query exection is completed or not
-    private static GetPlayersQueryStatus getAllPlayersQureyStatus = global::GetPlayersQueryStatus.NotStarted;
+    private static QueryStatus getAllPlayersQureyStatus = global::QueryStatus.NotStarted;
 
-    public static GetPlayersQueryStatus GetPlayersQueryStatus()
+    //Track if the query exection is completed or not
+    private static QueryStatus getDefaultMatQueryStatus = global::QueryStatus.NotStarted;
+
+    public static QueryStatus GetPlayersQueryStatus()
     {
         return getAllPlayersQureyStatus;
     }
 
+    public static QueryStatus GetMatQueryStatus()
+    {
+        return getDefaultMatQueryStatus;
+    }
     // Start is called before the first frame update
     void OnEnable()
     {
@@ -36,6 +42,8 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 
         PlayerSession.NewPlayerFound += addGameDataListener;
         PlayerSelection.DefaultPlayerChanged += addGameDataListener;
+
+        PlayerSession.NewMatFound += addDefaultMatIdListener;
 
         StartCoroutine(TrackNetworkConnectivity());
     }
@@ -50,7 +58,6 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     private void HandleConnectedChanged(object sender, ValueChangedEventArgs e)
     {
         Debug.Log("Network : " + e.Snapshot.Value);
-        //if(e.Snapshot.Value == "true")
         currentYipliConfig.bIsInternetConnected = e.Snapshot.Value.Equals(true);
     }
 
@@ -84,12 +91,15 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     private void HandleCurrentMatInfoValueChanged(object sender, ValueChangedEventArgs args)
     {
         Debug.Log("HandleCurrentMatInfoValueChanged invoked");
-        currentYipliConfig.matInfo = new YipliMatInfo(args.Snapshot, args.Snapshot.Key);
+        if(args.Snapshot.Value != null)
+            currentYipliConfig.matInfo = new YipliMatInfo(args.Snapshot, args.Snapshot.Key);
+        getDefaultMatQueryStatus = global::QueryStatus.Completed;
     }
 
     private void HandleCurrentMatIdValueChanged(object sender, ValueChangedEventArgs args)
     {
         Debug.Log("HandleCurrentMatIdValueChanged invoked");
+        getDefaultMatQueryStatus = global::QueryStatus.InProgress;
         //args.Snapshot has mat-Id for default mat.
         string matId = args.Snapshot.ToString();
         addDefaultMatInfoListener(matId);
@@ -111,7 +121,6 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     {
         Debug.Log("addGetPlayersListener invoked");
         await anonAuthenticate();
-        getAllPlayersQureyStatus = global::GetPlayersQueryStatus.Starting;
         FirebaseDatabase.DefaultInstance
         .GetReference("profiles/users/" + currentYipliConfig.userId + "/players")
         .ValueChanged += HandleAllPlayersDataValueChanged;
@@ -119,7 +128,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 
     void HandleAllPlayersDataValueChanged(object sender, ValueChangedEventArgs args)
     {
-        getAllPlayersQureyStatus = global::GetPlayersQueryStatus.InProgress;
+        getAllPlayersQureyStatus = global::QueryStatus.InProgress;
         Debug.Log("HandleAllPlayersDataValueChanged invoked");
         if (args.DatabaseError != null)
         {
@@ -143,7 +152,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
             }
         }
         Debug.Log("All players data got successfully.");
-        getAllPlayersQureyStatus = global::GetPlayersQueryStatus.Completed;
+        getAllPlayersQureyStatus = global::QueryStatus.Completed;
     }
 
     private async void addGameDataListener()
@@ -151,13 +160,13 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         Debug.Log("addGameDataListener invoked");
         await anonAuthenticate();
 
-        if(!currentYipliConfig.gameId.Equals("default") || currentYipliConfig.gameId.Length > 1)
+        if (!currentYipliConfig.gameId.Equals("default") || currentYipliConfig.gameId.Length > 1)
             FirebaseDatabase.DefaultInstance
-            .GetReference("profiles/users/" + currentYipliConfig.userId + "/players/"  + currentYipliConfig.playerInfo.playerId + "activity-statistics/games-statistics/" + currentYipliConfig.gameId + "/game-data")
+            .GetReference("profiles/users/" + currentYipliConfig.userId + "/players/" + currentYipliConfig.playerInfo.playerId + "/activity-statistics/games-statistics/" + currentYipliConfig.gameId + "/game-data")
             .ValueChanged += HandleGameDataValueChanged;
     }
 
-    void HandleGameDataValueChanged(object sender, ValueChangedEventArgs args) 
+    void HandleGameDataValueChanged(object sender, ValueChangedEventArgs args)
     {
         Debug.Log("HandleGameDataValueChanged invoked");
         currentYipliConfig.gameDataForCurrentPlayer = args.Snapshot;

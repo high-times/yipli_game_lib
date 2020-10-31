@@ -100,6 +100,7 @@ public class YipliUtils
         PAUSE,
         JUMPIN,
         JUMPOUT,
+        TILES,
         INVALID_ACTION
     }
 

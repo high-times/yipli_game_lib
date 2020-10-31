@@ -133,7 +133,7 @@ public class YipliMatInfo
         {
             if (snapshot != null)
             {
-                Debug.Log("filling the YipliPlayerInfo from Snapshot.");
+                Debug.Log("filling the YipliMatInfo from Snapshot.");
                 matId = key.ToString();
                 matName = snapshot.Child("display-name").Value?.ToString() ?? "";
                 macAddress = snapshot.Child("mac-address").Value?.ToString() ?? "";

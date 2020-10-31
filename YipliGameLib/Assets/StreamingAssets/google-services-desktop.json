@@ -8,9 +8,105 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:700200099137:android:2f10120b206a56356455c0",
+        "android_client_info": {
+          "package_name": "com.YIPLI.JoyfulJumps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700200099137-sei9a8ctnvtifm9q6v9hjs98ab4c1656.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.YIPLI.JoyfulJumps",
+            "certificate_hash": "7dbfac29df8afe709563d85a70899635f4ed22cd"
+          }
+        },
+        {
+          "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAceBtIqNZdErggHnZDuU12DfYrbBhe-T4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700200099137-p6iorpe58k8jpjj75m53in4a050hmt0r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fitmat.eggcatcher"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:700200099137:android:5087eee7b614c3166455c0",
         "android_client_info": {
           "package_name": "com.fitmat.eggcatcher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700200099137-siv58kb95ttd5kr3dq7rfpvje5p8pgf3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fitmat.eggcatcher",
+            "certificate_hash": "9c76b2b2880dea36dc1ad35eacc2c418e8265cbd"
+          }
+        },
+        {
+          "client_id": "700200099137-o8mrt5kfdglb1l2bq9kf6gi6kt3hq7ts.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fitmat.eggcatcher",
+            "certificate_hash": "5a1edfebda1b7b36d44fc226462e1cf9a9161f8c"
+          }
+        },
+        {
+          "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAceBtIqNZdErggHnZDuU12DfYrbBhe-T4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700200099137-p6iorpe58k8jpjj75m53in4a050hmt0r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fitmat.eggcatcher"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700200099137:android:326170411ac287226455c0",
+        "android_client_info": {
+          "package_name": "com.yipli.eggcatcher"
         }
       },
       "oauth_client": [
@@ -51,11 +147,63 @@
       },
       "oauth_client": [
         {
+          "client_id": "700200099137-6mrl921bvcjl7rnnu030r7fi0o6rvndk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yipli.gamelib",
+            "certificate_hash": "5a1edfebda1b7b36d44fc226462e1cf9a9161f8c"
+          }
+        },
+        {
           "client_id": "700200099137-r2lj87rn2q0liep4i4qqj0mpr56bna9n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.yipli.gamelib",
             "certificate_hash": "9c76b2b2880dea36dc1ad35eacc2c418e8265cbd"
+          }
+        },
+        {
+          "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAceBtIqNZdErggHnZDuU12DfYrbBhe-T4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700200099137-0mbaphq0ke83chaopjnupcrsc5tf8vcc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "700200099137-p6iorpe58k8jpjj75m53in4a050hmt0r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.fitmat.eggcatcher"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700200099137:android:f7503bf2b56d1cd16455c0",
+        "android_client_info": {
+          "package_name": "com.yipli.yiplirunner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700200099137-9a1pnpmpq4j0r5sgif82rn65et5ts8gp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yipli.yiplirunner",
+            "certificate_hash": "a4ad97c27b2be375b716e358362a095ccd0471f6"
           }
         },
         {
@@ -94,6 +242,54 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "700200099137-n9u41k33bq5bukc0ito3ks0386vti19a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.hightimeshq.yipli",
+            "certificate_hash": "4eabf5cfcbf800eb754e8c09fdab683cd448c8c4"
+          }
+        },
+        {
+          "client_id": "700200099137-npqptkd6ptfnfenqpjnvskes4dpuradp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.hightimeshq.yipli",
+            "certificate_hash": "020ab0988eea2477f9b947d352f7086b583bc65b"
+          }
+        },
+        {
+          "client_id": "700200099137-d0rsdk4al7t0rkss8fiv1snicc6o84qb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.hightimeshq.yipli",
+            "certificate_hash": "e21e6f09c20fc0729d2609c45028770056220678"
+          }
+        },
+        {
+          "client_id": "700200099137-3c59vi5a3qshedkmojf2smilfl26r4vv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.hightimeshq.yipli",
+            "certificate_hash": "553fb5850de74ce570e8adc492c2bf577395d3a6"
+          }
+        },
+        {
+          "client_id": "700200099137-il1n1lgc82pq63eh2br7dtgh8ei0a0er.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.hightimeshq.yipli",
+            "certificate_hash": "5ca04d4f882609ce8da76046dd0c3b87abe3b899"
+          }
+        },
+        {
+          "client_id": "700200099137-5flp5ct4ta6kqssovnoauc91go94du5i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.hightimeshq.yipli",
+            "certificate_hash": "2f05e87f86eda6a7fa383a92d48d8630830e9246"
+          }
+        },
         {
           "client_id": "700200099137-fphhmp759s4kg20npraeao4tg78766hf.apps.googleusercontent.com",
           "client_type": 1,
