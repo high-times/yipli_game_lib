@@ -413,7 +413,7 @@ public static class FirebaseDBHandler
 
     /* The function to store game data to backend without gamePlay. 
     * This is to be called by your games shop manager module.*/
-    public static async Task UpdateStoreData(string strUserId, string strPlayerId, string strGameId, Dictionary<string, object> dStoreData, PostUserCallback callback)
+    public static async void UpdateStoreData(string strUserId, string strPlayerId, string strGameId, Dictionary<string, object> dStoreData, PostUserCallback callback)
     {
         await auth.SignInAnonymouslyAsync().ContinueWith(async task =>
         {

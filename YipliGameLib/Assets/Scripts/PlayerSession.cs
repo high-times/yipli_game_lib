@@ -45,6 +45,7 @@ public class PlayerSession : MonoBehaviour
     [JsonIgnore]
     public static PlayerSession Instance { get { return _instance; } }
 
+    public float GetGameplayDuration { get => duration; set => duration = value; }
 
     //Delegates for Firebase Listeners
     public delegate void OnPlayerFound();
@@ -317,9 +318,9 @@ public class PlayerSession : MonoBehaviour
     }
 
     // Update store data witout gameplay. To be called by games Shop Manager.
-    public async Task UpdateStoreData(Dictionary<string, object> dStoreData)
+    public void UpdateStoreData(Dictionary<string, object> dStoreData)
     {
-        await FirebaseDBHandler.UpdateStoreData(
+        FirebaseDBHandler.UpdateStoreData(
             currentYipliConfig.userId,
             currentYipliConfig.playerInfo.playerId,
             currentYipliConfig.gameId,

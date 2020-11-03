@@ -364,7 +364,7 @@ public class PlayerSelection : MonoBehaviour
         {
             //Wait till the listeners are synced and the data has been populated
             Debug.Log("Waiting for players query to complete");
-            while (firebaseDBListenersAndHandlers.GetPlayersQueryStatus() == QueryStatus.InProgress)
+            while (firebaseDBListenersAndHandlers.GetPlayersQueryStatus() != QueryStatus.Completed)
                 yield return new WaitForSecondsRealtime(0.05f);
             
 

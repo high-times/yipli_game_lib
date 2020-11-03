@@ -108,7 +108,7 @@ namespace YipliFMDriverCommunication
                     PlayerSession.Instance.intensityLevel = "low";
                     break;
 
-                case "yiplirunner":
+                case "metrorush":
                     YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
