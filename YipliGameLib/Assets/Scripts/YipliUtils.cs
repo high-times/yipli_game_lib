@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class YipliUtils
 {
-     /* ******Gamification*******
-     * Function to be called after the gameplay for Report card screen for every game
-     * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
-     */
+    /* ******Gamification*******
+    * Function to be called after the gameplay for Report card screen for every game
+    * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
+    */
     public static float GetFitnessPoints(IDictionary<PlayerActions, int> playerActionCounts)
     {
         float fp = 0.0f;
@@ -24,7 +24,7 @@ public class YipliUtils
     */
     public static int GetXP(double secs)
     {
-        return (int)secs/10;
+        return (int)secs / 10;
     }
 
     /* ******Gamification*******
@@ -41,12 +41,12 @@ public class YipliUtils
         return calories;
     }
 
- /* 
-  * This function returns Yipli Fitness points predeclared for every player Action.
-  * Add a new case here with its identified FPs, whenever a new player action.
-  * The values are mapped with the cloud functions algorithm to calculate the fitness points.
-  * Change this function, if the values in the cloud-function changes.
-  */
+    /* 
+     * This function returns Yipli Fitness points predeclared for every player Action.
+     * Add a new case here with its identified FPs, whenever a new player action.
+     * The values are mapped with the cloud functions algorithm to calculate the fitness points.
+     * Change this function, if the values in the cloud-function changes.
+     */
     private static float GetFitnessPointsPerAction(PlayerActions playerAction)
     {
         Debug.Log("GetFitnessPointsPerAction() called for " + playerAction);
@@ -69,6 +69,12 @@ public class YipliUtils
                 fp = 10.0f;
                 break;
             case PlayerActions.JUMPOUT:
+                fp = 10.0f;
+                break;
+            case PlayerActions.R_LEG_HOPPING:
+                fp = 10.0f;
+                break;
+            case PlayerActions.L_LEG_HOPPING:
                 fp = 10.0f;
                 break;
             case PlayerActions.STOP:
@@ -101,6 +107,8 @@ public class YipliUtils
         JUMPIN,
         JUMPOUT,
         TILES,
+        R_LEG_HOPPING,
+        L_LEG_HOPPING,
         INVALID_ACTION
     }
 
@@ -132,6 +140,12 @@ public class YipliUtils
                 calories = 0.1f;
                 break;
             case PlayerActions.JUMPOUT:
+                calories = 0.1f;
+                break;
+            case PlayerActions.R_LEG_HOPPING:
+                calories = 0.1f;
+                break;
+            case PlayerActions.L_LEG_HOPPING:
                 calories = 0.1f;
                 break;
             case PlayerActions.STOP:
