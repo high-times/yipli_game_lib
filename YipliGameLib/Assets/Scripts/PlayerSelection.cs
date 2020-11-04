@@ -30,6 +30,9 @@ public class PlayerSelection : MonoBehaviour
     public MatSelection matSelectionScript;
     public Image profilePicImage;
     public GameObject RemotePlayCodePanel;
+    public GameObject GameVersionUpdatePanel;
+
+    public TextMeshProUGUI GameVersionUpdateText;
     public TextMeshProUGUI RemotePlayCodeErrorText;
     
     private string PlayerName;
@@ -47,13 +50,54 @@ public class PlayerSelection : MonoBehaviour
     public delegate void OnPlayerChanged();
     public static event OnPlayerChanged DefaultPlayerChanged;
 
+    public delegate void OnGameLaunch();
+    public static event OnUserFound GetGameInfo;
+
     public void OnEnable()
     {
         defaultProfilePicSprite = profilePicImage.sprite;
     }
+
     // When the game starts
-    public void Start()
-    {    
+    public IEnumerator Start()
+    {
+        GetGameInfo();
+
+        while (firebaseDBListenersAndHandlers.GetGameInfoQueryStatus() != QueryStatus.Completed)
+        {
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+        if (currentYipliConfig.gameInventoryInfo == null)
+        {
+            Debug.Log("Game info failed");
+            //currentYipliConfig.gameInfo = await FirebaseDBHandler.GetGameInfo(currentYipliConfig.gameId);
+        }
+        else {
+            Debug.Log("Game info success");
+        }
+
+        //If GameVersion latest then proceed
+        if (Application.version.Equals(currentYipliConfig.gameInventoryInfo.gameVersion))
+            CheckIntentsAndInitializePlayerEnvironment();
+        else
+        {
+            //Ask user to Update Game version option
+            LoadingPanel.SetActive(false);
+
+            GameVersionUpdateText.text = "A new version of "+ currentYipliConfig.gameInventoryInfo.displayName +" is available.\nUpdating the game is recommended for better experience?";
+            GameVersionUpdatePanel.SetActive(true);
+        }
+    }
+
+    public void OnUpdateGameClick()
+    {
+        string gameAppId = Application.identifier;
+        Debug.Log("App Id is : " + gameAppId);
+        YipliHelper.GoToPlaystoreUpdate(gameAppId);
+    }
+
+    public void OnSkipUpdateClick()
+    {
         CheckIntentsAndInitializePlayerEnvironment();
     }
 
@@ -303,6 +347,7 @@ public class PlayerSelection : MonoBehaviour
         GuestUserPanel.SetActive(false);
         LaunchFromYipliAppPanel.SetActive(false);
         LoadingPanel.SetActive(false);
+        GameVersionUpdatePanel.SetActive(false);
     }
 
     private void TurnOffAllPanelsExceptLoading()
@@ -315,6 +360,7 @@ public class PlayerSelection : MonoBehaviour
         noNetworkPanel.SetActive(false);
         GuestUserPanel.SetActive(false);
         LaunchFromYipliAppPanel.SetActive(false);
+        GameVersionUpdatePanel.SetActive(false);
     }
 
     private void CheckIntents()
@@ -365,7 +411,7 @@ public class PlayerSelection : MonoBehaviour
             //Wait till the listeners are synced and the data has been populated
             Debug.Log("Waiting for players query to complete");
             while (firebaseDBListenersAndHandlers.GetPlayersQueryStatus() != QueryStatus.Completed)
-                yield return new WaitForSecondsRealtime(0.05f);
+                yield return new WaitForSecondsRealtime(0.1f);
             
 
             Debug.Log("Sync players complete");
@@ -652,5 +698,10 @@ public class PlayerSelection : MonoBehaviour
             }
         }
         bIsProfilePicLoaded = false;
+    }
+
+    private void GetGameDetails()
+    {
+
     }
 }

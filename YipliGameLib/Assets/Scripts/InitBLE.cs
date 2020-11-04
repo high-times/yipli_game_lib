@@ -86,17 +86,18 @@ public class InitBLE
     {
         try
         {
-#if UNITY_ANDROID
-        return BLEStatus;
-#elif UNITY_STANDALONE_WIN
-            return DeviceControlActivity._IsDeviceConnected() == 1 ? "CONNECTED" : "DISCONNECTED";
-#endif
+            if (Application.platform == RuntimePlatform.Android)
+                return BLEStatus;
+            else if (Application.platform == RuntimePlatform.WindowsPlayer)
+                return DeviceControlActivity._IsDeviceConnected() == 1 ? "CONNECTED" : "DISCONNECTED";
+            else if (Application.platform == RuntimePlatform.WindowsEditor)
+                return "connected";
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.Log("Exception in getMatConnectionStatus() : " + e.Message);
-            return "disconnected";
         }
+        return "disconnected";
     }
 
 

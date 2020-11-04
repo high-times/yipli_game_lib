@@ -27,11 +27,10 @@ public class MatSelection : MonoBehaviour
     private int checkMatStatusCount;
     public GameObject tick;
 
+    private bool autoSkipMatConnection;
+
     private void Start()
     {
-#if UNITY_EDITOR
-        currentYipliConfig.onlyMatPlayMode = false;
-#endif
         if (currentYipliConfig.onlyMatPlayMode == false)
         {
             // Make the Skip button visible
@@ -45,15 +44,13 @@ public class MatSelection : MonoBehaviour
 
     public void MatConnectionFlow()
     {
-#if UNITY_EDITOR
-        secretEntryPanel.SetActive(false);
-        NoMatPanel.SetActive(false);
-        StartCoroutine(LoadMainGameScene());
-#endif
         Debug.Log("Starting Mat connection flow");
 
         NoMatPanel.SetActive(false);
         StopCoroutine(ConnectMatAndLoadGameScene());
+
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+            StartCoroutine(LoadMainGameScene());
 
         if (currentYipliConfig.matInfo == null)
         {
@@ -140,7 +137,6 @@ public class MatSelection : MonoBehaviour
         if (inputPassword.text == "123456")
         {
             //load last Scene
-            currentYipliConfig.onlyMatPlayMode = false;
             StartCoroutine(LoadMainGameScene());
         }
         else
@@ -154,16 +150,13 @@ public class MatSelection : MonoBehaviour
     IEnumerator LoadMainGameScene()
     {
         loadingPanel.SetActive(false);
-        Debug.Log("Your Fitmat is connected.Taking you to the game.");
         bleSuccessMsg.text = "Your Fitmat is connected.\nTaking you to the game.";
         BluetoothSuccessPanel.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         FindObjectOfType<YipliAudioManager>().Play("BLE_success");
-        yield return new WaitForSeconds(0.15f);
         tick.SetActive(true);
-        yield return new WaitForSeconds(0.35f);
-        Debug.Log("Starting the Coroutine LoadSceneAfterDisplayingDriverAndGameVersion()");
+        yield return new WaitForSeconds(0.5f);
         StartCoroutine(LoadSceneAfterDisplayingDriverAndGameVersion());
     }
 
@@ -171,13 +164,9 @@ public class MatSelection : MonoBehaviour
     {
         loadingPanel.SetActive(false);
         //TODO : Comment following lines for production build
-        Debug.Log("FmDriver Version : " + YipliHelper.GetFMDriverVersion());
-        Debug.Log("Game Version: " + Application.version);
-        bleSuccessMsg.text = "FmDriver Version : " + YipliHelper.GetFMDriverVersion() + "\n  Game Version : " + Application.version;
-        yield return new WaitForSeconds(1.5f);
-
-        BluetoothSuccessPanel.SetActive(false);
- 
+        bleSuccessMsg.text = "FmDriver Version : " + YipliHelper.GetFMDriverVersion() + "\n Game Version : " + Application.version;
+        yield return new WaitForSeconds(1f);
+         
         //load last Scene
         SceneManager.LoadScene(currentYipliConfig.callbackLevel); 
     }
@@ -187,80 +176,6 @@ public class MatSelection : MonoBehaviour
         secretEntryPanel.SetActive(false);
         NoMatPanel.SetActive(true);
     }
-
-    //public void ReCheckMatConnection()
-    //{
-    //    Debug.Log("Checking Mat.");
-    //    NoMatPanel.SetActive(false);
-    //    string result = "failure";
-    //    //To handle the case of No mats registered
-    //    if ((currentYipliConfig.matInfo == null) || (currentYipliConfig.matInfo.macAddress.Length == 0))
-    //    {
-    //        loadingPanel.SetActive(true);
-    //        ValidateAndInitiateMatConnection();
-    //        loadingPanel.SetActive(false);
-    //    }
-
-    //    string connectionState = "";
-    //    if ((currentYipliConfig.matInfo != null) || (result == "success"))
-    //    {
-    //        try
-    //        {
-    //            connectionState = InitBLE.getMatConnectionStatus();
-    //        }
-    //        catch (Exception exp)
-    //        {
-    //            Debug.Log("Exception occured in ReCheckMatConnection() : " + exp.Message);
-    //        }
-
-    //        if (connectionState.Equals("CONNECTED", StringComparison.OrdinalIgnoreCase))
-    //        {
-    //            //load last Scene
-    //            StartCoroutine(LoadMainGameScene());
-    //        }
-    //        else
-    //        {
-    //            // If it is > 1, reCheck is clicked atleast once. After ReChecking the status, if the status isnt connected,
-    //            //then initiate the Mat connection again, so that, in next reCheck it will get connected.
-    //            try
-    //            {
-    //                loadingPanel.SetActive(true);
-    //                string res = ValidateAndInitiateMatConnection();
-    //                connectionState = InitBLE.getMatConnectionStatus();
-    //                loadingPanel.SetActive(false);
-
-    //                if (res == "success")
-    //                {
-    //                    if (connectionState.Equals("CONNECTED", StringComparison.OrdinalIgnoreCase))
-    //                    {
-    //                        //load last Scene
-    //                        StartCoroutine(LoadMainGameScene());
-    //                    }
-    //                }
-    //            }
-    //            catch (Exception exp)
-    //            {
-    //                Debug.Log("Exception occured in ReCheckMatConnection() : " + exp.Message);
-    //            }
-    //            Debug.Log("Mat not reachable.");
-    //            noMatText.text = "Make sure that the registered mat is reachable.";
-
-    //            FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
-    //            NoMatPanel.SetActive(true);
-    //        }
-    //    }
-    //    else //Current Mat not found in Db.
-    //    {
-    //        FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
-    //        Debug.Log("No Mat found in cache.");
-    //        if(YipliHelper.checkInternetConnection())
-    //            noMatText.text = "Register MAT in the Yipli App to continue playing";
-    //        else
-    //            noMatText.text = "Register MAT in the Yipli App to continue playing with active network connection";
-
-    //        NoMatPanel.SetActive(true);
-    //    }
-    //}
 
 
     /* This function is responsible for only initiating mat connection 

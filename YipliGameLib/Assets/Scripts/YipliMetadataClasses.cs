@@ -153,3 +153,46 @@ public class YipliMatInfo
     }
 }
 
+
+public class YipliInventoryGameInfo
+{
+    public string gameId;
+    public string displayName;
+    public string gamePackageId;
+    public string gameVersion;
+
+    YipliInventoryGameInfo(string gameId)
+    {
+        this.gameId = gameId;
+    }
+
+    public YipliInventoryGameInfo(DataSnapshot snapshot)
+    {
+        try
+        {
+            if (snapshot != null)
+            {
+                Debug.Log("filling the GameInfo from Snapshot.");
+                gameId = snapshot.Key;
+                displayName = snapshot.Child("name").Value?.ToString() ?? "";
+                gamePackageId = snapshot.Child("android-url").Value?.ToString() ?? "";
+                gameVersion = snapshot.Child("currentVersion").Value?.ToString() ?? "";
+            }
+            else
+            {
+                Debug.Log("DataSnapshot is null. Can't create YipliGameInfo instance.");
+                gameId = null;
+            }
+        }
+        catch (Exception exp)
+        {
+            Debug.Log("Exception in creating YipliMatInfo object from DataSnapshot : " + exp.Message);
+            gameId = null;
+        }
+    }
+
+    public YipliInventoryGameInfo()
+    {
+    }
+}
+

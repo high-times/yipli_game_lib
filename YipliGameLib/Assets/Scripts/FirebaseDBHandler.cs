@@ -21,6 +21,30 @@ public static class FirebaseDBHandler
     public delegate void PostUserCallback();
 
     /* The function call to be allowed only if network is available */
+    public static async Task<YipliInventoryGameInfo> GetGameInfo(string gameId)
+    {
+        YipliInventoryGameInfo gameInfo = new YipliInventoryGameInfo();
+        DataSnapshot snapshot = null;
+        try
+        {
+            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+            newUser.DisplayName, newUser.UserId);
+
+            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+            snapshot = await reference.Child("inventory/games").Child(gameId).GetValueAsync();
+            gameInfo = new YipliInventoryGameInfo(snapshot);
+        }
+        catch (Exception exp)
+        {
+            Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
+        }
+
+        return gameInfo ;
+    }
+
+    /* The function call to be allowed only if network is available */
     public static async Task<string> GetUserIdFromCode(string code)
     {
         string userId = "";

@@ -38,10 +38,20 @@ public static class YipliHelper
 
     public static string GetMatConnectionStatus()
     {
-        if (!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
+        if(!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
             return "connected";
         Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getMatConnectionStatus());
         return InitBLE.getMatConnectionStatus();
+    }
+
+
+    public static void GoToPlaystoreUpdate(string gamePackageId)
+    {
+#if UNITY_ANDROID
+            Application.OpenURL("market://details?id=" + gamePackageId);
+#else
+        Debug.Log("Unsupported os");
+#endif
     }
 
     public static void GoToYipli()
