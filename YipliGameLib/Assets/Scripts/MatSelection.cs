@@ -97,14 +97,6 @@ public class MatSelection : MonoBehaviour
         {
             yield return new WaitForSecondsRealtime(0.25f);
             iTryCount++;
-
-            //Initiate Mat connection after every 2.5 seconds
-            if (iTryCount % 10 == 0)
-            {
-                //Initiate the connection with the mat.
-                InitiateMatConnection();
-            }
-
         }
 
         //Turn off the Mat Find Panel
@@ -177,36 +169,35 @@ public class MatSelection : MonoBehaviour
         NoMatPanel.SetActive(true);
     }
 
-
     /* This function is responsible for only initiating mat connection 
      * Checking if mat is connected or not, Loading game scene, isnt handled here */
-    public void ValidateAndInitiateMatConnection()
-    {
-        Debug.Log("Starting mat connection");
-        if (currentYipliConfig.matInfo != null)
-        {
-            try
-            {
-                if (currentYipliConfig.matInfo.macAddress.Length > 1)
-                {
-                    //Initiate the connection with the mat.
-                    InitiateMatConnection();
-                }
-                else
-                {
-                    Debug.Log("No valid yipli mat found. Register a YIPLI mat and try again.");
-                }
-            }
-            catch (Exception exp)
-            {
-                Debug.Log("Exception in InitBLEFramework :" + exp.Message);
-            }
-        }
-        else
-        {
-            Debug.Log("No valid yipli mat found. Register a YIPLI mat and try again.");
-        }
-    }
+    //public void ValidateAndInitiateMatConnection()
+    //{
+    //    Debug.Log("Starting mat connection");
+    //    if (currentYipliConfig.matInfo != null)
+    //    {
+    //        try
+    //        {
+    //            if (currentYipliConfig.matInfo.macAddress.Length > 1)
+    //            {
+    //                //Initiate the connection with the mat.
+    //                InitiateMatConnection();
+    //            }
+    //            else
+    //            {
+    //                Debug.Log("No valid yipli mat found. Register a YIPLI mat and try again.");
+    //            }
+    //        }
+    //        catch (Exception exp)
+    //        {
+    //            Debug.Log("Exception in InitBLEFramework :" + exp.Message);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("No valid yipli mat found. Register a YIPLI mat and try again.");
+    //    }
+    //}
 
     private void InitiateMatConnection()
     {

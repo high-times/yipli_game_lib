@@ -274,7 +274,7 @@ public class PlayerSelection : MonoBehaviour
         if (currentYipliConfig.matInfo != null)
         {
             // Initiate the mat Connection in advance as it takes time to connect.
-            matSelectionScript.ValidateAndInitiateMatConnection();
+            //matSelectionScript.ValidateAndInitiateMatConnection();
         }
     }
 

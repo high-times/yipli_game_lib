@@ -27,6 +27,7 @@ public class PlayerSession : MonoBehaviour
 
     public GameObject YipliBackgroundPanel;
     public GameObject BleErrorPanel;
+    public GameObject retryBleConnectionButton;
     public GameObject LoadingScreen;
     private GameObject instantiatedBleErrorPanel;
 
@@ -292,6 +293,7 @@ public class PlayerSession : MonoBehaviour
     private IEnumerator ReconnectBleFromGame()
     {
         bIsBleCheckRunning = true;
+        retryBleConnectionButton.SetActive(false);
         Debug.Log("In ReconnectBleFromGame.");
         try
         {
@@ -304,9 +306,10 @@ public class PlayerSession : MonoBehaviour
             Debug.Log("Exception in InitBLEFramework from ReconnectBleFromGame" + exp.Message);
         }
 
-        //Block this fuction for next 5 seconds. 
+        //Block this function for next 5 seconds by disabling the retry Button.
         //Dont allow user to initiate Bluetooth connection for atleast 5 secs, as 1 connecteion initiation is enough.
         yield return new WaitForSecondsRealtime(5f);
+        retryBleConnectionButton.SetActive(true);
         bIsBleCheckRunning = false;
     }
 
