@@ -67,25 +67,27 @@ public class PlayerSelection : MonoBehaviour
         {
             yield return new WaitForSecondsRealtime(0.1f);
         }
-        if (currentYipliConfig.gameInventoryInfo == null)
-        {
-            Debug.Log("Game info failed");
-            //currentYipliConfig.gameInfo = await FirebaseDBHandler.GetGameInfo(currentYipliConfig.gameId);
-        }
-        else {
-            Debug.Log("Game info success");
-        }
 
         //If GameVersion latest then proceed
-        if (Application.version.Equals(currentYipliConfig.gameInventoryInfo.gameVersion))
-            CheckIntentsAndInitializePlayerEnvironment();
+        if (currentYipliConfig.gameInventoryInfo == null)
+        {
+            Debug.Log("Game not found in the iventory");
+        }
         else
         {
-            //Ask user to Update Game version option
-            LoadingPanel.SetActive(false);
+            Debug.Log("Game found in the iventory");
+            Debug.Log("Currrent Game version : " + Application.version);
+            Debug.Log("Latest Game version : " + currentYipliConfig.gameInventoryInfo.gameVersion);
+            if (Application.version.Equals(currentYipliConfig.gameInventoryInfo.gameVersion))
+                CheckIntentsAndInitializePlayerEnvironment();
+            else
+            {
+                //Ask user to Update Game version option
+                LoadingPanel.SetActive(false);
 
-            GameVersionUpdateText.text = "A new version of "+ currentYipliConfig.gameInventoryInfo.displayName +" is available.\nUpdating the game is recommended for better experience?";
-            GameVersionUpdatePanel.SetActive(true);
+                GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdating the game is recommended for better experience?";
+                GameVersionUpdatePanel.SetActive(true);
+            }
         }
     }
 

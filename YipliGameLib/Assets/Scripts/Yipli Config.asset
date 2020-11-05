@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   callbackLevel: DemoGameScene
   userId: F9zyHSRJUCb0Ctc15F9xkLFSH5f1
-  gameId: default
+  gameId: eggcatcher
   bIsMatIntroDone: 1
   bIsChangePlayerCalled: 0
   onlyMatPlayMode: 1

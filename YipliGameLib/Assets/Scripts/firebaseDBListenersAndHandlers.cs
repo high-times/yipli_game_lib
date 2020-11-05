@@ -71,7 +71,11 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     private void HandleGameInfoValueChanged(object sender, ValueChangedEventArgs e)
     {
         getGameInfoQueryStatus = global::QueryStatus.InProgress;
-        currentYipliConfig.gameInventoryInfo = new YipliInventoryGameInfo(e.Snapshot);
+        if(e.Snapshot.Value != null)
+            currentYipliConfig.gameInventoryInfo = new YipliInventoryGameInfo(e.Snapshot);
+        {
+            Debug.Log("Invalid Game. Nothing found at specified path.");
+        }
         getGameInfoQueryStatus = global::QueryStatus.Completed;
     }
 
