@@ -42,4 +42,7 @@ public class YipliConfig : ScriptableObject
 
     [HideInInspector]
     public YipliInventoryGameInfo gameInventoryInfo;
+
+    [HideInInspector]
+    public int oldFMResponseCount;
 }

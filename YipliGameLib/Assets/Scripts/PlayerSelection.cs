@@ -85,7 +85,7 @@ public class PlayerSelection : MonoBehaviour
                 //Ask user to Update Game version option
                 LoadingPanel.SetActive(false);
 
-                GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdating the game is recommended for better experience?";
+                GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdating the same is recommended for better experience";
                 GameVersionUpdatePanel.SetActive(true);
             }
         }
@@ -385,9 +385,9 @@ public class PlayerSelection : MonoBehaviour
 
         //Fill dummy data in user/player, for testing from Editor
 #if UNITY_EDITOR
-        //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
+        currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
         //currentYipliConfig.playerInfo = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg");
-        //currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
+        currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
 #endif
     }
 

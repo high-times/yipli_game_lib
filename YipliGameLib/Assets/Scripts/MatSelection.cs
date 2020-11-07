@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class MatSelection : MonoBehaviour
 {
-    private const int MaxBleCheckCount=20;
+    private const int MaxBleCheckCount = 20;
     public TextMeshProUGUI noMatText;
 
     public TextMeshProUGUI bleSuccessMsg;
@@ -29,6 +29,9 @@ public class MatSelection : MonoBehaviour
 
     private bool autoSkipMatConnection;
 
+    private bool bIsGameMainSceneLoading = false;
+
+    private bool bIsMatFlowInitialized = false;
     private void Start()
     {
         if (currentYipliConfig.onlyMatPlayMode == false)
@@ -45,12 +48,16 @@ public class MatSelection : MonoBehaviour
     public void MatConnectionFlow()
     {
         Debug.Log("Starting Mat connection flow");
-
+        bIsMatFlowInitialized = true;
         NoMatPanel.SetActive(false);
         StopCoroutine(ConnectMatAndLoadGameScene());
 
+        //Bypass mat connection in Unity Editor
         if (Application.platform == RuntimePlatform.WindowsEditor)
-            StartCoroutine(LoadMainGameScene());
+        {
+            if (!bIsGameMainSceneLoading)
+                StartCoroutine(LoadMainGameScene());
+        }
 
         if (currentYipliConfig.matInfo == null)
         {
@@ -63,7 +70,10 @@ public class MatSelection : MonoBehaviour
             Debug.Log("Mac Address : " + currentYipliConfig.matInfo.macAddress);
             //Load Game scene if the mat is already connected.
             if (InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
-                StartCoroutine(LoadMainGameScene());
+            {
+                if (!bIsGameMainSceneLoading)
+                    StartCoroutine(LoadMainGameScene());
+            }
             else
                 StartCoroutine(ConnectMatAndLoadGameScene());
         }
@@ -82,11 +92,28 @@ public class MatSelection : MonoBehaviour
         MatConnectionFlow();
     }
 
+
+    public void Update()
+    {
+        if (bIsMatFlowInitialized)
+        {
+            //LoadGameScene if mat connection is established
+            if (InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+            {
+                if (true != bIsGameMainSceneLoading)
+                    StartCoroutine(LoadMainGameScene());
+            }
+        }
+    }
+
+
     private IEnumerator ConnectMatAndLoadGameScene()
     {
         int iTryCount = 0;
+
         //Initiate the connection with the mat.
         InitiateMatConnection();
+        yield return new WaitForSecondsRealtime(0.1f);
 
         //Turn on the Mat Find Panel, and animate
         loadingPanel.gameObject.GetComponentInChildren<Text>().text = "Finding your mat..";
@@ -101,21 +128,17 @@ public class MatSelection : MonoBehaviour
 
         //Turn off the Mat Find Panel
         loadingPanel.SetActive(false);
-        loadingPanel.gameObject.GetComponentInChildren<Text>().text = "Fetching Player details...";
+        loadingPanel.gameObject.GetComponentInChildren<Text>().text = "Fetching player details...";
 
-        if (InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
-        {
-            StartCoroutine(LoadMainGameScene());
-        }
-        else
+        if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
         {
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
             Debug.Log("Mat not reachable.");
-            noMatText.text = "Make sure that the registered mat is reachable.";
+            noMatText.text = "Make sure that your active Yipli mat is not very far from your device.";
             NoMatPanel.SetActive(true);
         }
     }
-    
+
     public void SkipMat()
     {
         NoMatPanel.SetActive(false);
@@ -129,7 +152,8 @@ public class MatSelection : MonoBehaviour
         if (inputPassword.text == "123456")
         {
             //load last Scene
-            StartCoroutine(LoadMainGameScene());
+            if (!bIsGameMainSceneLoading)
+                StartCoroutine(LoadMainGameScene());
         }
         else
         {
@@ -141,7 +165,9 @@ public class MatSelection : MonoBehaviour
 
     IEnumerator LoadMainGameScene()
     {
+        bIsGameMainSceneLoading = true;
         loadingPanel.SetActive(false);
+        NoMatPanel.SetActive(false);
         bleSuccessMsg.text = "Your Fitmat is connected.\nTaking you to the game.";
         BluetoothSuccessPanel.SetActive(true);
         yield return new WaitForSeconds(1f);
@@ -154,13 +180,12 @@ public class MatSelection : MonoBehaviour
 
     IEnumerator LoadSceneAfterDisplayingDriverAndGameVersion()
     {
-        loadingPanel.SetActive(false);
         //TODO : Comment following lines for production build
         bleSuccessMsg.text = "FmDriver Version : " + YipliHelper.GetFMDriverVersion() + "\n Game Version : " + Application.version;
         yield return new WaitForSeconds(1f);
-         
+
         //load last Scene
-        SceneManager.LoadScene(currentYipliConfig.callbackLevel); 
+        SceneManager.LoadScene(currentYipliConfig.callbackLevel);
     }
 
     public void OnBackPress()

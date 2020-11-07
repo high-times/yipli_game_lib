@@ -176,7 +176,7 @@ public class YipliInventoryGameInfo
                 gameId = snapshot.Key;
                 displayName = snapshot.Child("name").Value?.ToString() ?? "";
                 gamePackageId = snapshot.Child("android-url").Value?.ToString() ?? "";
-                gameVersion = snapshot.Child("currentVersion").Value?.ToString() ?? "";
+                gameVersion = snapshot.Child("current-version").Value?.ToString() ?? "";
             }
             else
             {

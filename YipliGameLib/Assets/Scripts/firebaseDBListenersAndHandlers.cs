@@ -193,7 +193,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 
         if (!currentYipliConfig.gameId.Equals("default") || currentYipliConfig.gameId.Length > 1)
             FirebaseDatabase.DefaultInstance
-            .GetReference("profiles/users/" + currentYipliConfig.userId + "/players/" + currentYipliConfig.playerInfo.playerId + "/activity-statistics/games-statistics/" + currentYipliConfig.gameId + "/game-data")
+            .GetReference("fgd/" + currentYipliConfig.userId + "/" + currentYipliConfig.playerInfo.playerId + "/" + currentYipliConfig.gameId)
             .ValueChanged += HandleGameDataValueChanged;
     }
 
