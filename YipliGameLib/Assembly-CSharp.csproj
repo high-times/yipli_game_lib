@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\ActionAndGameInfo.cs" />
     <Compile Include="Assets\Scripts\BLEControllerEventHandler.cs" />
+    <Compile Include="Assets\Scripts\FileReadWrite.cs" />
     <Compile Include="Assets\Scripts\FirebaseDBHandler.cs" />
     <Compile Include="Assets\Scripts\GamelibSounds.cs" />
     <Compile Include="Assets\Scripts\InitBLE.cs" />

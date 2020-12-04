@@ -1,4 +1,7 @@
-﻿using com.fitmat.fitmatdriver.Producer.Connection;
+﻿#if UNITY_STANDALONE_WIN
+using com.fitmat.fitmatdriver.Producer.Connection;
+#endif
+
 using System;
 using UnityEngine;
 public class InitBLE
@@ -83,8 +86,9 @@ public class InitBLE
 
     public static string getMatConnectionStatus()
     {
-        if (Application.platform == RuntimePlatform.WindowsEditor)
+#if UNITY_EDITOR
             return "connected";
+#endif
         try
         {
 #if UNITY_ANDROID

@@ -49,8 +49,8 @@ public class PlayerSession : MonoBehaviour
     public float GetGameplayDuration { get => duration; set => duration = value; }
 
     //Delegates for Firebase Listeners
-    public delegate void OnPlayerFound();
-    public static event OnPlayerFound NewPlayerFound;
+    //public delegate void OnPlayerFound();
+    //public static event OnPlayerFound NewPlayerFound;
 
     //Delegates for Firebase Listeners
     public delegate void OnDefaultMatChanged();
@@ -91,7 +91,7 @@ public class PlayerSession : MonoBehaviour
         //Invoke the player found event, to get the player data.
         if (currentYipliConfig.gameId.Length > 1)
         {
-            NewPlayerFound();
+            //NewPlayerFound();
             NewMatFound();
         }
         else
@@ -269,7 +269,7 @@ public class PlayerSession : MonoBehaviour
         {
             //Initiate mat connection with last set GameCluterId
             Debug.Log("ReconnectBle with Game clster ID : " + YipliHelper.GetGameClusterId());
-            InitBLE.InitBLEFramework(currentYipliConfig.matInfo.macAddress, YipliHelper.GetGameClusterId() != 1000 ? YipliHelper.GetGameClusterId() : 0);
+            InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", YipliHelper.GetGameClusterId() != 1000 ? YipliHelper.GetGameClusterId() : 0);
         }
         catch (Exception exp)
         {

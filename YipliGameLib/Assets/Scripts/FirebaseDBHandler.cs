@@ -21,37 +21,37 @@ public static class FirebaseDBHandler
     public delegate void PostUserCallback();
 
     /* The function call to be allowed only if network is available */
-    public static async Task<YipliInventoryGameInfo> GetGameInfo(string gameId)
-    {
-        YipliInventoryGameInfo gameInfo = new YipliInventoryGameInfo();
-        DataSnapshot snapshot = null;
-        try
-        {
-            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
-            Debug.LogFormat("User signed in successfully: {0} ({1})",
-            newUser.DisplayName, newUser.UserId);
+    //public static async Task<YipliInventoryGameInfo> GetGameInfo(string gameId)
+    //{
+    //    YipliInventoryGameInfo gameInfo = new YipliInventoryGameInfo();
+    //    DataSnapshot snapshot = null;
+    //    try
+    //    {
+    //        Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
+    //        Debug.LogFormat("Dummy User signed in successfully: {0} ({1})",
+    //        newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
-            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-            snapshot = await reference.Child("inventory/games").Child(gameId).GetValueAsync();
-            gameInfo = new YipliInventoryGameInfo(snapshot);
-        }
-        catch (Exception exp)
-        {
-            Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
-        }
+    //        FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //        DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+    //        snapshot = await reference.Child("inventory/games").Child(gameId).GetValueAsync();
+    //        gameInfo = new YipliInventoryGameInfo(snapshot);
+    //    }
+    //    catch (Exception exp)
+    //    {
+    //        Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
+    //    }
 
-        return gameInfo ;
-    }
+    //    return gameInfo ;
+    //}
 
-    /* The function call to be allowed only if network is available */
+    ///* The function call to be allowed only if network is available */
     public static async Task<string> GetUserIdFromCode(string code)
     {
         string userId = "";
         DataSnapshot snapshot = null;
         try
         {
-            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+            Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
             Debug.LogFormat("User signed in successfully: {0} ({1})",
             newUser.DisplayName, newUser.UserId);
 
@@ -71,7 +71,7 @@ public static class FirebaseDBHandler
     // Adds a PlayerSession to the Firebase Database
     public static void PostPlayerSession(PlayerSession session, PostUserCallback callback)
     {
-        auth.SignInAnonymouslyAsync().ContinueWith(task => {
+        auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password).ContinueWith(task => {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInAnonymouslyAsync was canceled.");
@@ -103,7 +103,7 @@ public static class FirebaseDBHandler
     // Adds a PlayerSession to the Firebase Database
     public static void PostMultiPlayerSession(PlayerSession session,PlayerDetails playerDetails,string mpSessionUUID, PostUserCallback callback)
     {
-        auth.SignInAnonymouslyAsync().ContinueWith(task => {
+        auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password).ContinueWith(task => {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInAnonymouslyAsync was canceled.");
@@ -134,7 +134,7 @@ public static class FirebaseDBHandler
 
     //public static void ChangeCurrentPlayerInBackend(string strUserId, string strPlayerId, PostUserCallback callback)
     //{
-    //    auth.SignInAnonymouslyAsync().ContinueWith(task =>
+    //    auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password).ContinueWith(task =>
     //    {
     //        if (task.IsCanceled)
     //        {
@@ -170,7 +170,7 @@ public static class FirebaseDBHandler
     //    {
     //        try
     //        {
-    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
@@ -199,7 +199,7 @@ public static class FirebaseDBHandler
     //    {
     //        try
     //        {
-    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
@@ -245,7 +245,7 @@ public static class FirebaseDBHandler
     //    {
     //        try
     //        {
-    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
@@ -286,7 +286,7 @@ public static class FirebaseDBHandler
 
 
     // Mat related queries
-    
+
     /* The function call to be allowed only if network is available */
     //public static async Task<YipliMatInfo> GetCurrentMatDetails(string userId, PostUserCallback callback)
     //{
@@ -302,7 +302,7 @@ public static class FirebaseDBHandler
     //    {
     //        try
     //        {
-    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
@@ -350,7 +350,7 @@ public static class FirebaseDBHandler
     //    {
     //        try
     //        {
-    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+    //            Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
@@ -416,7 +416,7 @@ public static class FirebaseDBHandler
     * This is to be called by your games shop manager module.*/
     public static async void UpdateStoreData(string strUserId, string strPlayerId, string strGameId, Dictionary<string, object> dStoreData, PostUserCallback callback)
     {
-        await auth.SignInAnonymouslyAsync().ContinueWith(async task =>
+        await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password).ContinueWith(async task =>
         {
             if (task.IsCanceled)
             {
@@ -441,7 +441,7 @@ public static class FirebaseDBHandler
     // Adds a PlayerSession to the Firebase Database
     public static void _T_PostDummyPlayerSession(Dictionary<string, dynamic> tempData)
     {
-        auth.SignInAnonymouslyAsync().ContinueWith(task => {
+        auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password).ContinueWith(task => {
             if (task.IsCanceled)
             {
                 Debug.LogError("SignInAnonymouslyAsync was canceled.");

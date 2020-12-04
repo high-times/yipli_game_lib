@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using yipli.Windows;
 
 public class PlayerSelection : MonoBehaviour
 {
@@ -78,16 +79,21 @@ public class PlayerSelection : MonoBehaviour
             Debug.Log("Game found in the iventory");
             Debug.Log("Currrent Game version : " + Application.version);
             Debug.Log("Latest Game version : " + currentYipliConfig.gameInventoryInfo.gameVersion);
-            if (Application.version.Equals(currentYipliConfig.gameInventoryInfo.gameVersion))
-                CheckIntentsAndInitializePlayerEnvironment();
-            else
+
+            int gameVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(Application.version);
+            int inventoryVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(currentYipliConfig.gameInventoryInfo.gameVersion);
+
+
+            if (inventoryVersionCode > gameVersionCode)
             {
                 //Ask user to Update Game version option
                 LoadingPanel.SetActive(false);
 
-                GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdating the same is recommended for better experience";
+                GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";
                 GameVersionUpdatePanel.SetActive(true);
-            }
+            }                
+            else
+                CheckIntentsAndInitializePlayerEnvironment();
         }
     }
 
@@ -115,7 +121,7 @@ public class PlayerSelection : MonoBehaviour
             Debug.Log("Calling CheckIntentsAndInitializePlayerEnvironment()");
 
             // Read intents and Initialize defaults
-            CheckIntents();
+            FetchUserDetails();
 
             yield return new WaitForSeconds(0.2f);
         }
@@ -128,7 +134,7 @@ public class PlayerSelection : MonoBehaviour
         Debug.Log("In CheckIntentsAndInitializePlayerEnvironment()");
 
         // Read intents and Initialize defaults
-        CheckIntents();
+        FetchUserDetails();
 
         StartCoroutine(InitializeAndStartPlayerSelection());
     }
@@ -270,12 +276,6 @@ public class PlayerSelection : MonoBehaviour
             //This code block will be called when the game App is not launched from the Yipli app.
             currentYipliConfig.matInfo = UserDataPersistence.GetSavedMat();
         }
-
-        if (currentYipliConfig.matInfo != null)
-        {
-            // Initiate the mat Connection in advance as it takes time to connect.
-            //matSelectionScript.ValidateAndInitiateMatConnection();
-        }
     }
 
     private void InitUserId()
@@ -365,13 +365,15 @@ public class PlayerSelection : MonoBehaviour
         GameVersionUpdatePanel.SetActive(false);
     }
 
-    private void CheckIntents()
+    private void FetchUserDetails()
     {
         try
         {
             Debug.Log("In player Selection Start()");
-#if UNITY_ANDROID || UNITY_EDITOR
+#if UNITY_ANDROID
             ReadAndroidIntents();
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+            ReadFromWindowsFile();
 #endif
         }
         catch (System.Exception exp)// handling of game directing opening, without yipli app
@@ -381,13 +383,18 @@ public class PlayerSelection : MonoBehaviour
 
             currentYipliConfig.userId = null;
             currentYipliConfig.playerInfo = null;
+            currentYipliConfig.matInfo = null;
+
+            //Fill dummy data in user/player, for testing from Editor
+#if UNITY_EDITOR
+            currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
+            //currentYipliConfig.playerInfo = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg");
+            currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
+#endif
         }
 
-        //Fill dummy data in user/player, for testing from Editor
-#if UNITY_EDITOR
-        currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
-        //currentYipliConfig.playerInfo = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg");
-        currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
+#if UNITY_STANDALONE_WIN
+        currentYipliConfig.matInfo = null;
 #endif
     }
 
@@ -396,9 +403,11 @@ public class PlayerSelection : MonoBehaviour
         //Setting User Id in the scriptable Object
         InitUserId();
 
+#if UNITY_ANDROID
         //Setting Deafult mat
         InitDefaultMat();
 
+#endif
         //Setting default Player in the scriptable Object
         InitDefaultPlayer();
 
@@ -702,8 +711,9 @@ public class PlayerSelection : MonoBehaviour
         bIsProfilePicLoaded = false;
     }
 
-    private void GetGameDetails()
+    private void ReadFromWindowsFile()
     {
-
+        currentYipliConfig.userId = FileReadWrite.ReadFromFile();
+        currentYipliConfig.playerInfo = null;
     }
 }

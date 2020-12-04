@@ -7,9 +7,6 @@
 
     public class BLEControllerEventHandler : MonoBehaviour
     {
-
-
-
         //native events
         public delegate void OnBleDidConnectEventDelegate(string error);
         public static event OnBleDidConnectEventDelegate OnBleDidConnectEvent;

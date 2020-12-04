@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Yipli Config
   m_EditorClassIdentifier: 
   callbackLevel: DemoGameScene
-  userId: 
-  gameId: NA
+  userId: F9zyHSRJUCb0Ctc15F9xkLFSH5f1
+  gameId: eggcatcher
   bIsMatIntroDone: 1
   bIsChangePlayerCalled: 0
   onlyMatPlayMode: 1
   bIsInternetConnected: 1
+  oldFMResponseCount: 0

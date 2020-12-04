@@ -5,6 +5,10 @@ public static class YipliHelper
 {
     private static string yipliAppBundleId = "com.yipli.app"; //todo: Change this later
 
+    public static string userName = "bhansali.saurabh20@gmail.com";
+    public static string password = "abcdefg123456789";
+
+
     public static int GetGameClusterId()
     {
         return InitBLE.getGameClusterID();
@@ -107,7 +111,7 @@ public static class YipliHelper
         Debug.Log("Yipli App is Installed. Returning true.");
         return true;
 
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR // TODO : Handle Windows flow
         Debug.Log("Yipli App validation for windows isnt required. Returning true");
         return true;
 #else
@@ -115,5 +119,25 @@ public static class YipliHelper
         return false;
 #endif
     }
+
+    public static int convertGameVersionToBundleVersionCode(string gameVersion)
+    {
+        int versionCode;
+
+        string[] strVersionCode = gameVersion.Split('.');
+
+        string finalVersion = "";
+        foreach (var word in strVersionCode)
+        {
+            finalVersion += word;
+        }
+
+        versionCode = int.Parse(finalVersion);
+
+        Debug.Log("Returning version Code : " + versionCode);
+
+        return versionCode;
+    }
+
 }
 
