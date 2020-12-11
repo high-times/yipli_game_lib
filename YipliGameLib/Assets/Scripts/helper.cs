@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using yipli.Windows;
 
 public static class YipliHelper
 {
@@ -32,12 +33,7 @@ public static class YipliHelper
 
     public static bool checkInternetConnection()
     {
-        bool bIsNetworkAvailable = true;
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            bIsNetworkAvailable = false;
-        }
-        return bIsNetworkAvailable;
+        return PlayerSession.Instance.currentYipliConfig.bIsInternetConnected;
     }
 
     public static string GetMatConnectionStatus()
@@ -76,6 +72,8 @@ public static class YipliHelper
             Debug.Log(e);
             Application.OpenURL("market://details?id=" + yipliAppBundleId);
         }
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+        FileReadWrite.OpenYipliApp();
 #else
         Debug.Log("Unsupported os");
 #endif

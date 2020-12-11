@@ -177,8 +177,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
             return;
         }
 
-        if (currentYipliConfig.allPlayersInfo == null)
-            currentYipliConfig.allPlayersInfo = new List<YipliPlayerInfo>();
+        currentYipliConfig.allPlayersInfo = new List<YipliPlayerInfo>();
 
         foreach (var childSnapshot in args.Snapshot.Children)
         {

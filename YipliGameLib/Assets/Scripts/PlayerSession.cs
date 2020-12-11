@@ -49,10 +49,6 @@ public class PlayerSession : MonoBehaviour
     public float GetGameplayDuration { get => duration; set => duration = value; }
 
     //Delegates for Firebase Listeners
-    //public delegate void OnPlayerFound();
-    //public static event OnPlayerFound NewPlayerFound;
-
-    //Delegates for Firebase Listeners
     public delegate void OnDefaultMatChanged();
     public static event OnDefaultMatChanged NewMatFound;
 
@@ -69,18 +65,25 @@ public class PlayerSession : MonoBehaviour
             _instance = this;
         }
 
-        if (currentYipliConfig.playerInfo == null)
+        if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)
+        {
+            if (currentYipliConfig.userId == null || currentYipliConfig.userId.Length < 1)
+            {
+                SceneManager.LoadScene("yipli_lib_scene");
+            }
+        }
+        else if (currentYipliConfig.playerInfo == null && currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
         {
             // Call Yipli_GameLib_Scene
             _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
             Debug.Log("Updating the callBackLevel Value to :" + _instance.currentYipliConfig.callbackLevel);
-            Debug.Log("Loading Yipli scene for player Selection...");
+            Debug.Log("Loading Yipli scene for player Selection...");           
             if (!_instance.currentYipliConfig.callbackLevel.Equals("Yipli_Testing_harness"))
                 SceneManager.LoadScene("yipli_lib_scene");
         }
         else
         {
-            Debug.Log("Current player is not null.");
+            Debug.Log("Current player is not null. Not calling yipli_lib_scene");
         }
     }
 
@@ -102,8 +105,6 @@ public class PlayerSession : MonoBehaviour
         playerNameGreetingText.text = "Hi, " + GetCurrentPlayer();
         
         Debug.Log("Starting the BLE routine check in PlayerSession Start()");
-        //if (!_instance.currentYipliConfig.callbackLevel.Equals("Yipli_Testing_harness"))
-        //    StartCoroutine(CheckBleRoutine());
     }
 
     public void Update()
@@ -214,38 +215,6 @@ public class PlayerSession : MonoBehaviour
         }
     }
 
-    private IEnumerator CheckBleRoutine()
-    {
-        while (true)
-        {
-            if (!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
-            {
-                Debug.Log("Setting the Error Panel Active");
-                if (!BleErrorPanel.activeSelf)
-                {
-                    bleErrorText.text = "Bluetooth Connection lost. Make sure that the Yipli Mat(default) and your device bluetooth are turned on and ReCheck.";
-                    FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
-
-                    YipliBackgroundPanel.SetActive(true);
-                    BleErrorPanel.SetActive(true);
-
-                }
-            }
-            else
-            {
-                Debug.Log("Bluetooth connection is established.");
-                Debug.Log("Destroying Ble Error canvas prefab.");
-                if (BleErrorPanel.activeSelf)
-                {
-                    FindObjectOfType<YipliAudioManager>().Play("BLE_success");
-                    YipliBackgroundPanel.SetActive(false);
-                    BleErrorPanel.SetActive(false);
-                }
-            }
-            yield return new WaitForSecondsRealtime(.2f);
-        }
-    }
-
     public void StartCoroutineForBleReConnection()
     {
         try
@@ -321,16 +290,13 @@ public class PlayerSession : MonoBehaviour
     {
         return playerActionCounts;
     }
-
-
+    
     public Dictionary<string, dynamic> GetPlayerSessionDataJsonDic()
     {
         Dictionary<string, dynamic> x;
         x = new Dictionary<string, dynamic>();
         x.Add("game-id", currentYipliConfig.gameId);
         x.Add("user-id", currentYipliConfig.userId);
-        x.Add("mat-id", currentYipliConfig.matInfo.matId);
-        x.Add("mac-address", currentYipliConfig.matInfo.macAddress);
         x.Add("player-id", currentYipliConfig.playerInfo.playerId);
         x.Add("age", int.Parse(currentYipliConfig.playerInfo.playerAge));
         x.Add("points", (int)gamePoints);
@@ -357,6 +323,10 @@ public class PlayerSession : MonoBehaviour
             Debug.Log("Game-data is null");
         }
 
+        //Removed following, since mat-id and mac-address couldnt be got on windows
+        //x.Add("mat-id", currentYipliConfig.matInfo.matId);
+        //x.Add("mac-address", currentYipliConfig.matInfo.macAddress);
+        
         return x;
     }
 
@@ -470,8 +440,6 @@ public class PlayerSession : MonoBehaviour
         x = new Dictionary<string, dynamic>();
         x.Add("game-id", playerDetails.gameId);
         x.Add("user-id", playerDetails.userId);
-        x.Add("mat-id", playerDetails.matId);
-        x.Add("mac-address", playerDetails.matMacAddress);
         x.Add("player-id", playerDetails.playerId);
         x.Add("age", int.Parse(playerDetails.playerAge));
         x.Add("points", (int)playerDetails.points);
@@ -505,8 +473,9 @@ public class PlayerSession : MonoBehaviour
     public void StartMPSession()
     {
         Debug.Log("Starting multi player session.");
-        playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
-
+        currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
+        currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
+        
         ActionAndGameInfoManager.SetYipliMultiplayerGameInfo(currentYipliConfig.gameId);
 
         currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.points = 0;

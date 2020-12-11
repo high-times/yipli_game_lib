@@ -87,7 +87,7 @@ public class InitBLE
     public static string getMatConnectionStatus()
     {
 #if UNITY_EDITOR
-            return "connected";
+        return "connected";
 #endif
         try
         {

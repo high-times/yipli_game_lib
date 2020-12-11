@@ -20,3 +20,4 @@ MonoBehaviour:
   onlyMatPlayMode: 1
   bIsInternetConnected: 1
   oldFMResponseCount: 0
+  gameType: 1

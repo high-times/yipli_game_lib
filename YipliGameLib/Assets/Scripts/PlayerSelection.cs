@@ -7,7 +7,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+
+#if UNITY_STANDALONE_WIN
 using yipli.Windows;
+#endif
 
 public class PlayerSelection : MonoBehaviour
 {
@@ -31,6 +34,7 @@ public class PlayerSelection : MonoBehaviour
     public MatSelection matSelectionScript;
     public Image profilePicImage;
     public GameObject RemotePlayCodePanel;
+    public GameObject Minimum2PlayersPanel;
     public GameObject GameVersionUpdatePanel;
 
     public TextMeshProUGUI GameVersionUpdateText;
@@ -93,7 +97,7 @@ public class PlayerSelection : MonoBehaviour
                 GameVersionUpdatePanel.SetActive(true);
             }                
             else
-                CheckIntentsAndInitializePlayerEnvironment();
+                FetchUserAndInitializePlayerEnvironment();
         }
     }
 
@@ -106,7 +110,7 @@ public class PlayerSelection : MonoBehaviour
 
     public void OnSkipUpdateClick()
     {
-        CheckIntentsAndInitializePlayerEnvironment();
+        FetchUserAndInitializePlayerEnvironment();
     }
 
     //Whenever the Yipli App launches the game, the user will be found and next flow will be called automatically.
@@ -129,7 +133,7 @@ public class PlayerSelection : MonoBehaviour
         StartCoroutine(InitializeAndStartPlayerSelection());
     }
 
-    private void CheckIntentsAndInitializePlayerEnvironment()
+    private void FetchUserAndInitializePlayerEnvironment()
     {
         Debug.Log("In CheckIntentsAndInitializePlayerEnvironment()");
 
@@ -344,6 +348,7 @@ public class PlayerSelection : MonoBehaviour
         switchPlayerPanel.SetActive(false);
         playerSelectionPanel.SetActive(false);
         onlyOnePlayerPanel.SetActive(false);
+        Minimum2PlayersPanel.SetActive(false);
         zeroPlayersPanel.SetActive(false);
         noNetworkPanel.SetActive(false);
         GuestUserPanel.SetActive(false);
@@ -358,6 +363,7 @@ public class PlayerSelection : MonoBehaviour
         switchPlayerPanel.SetActive(false);
         playerSelectionPanel.SetActive(false);
         onlyOnePlayerPanel.SetActive(false);
+        Minimum2PlayersPanel.SetActive(false);
         zeroPlayersPanel.SetActive(false);
         noNetworkPanel.SetActive(false);
         GuestUserPanel.SetActive(false);
@@ -389,7 +395,7 @@ public class PlayerSelection : MonoBehaviour
 #if UNITY_EDITOR
             currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
             //currentYipliConfig.playerInfo = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg");
-            currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
+            //currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
 #endif
         }
 
@@ -421,12 +427,31 @@ public class PlayerSelection : MonoBehaviour
         {
             //Wait till the listeners are synced and the data has been populated
             Debug.Log("Waiting for players query to complete");
+            LoadingPanel.gameObject.GetComponentInChildren<Text>().text = "Getting all players...";
             while (firebaseDBListenersAndHandlers.GetPlayersQueryStatus() != QueryStatus.Completed)
+            {
                 yield return new WaitForSecondsRealtime(0.1f);
+            }
             
+            //Special handling in case of Multiplayer games
+            if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)
+            {
+                // Check if atleast 2 players are available for playing the multiplayer game
+                if (currentYipliConfig.allPlayersInfo.Count < 2)
+                {
+                    //Set active a panel to handle atleast 2 players should be there to play
+                    TurnOffAllPanels();
+                    Minimum2PlayersPanel.SetActive(true);
+                }
+                else
+                {
+                    LoadingPanel.SetActive(false);
+                    //Skip player selection as it will be handled by game side, directly go to the mat selection flow
+                    matSelectionScript.MatConnectionFlow();
+                }
+            }
 
-            Debug.Log("Sync players complete");
-            if (currentYipliConfig.bIsChangePlayerCalled == true)
+            else if (currentYipliConfig.bIsChangePlayerCalled == true)
             {
                 currentYipliConfig.bIsChangePlayerCalled = false;
                 PlayerSelectionFlow();
@@ -440,6 +465,13 @@ public class PlayerSelection : MonoBehaviour
                     SwitchPlayerFlow();
             }
         }
+    }
+
+
+    public void retryPlayersCheck()
+    {
+        Minimum2PlayersPanel.SetActive(false);
+        StartCoroutine(InitializeAndStartPlayerSelection());
     }
 
     public void SwitchPlayerFlow()//Call this for every StartGame()/Game Session
@@ -470,13 +502,14 @@ public class PlayerSelection : MonoBehaviour
     private IEnumerator ImageUploadAndPlayerUIInit()
     {
         //Activate the PlayerName and Image display object
-        //LoadingPanel.SetActive(true);
-        if (!bIsProfilePicLoaded)
-            yield return loadProfilePicAsync(profilePicImage, currentYipliConfig.playerInfo.profilePicUrl);
-        //LoadingPanel.SetActive(false);
-        playerNameText.text = "Hi, " + currentYipliConfig.playerInfo.playerName;
-        playerNameText.gameObject.SetActive(true);
-        yield return new WaitForSecondsRealtime(0.0001f);
+        if(currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
+        {
+            if (!bIsProfilePicLoaded)
+                yield return loadProfilePicAsync(profilePicImage, currentYipliConfig.playerInfo.profilePicUrl);
+            playerNameText.text = "Hi, " + currentYipliConfig.playerInfo.playerName;
+            playerNameText.gameObject.SetActive(true);
+        }
+        yield return new WaitForSecondsRealtime(0.00001f);
     }
 
     public void PlayerSelectionFlow()
@@ -484,7 +517,7 @@ public class PlayerSelection : MonoBehaviour
         Debug.Log("In Player selection flow.");
 
         // first of all destroy all PlayerButton prefabs. This is required to remove stale prefabs.
-        if (generatedObjects != null)
+        if (generatedObjects.Count > 0)
         {
             Debug.Log("Destroying all the stale --PlayerName-- prefabs, before spawning new ones.");
             foreach (var obj1 in generatedObjects)
@@ -711,9 +744,11 @@ public class PlayerSelection : MonoBehaviour
         bIsProfilePicLoaded = false;
     }
 
+#if UNITY_STANDALONE_WIN
     private void ReadFromWindowsFile()
     {
         currentYipliConfig.userId = FileReadWrite.ReadFromFile();
         currentYipliConfig.playerInfo = null;
     }
+#endif
 }

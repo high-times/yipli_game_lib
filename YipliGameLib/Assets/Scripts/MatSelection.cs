@@ -50,15 +50,11 @@ public class MatSelection : MonoBehaviour
         Debug.Log("Starting Mat connection flow");
         bIsMatFlowInitialized = true;
         NoMatPanel.SetActive(false);
-        StopCoroutine(ConnectMatAndLoadGameScene());
-
-        //Bypass mat connection in Unity Editor
+        
 #if UNITY_EDITOR
         if (!bIsGameMainSceneLoading)
             StartCoroutine(LoadMainGameScene());
-#endif
-
-#if UNITY_ANDROID
+#elif UNITY_ANDROID
         if (currentYipliConfig.matInfo == null)
         {
             Debug.Log("Filling te current mat Info from Device saved MAT");
@@ -177,22 +173,17 @@ public class MatSelection : MonoBehaviour
     IEnumerator LoadMainGameScene()
     {
         bIsGameMainSceneLoading = true;
+        loadingPanel.gameObject.GetComponentInChildren<Text>().text = "launching game..";
         loadingPanel.SetActive(false);
         NoMatPanel.SetActive(false);
-        bleSuccessMsg.text = "Your Fitmat is connected.\nTaking you to the game.";
+        bleSuccessMsg.text = "Your FITMAT is connected.";
+
         BluetoothSuccessPanel.SetActive(true);
-
-        while (firebaseDBListenersAndHandlers.GetGameInfoQueryStatus() != QueryStatus.Completed)
-        {
-            Debug.Log("Waiting for GetGameDatatForCurrentPlayer Query to complete.");
-            yield return new WaitForSecondsRealtime(0.1f);
-        }
-
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSecondsRealtime(1f);
 
         FindObjectOfType<YipliAudioManager>().Play("BLE_success");
         tick.SetActive(true);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(2f);
         StartCoroutine(LoadSceneAfterDisplayingDriverAndGameVersion());
     }
 

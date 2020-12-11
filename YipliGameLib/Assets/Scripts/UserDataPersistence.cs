@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public static class UserDataPersistence
 {
@@ -31,6 +31,26 @@ public static class UserDataPersistence
         PlayerPrefs.Save();
     }
 
+    public static void SaveMultiplayerToDevice()
+    {
+        Debug.Log("Save data test- Starting save data function");
+        MultiPlayerData multiPlayerData = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData;
+
+        Debug.Log("Save data test- Saving player one to device with properties : " + multiPlayerData.PlayerOneDetails.playerId + " " + multiPlayerData.PlayerOneName + " " + multiPlayerData.PlayerOneDetails.playerAge + " " + multiPlayerData.PlayerOneDetails.playerHeight + " " + multiPlayerData.PlayerOneDetails.playerWeight);
+        SavePropertyValue("player-one-id", multiPlayerData.PlayerOneDetails.playerId);
+        SavePropertyValue("player-one-name", multiPlayerData.PlayerOneName);
+        SavePropertyValue("player-one-age", multiPlayerData.PlayerOneDetails.playerAge);
+        SavePropertyValue("player-one-height", multiPlayerData.PlayerOneDetails.playerHeight);
+        SavePropertyValue("player-one-weight", multiPlayerData.PlayerOneDetails.playerWeight);
+
+        Debug.Log("Save data test- Saving player two to device with properties : " + multiPlayerData.PlayerTwoDetails.playerId + " " + multiPlayerData.PlayerTwoName + " " + multiPlayerData.PlayerTwoDetails.playerAge + " " + multiPlayerData.PlayerTwoDetails.playerHeight + " " + multiPlayerData.PlayerTwoDetails.playerWeight);
+        SavePropertyValue("player-two-id", multiPlayerData.PlayerTwoDetails.playerId);
+        SavePropertyValue("player-two-name", multiPlayerData.PlayerTwoName);
+        SavePropertyValue("player-two-age", multiPlayerData.PlayerTwoDetails.playerAge);
+        SavePropertyValue("player-two-height", multiPlayerData.PlayerTwoDetails.playerHeight);
+        SavePropertyValue("player-two-weight", multiPlayerData.PlayerTwoDetails.playerWeight);
+    }
+
     public static YipliPlayerInfo GetSavedPlayer()
     {
         Debug.Log("Getting saved player from device.");
@@ -44,6 +64,38 @@ public static class UserDataPersistence
 
         Debug.Log("Return null for GetSavedPlayer");
         return null;
+    }
+
+    public static bool GetSavedMultiplayerFromDevice()
+    {
+        Debug.Log("Save data test- Getting saved data function");
+        if (GetPropertyValue("player-one-id") != null && GetPropertyValue("player-two-id") != null)
+        {
+            Debug.Log("Save data test- Saved data found");
+            MultiPlayerData multiPlayerData = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData;
+            Debug.Log("Save data test- Found scriptable");
+
+            multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-id");
+            multiPlayerData.PlayerOneName = GetPropertyValue("player-one-name");
+            multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-age");
+            multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-height");
+            multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-weight");
+            Debug.Log("Save data test- Got player one data");
+
+            multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-id");
+            multiPlayerData.PlayerTwoName = GetPropertyValue("player-two-name");
+            multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-age");
+            multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-height");
+            multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-weight");
+            Debug.Log("Save data test- Got player two data");
+
+            return true;
+        }
+        else
+        {
+            Debug.Log("Save data test- No saved data found");
+            return false;
+        }
     }
 
     public static void SaveMatToDevice(YipliMatInfo matInfo)
