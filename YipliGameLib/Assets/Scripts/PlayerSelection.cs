@@ -393,7 +393,7 @@ public class PlayerSelection : MonoBehaviour
 
             //Fill dummy data in user/player, for testing from Editor
 #if UNITY_EDITOR
-            currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
+            //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
             //currentYipliConfig.playerInfo = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg");
             //currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
 #endif
@@ -467,6 +467,11 @@ public class PlayerSelection : MonoBehaviour
         }
     }
 
+    public void retryUserCheck()
+    {
+        GuestUserPanel.SetActive(false);
+        FetchUserAndInitializePlayerEnvironment();
+    }
 
     public void retryPlayersCheck()
     {
@@ -565,7 +570,7 @@ public class PlayerSelection : MonoBehaviour
     {
         playerSelectionPanel.SetActive(false);
         FindObjectOfType<YipliAudioManager>().Play("ButtonClick");
-        PlayerName = EventSystem.current.currentSelectedGameObject.name;
+        PlayerName = EventSystem.current.currentSelectedGameObject != null ? EventSystem.current.currentSelectedGameObject.name : FindObjectOfType<MatInputController>().GetCurrentButton().name;
 
         // first of all destroy all PlayerButton prefabs. This is required to remove stale prefabs.
         foreach (var obj1 in generatedObjects)

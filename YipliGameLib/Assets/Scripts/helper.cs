@@ -33,7 +33,15 @@ public static class YipliHelper
 
     public static bool checkInternetConnection()
     {
-        return PlayerSession.Instance.currentYipliConfig.bIsInternetConnected;
+        try
+        {
+            return PlayerSession.Instance.currentYipliConfig.bIsInternetConnected;
+        }
+        catch(Exception e )
+        {
+            Debug.LogError("Exception in check Internet : " + e.Message);
+            return false;
+        }
     }
 
     public static string GetMatConnectionStatus()

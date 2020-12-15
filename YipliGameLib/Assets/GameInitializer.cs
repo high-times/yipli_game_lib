@@ -7,7 +7,7 @@ public class GameInitializer : MonoBehaviour
     public YipliConfig currentYipliConfig;
     private void Awake()
     {
-        currentYipliConfig.gameType = GameType.MULTIPLAYER_GAMING;
+        currentYipliConfig.gameType = GameType.FITNESS_GAMING;
         currentYipliConfig.gameId = "multiplayermayhem";
     }
 }
