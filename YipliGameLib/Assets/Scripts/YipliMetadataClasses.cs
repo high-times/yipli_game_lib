@@ -91,24 +91,22 @@ public class YipliPlayerInfo
     private string CalculateAge(string strDob /* 'mm-dd-yyyy' format */)
     {
         DateTime now = DateTime.Now;
-
-        DateTime dob = DateTime.Parse(strDob);
-
-        var years = now.Year - dob.Year;
-
-        if (now.Month < dob.Month)
+        string[] tokens = strDob.Split('-');
+        int month = int.Parse(tokens[0]);
+        int year = int.Parse(tokens[2]);
+        int day = int.Parse(tokens[1]);
+        var years = now.Year - year;
+        if (now.Month < month)
         {
             years--;
         }
-
-        if (now.Month == dob.Month)
+        if (now.Month == month)
         {
-            if (now.Day < dob.Day)
+            if (now.Day < day)
             {
                 years--;
             }
         }
-
         return years.ToString();
     }
 }
