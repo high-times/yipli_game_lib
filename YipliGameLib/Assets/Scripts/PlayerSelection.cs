@@ -47,6 +47,7 @@ public class PlayerSelection : MonoBehaviour
     private bool bIsProfilePicLoaded = false;
     private Sprite defaultProfilePicSprite;
 
+    private bool isSkipUpdateCalled = false;
 
     //Delegates for Firebase Listeners
     public delegate void OnUserFound();
@@ -64,41 +65,12 @@ public class PlayerSelection : MonoBehaviour
     }
 
     // When the game starts
-    public IEnumerator Start()
+    public void Start()
     {
+        // Game info and update check before player selection
         GetGameInfo();
 
-        while (firebaseDBListenersAndHandlers.GetGameInfoQueryStatus() != QueryStatus.Completed)
-        {
-            yield return new WaitForSecondsRealtime(0.1f);
-        }
-
-        //If GameVersion latest then proceed
-        if (currentYipliConfig.gameInventoryInfo == null)
-        {
-            Debug.Log("Game not found in the iventory");
-        }
-        else
-        {
-            Debug.Log("Game found in the iventory");
-            Debug.Log("Currrent Game version : " + Application.version);
-            Debug.Log("Latest Game version : " + currentYipliConfig.gameInventoryInfo.gameVersion);
-
-            int gameVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(Application.version);
-            int inventoryVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(currentYipliConfig.gameInventoryInfo.gameVersion);
-
-
-            if (inventoryVersionCode > gameVersionCode)
-            {
-                //Ask user to Update Game version option
-                LoadingPanel.SetActive(false);
-
-                GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";
-                GameVersionUpdatePanel.SetActive(true);
-            }                
-            else
-                FetchUserAndInitializePlayerEnvironment();
-        }
+        FetchUserAndInitializePlayerEnvironment();
     }
 
     public void OnUpdateGameClick()
@@ -110,6 +82,7 @@ public class PlayerSelection : MonoBehaviour
 
     public void OnSkipUpdateClick()
     {
+        isSkipUpdateCalled = true;
         FetchUserAndInitializePlayerEnvironment();
     }
 
@@ -183,13 +156,9 @@ public class PlayerSelection : MonoBehaviour
         }
         else
         {
-#if UNITY_STANDALONE_WIN || UNITY_EDITOR
-            RemotePlayCodePanel.SetActive(true);
-#elif UNITY_ANDROID
             Debug.Log("Calling RedirectToYipliAppForNoUserFound()");
             //Automatically redirect to Yipli App
             StartCoroutine(RedirectToYipliAppForNoUserFound());     
-#endif
         }
     }
 
@@ -425,44 +394,91 @@ public class PlayerSelection : MonoBehaviour
         }
         else
         {
-            //Wait till the listeners are synced and the data has been populated
-            Debug.Log("Waiting for players query to complete");
-            LoadingPanel.gameObject.GetComponentInChildren<Text>().text = "Getting all players...";
-            while (firebaseDBListenersAndHandlers.GetPlayersQueryStatus() != QueryStatus.Completed)
+            // game info status check
+            while (firebaseDBListenersAndHandlers.GetGameInfoQueryStatus() != QueryStatus.Completed)
             {
                 yield return new WaitForSecondsRealtime(0.1f);
             }
-            
-            //Special handling in case of Multiplayer games
-            if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)
+
+            // if change player is called, do not check for game update as user has already skipped it.
+            // isSkipUpdateCalled is here to make sure update panel only come once on game start.
+            if (!currentYipliConfig.bIsChangePlayerCalled && !isSkipUpdateCalled)
             {
-                // Check if atleast 2 players are available for playing the multiplayer game
-                if (currentYipliConfig.allPlayersInfo.Count < 2)
+                //If GameVersion latest then proceed
+                if (currentYipliConfig.gameInventoryInfo == null)
                 {
-                    //Set active a panel to handle atleast 2 players should be there to play
-                    TurnOffAllPanels();
-                    Minimum2PlayersPanel.SetActive(true);
+                    Debug.Log("Game not found in the iventory");
                 }
                 else
                 {
-                    LoadingPanel.SetActive(false);
-                    //Skip player selection as it will be handled by game side, directly go to the mat selection flow
-                    matSelectionScript.MatConnectionFlow();
-                }
-            }
+                    Debug.Log("Game found in the iventory");
+                    Debug.Log("Currrent Game version : " + Application.version);
+                    Debug.Log("Latest Game version : " + currentYipliConfig.gameInventoryInfo.gameVersion);
 
-            else if (currentYipliConfig.bIsChangePlayerCalled == true)
-            {
-                currentYipliConfig.bIsChangePlayerCalled = false;
-                PlayerSelectionFlow();
+                    int gameVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(Application.version);
+                    int inventoryVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(currentYipliConfig.gameInventoryInfo.gameVersion);
+
+
+                    if (inventoryVersionCode > gameVersionCode)
+                    {
+                        //Ask user to Update Game version option
+                        LoadingPanel.SetActive(false);
+
+                        GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";
+                        GameVersionUpdatePanel.SetActive(true);
+                    }
+                }
             }
             else
             {
-                //Uncomment following line to always start the flow from phoneHolder panel
-                if (!currentYipliConfig.bIsMatIntroDone && currentYipliConfig.playerInfo != null)
-                    playPhoneHolderTutorial();
+                //Wait till the listeners are synced and the data has been populated
+                Debug.Log("Waiting for players query to complete");
+                LoadingPanel.gameObject.GetComponentInChildren<Text>().text = "Getting all players...";
+                while (firebaseDBListenersAndHandlers.GetPlayersQueryStatus() != QueryStatus.Completed)
+                {
+                    yield return new WaitForSecondsRealtime(0.1f);
+                }
+
+                //Special handling in case of Multiplayer games
+                if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)
+                {
+                    // Check if atleast 2 players are available for playing the multiplayer game
+                    if (currentYipliConfig.allPlayersInfo.Count < 2)
+                    {
+                        //Set active a panel to handle atleast 2 players should be there to play
+                        TurnOffAllPanels();
+                        Minimum2PlayersPanel.SetActive(true);
+                    }
+                    else
+                    {
+                        LoadingPanel.SetActive(false);
+                        //Skip player selection as it will be handled by game side, directly go to the mat selection flow
+                        matSelectionScript.MatConnectionFlow();
+                    }
+                }
+
+                else if (currentYipliConfig.bIsChangePlayerCalled == true)
+                {
+                    currentYipliConfig.bIsChangePlayerCalled = false;
+
+                    if (currentYipliConfig.allPlayersInfo.Count > 1)
+                    {
+                        PlayerSelectionFlow();
+                    }
+                    else // If No then throw a new panel to tell the Gamer that there is only 1 player currently
+                    {
+                        TurnOffAllPanels();
+                        onlyOnePlayerPanel.SetActive(true);
+                    }
+                }
                 else
-                    SwitchPlayerFlow();
+                {
+                    //Uncomment following line to always start the flow from phoneHolder panel
+                    if (!currentYipliConfig.bIsMatIntroDone && currentYipliConfig.playerInfo != null)
+                        playPhoneHolderTutorial();
+                    else
+                        SwitchPlayerFlow();
+                }
             }
         }
     }

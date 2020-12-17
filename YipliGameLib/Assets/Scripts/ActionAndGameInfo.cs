@@ -123,6 +123,11 @@ namespace YipliFMDriverCommunication
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
+                case "dancingball":
+                    YipliHelper.SetGameClusterId(2);
+                    PlayerSession.Instance.intensityLevel = "medium";
+                    break;
+
                 case "rollingball":
                     YipliHelper.SetGameClusterId(2);
                     PlayerSession.Instance.intensityLevel = "medium";

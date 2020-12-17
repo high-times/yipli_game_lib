@@ -119,7 +119,7 @@ public static class YipliHelper
 
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR // TODO : Handle Windows flow
         Debug.Log("Yipli App validation for windows isnt required. Returning true");
-        return true;
+        return FileReadWrite.IsYipliPcIsInstalled();
 #else
         Debug.Log("OS not supported. Returnin false.");
         return false;

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   callbackLevel: DemoGameScene
   userId: lC4qqZCFEaMogYswKjd0ObE6nD43
-  gameId: eggcatcher
+  gameId: na
   bIsMatIntroDone: 1
-  bIsChangePlayerCalled: 1
+  bIsChangePlayerCalled: 0
   onlyMatPlayMode: 1
   bIsInternetConnected: 1
   oldFMResponseCount: 0
-  gameType: 1
+  gameType: 0

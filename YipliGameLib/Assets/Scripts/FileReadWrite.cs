@@ -109,6 +109,13 @@ namespace yipli.Windows
         {
             return File.Exists(fileLocation);
         }
+
+        public static bool IsYipliPcIsInstalled()
+        {
+            string yipliAppExeLoc = GetApplictionInstallPath("yipliapp") + "\\" + "YipliApp.exe";
+
+            return ValidateFile(yipliAppExeLoc);
+        }
     }
 }
 #endif

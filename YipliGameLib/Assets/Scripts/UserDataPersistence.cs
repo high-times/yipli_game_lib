@@ -10,6 +10,11 @@ public static class UserDataPersistence
         }
     }
 
+    public static void DeletePropertyValue(string strProperty)
+    {
+        PlayerPrefs.DeleteKey(strProperty);
+    }
+
     public static string GetPropertyValue(string strProperty)
     {
         if(PlayerPrefs.HasKey(strProperty) && PlayerPrefs.GetString(strProperty).Length > 0)
@@ -28,6 +33,18 @@ public static class UserDataPersistence
 
         if(playerInfo.profilePicUrl != null)
         SavePropertyValue("player-profilePicUrl", playerInfo.profilePicUrl);
+        PlayerPrefs.Save();
+    }
+
+    private static void ClearPlayerFromDevice()
+    {
+        DeletePropertyValue("player-id");
+        DeletePropertyValue("player-name");
+        DeletePropertyValue("player-dob");
+        DeletePropertyValue("player-height");
+        DeletePropertyValue("player-weight");
+
+        DeletePropertyValue("player-profilePicUrl");
         PlayerPrefs.Save();
     }
 
@@ -117,5 +134,19 @@ public static class UserDataPersistence
 
         Debug.Log("Return null for GetSavedMat");
         return null;
+    }
+
+    //If player is not availabe in firebase, delete player's data from device also.
+    public static void ClearDefaultPlayer(YipliConfig currentYipliConfig)
+    {
+        try
+        {
+            ClearPlayerFromDevice();
+            currentYipliConfig.playerInfo = null;
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError("Exception in Clear player from device : " + e.Message);
+        }
     }
 }

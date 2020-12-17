@@ -50,7 +50,7 @@ public class MatSelection : MonoBehaviour
         Debug.Log("Starting Mat connection flow");
         bIsMatFlowInitialized = true;
         NoMatPanel.SetActive(false);
-        
+
 #if UNITY_EDITOR
         if (!bIsGameMainSceneLoading)
             StartCoroutine(LoadMainGameScene());
@@ -119,7 +119,20 @@ public class MatSelection : MonoBehaviour
         int iTryCount = 0;
 
         //Initiate the connection with the mat.
-        InitiateMatConnection();
+        
+        try
+        {
+            InitiateMatConnection();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("mat connection failed : " + e.Message);
+
+            loadingPanel.SetActive(false);
+            NoMatPanel.SetActive(true);
+            yield break;
+        }
+
         yield return new WaitForSecondsRealtime(0.1f);
 
         //Turn on the Mat Find Panel, and animate
@@ -176,7 +189,7 @@ public class MatSelection : MonoBehaviour
         loadingPanel.gameObject.GetComponentInChildren<Text>().text = "launching game..";
         loadingPanel.SetActive(false);
         NoMatPanel.SetActive(false);
-        bleSuccessMsg.text = "Your FITMAT is connected.";
+        bleSuccessMsg.text = "Your YIPLI MAT is connected.";
 
         BluetoothSuccessPanel.SetActive(true);
         yield return new WaitForSecondsRealtime(1f);
@@ -192,6 +205,9 @@ public class MatSelection : MonoBehaviour
         //TODO : Comment following lines for production build
         bleSuccessMsg.text = "FmDriver Version : " + YipliHelper.GetFMDriverVersion() + "\n Game Version : " + Application.version;
         yield return new WaitForSeconds(1f);
+
+        // this check has to be false for every game scene load.
+        currentYipliConfig.bIsChangePlayerCalled = false;
 
         //load last Scene
         SceneManager.LoadScene(currentYipliConfig.callbackLevel);

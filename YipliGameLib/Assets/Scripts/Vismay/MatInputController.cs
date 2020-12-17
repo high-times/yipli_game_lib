@@ -175,7 +175,7 @@ public class MatInputController : MonoBehaviour
                 if (i == currentButtonIndex)
                 {
                     // animate button
-                    currentMenuButtons[i].GetComponent<Image>().color = Color.green;
+                    currentMenuButtons[i].GetComponent<Image>().color = Color.black;
                     currentMenuButtons[i].transform.GetChild(0).GetComponent<Animator>().enabled = true;
                     currentB = currentMenuButtons[i];
 

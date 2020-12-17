@@ -41,7 +41,7 @@ public class YipliConfig : ScriptableObject
     public DataSnapshot gameDataForCurrentPlayer;
 
     [HideInInspector]
-    public bool bIsChangePlayerCalled;
+    public bool bIsChangePlayerCalled = false;
 
     public bool onlyMatPlayMode = true;
 

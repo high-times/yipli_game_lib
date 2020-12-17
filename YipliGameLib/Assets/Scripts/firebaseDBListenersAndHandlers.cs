@@ -177,6 +177,9 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
             return;
         }
 
+        bool isDefaultPlayerPresent = false;
+        bool isSavedPlayerInfoAvailabe = currentYipliConfig.playerInfo == null ? false : true;
+
         currentYipliConfig.allPlayersInfo = new List<YipliPlayerInfo>();
 
         foreach (var childSnapshot in args.Snapshot.Children)
@@ -185,12 +188,29 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
             if (playerInstance.playerId != null)
             {
                 currentYipliConfig.allPlayersInfo.Add(playerInstance);
+
+                if (isSavedPlayerInfoAvailabe && playerInstance.playerId.Equals(currentYipliConfig.playerInfo.playerId))
+                {
+                    isDefaultPlayerPresent = true;
+                }
             }
             else
             {
                 Debug.Log("Skipping this instance of player, backend seems corrupted.");
             }
         }
+
+        if (!isDefaultPlayerPresent || !isSavedPlayerInfoAvailabe)
+        {
+            Debug.Log("Removing saved player as it don't exist.");
+            UserDataPersistence.ClearDefaultPlayer(currentYipliConfig);
+
+            if (PlayerSession.Instance != null)
+            {
+                PlayerSession.Instance.ChangePlayer();
+            }
+        }
+
         Debug.Log("All players data got successfully.");
         getAllPlayersQureyStatus = global::QueryStatus.Completed;
     }
