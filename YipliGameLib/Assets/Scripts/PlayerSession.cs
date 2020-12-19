@@ -77,7 +77,7 @@ public class PlayerSession : MonoBehaviour
             // Call Yipli_GameLib_Scene
             _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
             Debug.Log("Updating the callBackLevel Value to :" + _instance.currentYipliConfig.callbackLevel);
-            Debug.Log("Loading Yipli scene for player Selection...");           
+            Debug.Log("Loading Yipli scene for player Selection...");
             if (!_instance.currentYipliConfig.callbackLevel.Equals("Yipli_Testing_harness"))
                 SceneManager.LoadScene("yipli_lib_scene");
         }
@@ -195,10 +195,11 @@ public class PlayerSession : MonoBehaviour
         if (YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
         {
             Debug.Log("Mat connection is established.");
-            YipliBackgroundPanel.SetActive(false);
-            BleErrorPanel.SetActive(false);
+            
             if (BleErrorPanel.activeSelf)
             {
+                YipliBackgroundPanel.SetActive(false);
+                BleErrorPanel.SetActive(false);
                 FindObjectOfType<YipliAudioManager>().Play("BLE_success");
             }
         }

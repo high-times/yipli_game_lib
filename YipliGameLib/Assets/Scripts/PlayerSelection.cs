@@ -427,6 +427,12 @@ public class PlayerSelection : MonoBehaviour
                         GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";
                         GameVersionUpdatePanel.SetActive(true);
                     }
+                    else
+                    {
+                        // if version is not higher start player selection process
+                        isSkipUpdateCalled = true;
+                        FetchUserAndInitializePlayerEnvironment();
+                    }
                 }
             }
             else
