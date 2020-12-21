@@ -639,8 +639,7 @@ public class PlayerSelection : MonoBehaviour
         return null;
     }
 
-
-    /* player selection is done. 
+    /* Player selection is done. 
      * This function takes the flow to Mat connection */
     public void OnContinuePress()
     {
