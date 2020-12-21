@@ -1,6 +1,8 @@
 ﻿using System;
 using UnityEngine;
+#if UNITY_STANDALONE_WIN || UNITY_WDITOR
 using yipli.Windows;
+#endif
 
 public static class YipliHelper
 {
