@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 469c24fdb3bd6431b92cc1465bd9166b, type: 3}
+  m_Name: RemoteConfigDataStoreAsset
+  m_EditorClassIdentifier: 
+  rsKeyList:
+  - metadata:
+      entityId: 1c3d1ac3-47d7-4c33-a215-08f7d51196d9
+    rs:
+      key: isGameUnderMaintenance
+      type: bool
+      value: False
+  - metadata:
+      entityId: 12cd9e46-fcea-473b-a89e-26077b80abec
+    rs:
+      key: gameNameThatisUndermaintenance
+      type: string
+      value: 
+  rsLastCachedKeyList:
+  - metadata:
+      entityId: 1c3d1ac3-47d7-4c33-a215-08f7d51196d9
+    rs:
+      key: isGameUnderMaintenance
+      type: bool
+      value: False
+  - metadata:
+      entityId: 12cd9e46-fcea-473b-a89e-26077b80abec
+    rs:
+      key: gameNameThatisUndermaintenance
+      type: string
+      value: 
+  configId: bb4c150f-e7e1-4a29-a8cf-17229c836b7b
+  currentEnvironmentId: 6b386880-729e-4ba2-9fb9-9273f01ce306
+  environments:
+  - id: 8144936e-0f20-4b90-a200-4fe87ae05678
+    appId: 
+    name: Release (Default)
+    description: 
+    createdAt: 2020-12-21T05:26:31Z
+    updatedAt: 2020-12-21T05:26:31Z
+  - id: 6b386880-729e-4ba2-9fb9-9273f01ce306
+    appId: 
+    name: Development
+    description: 
+    createdAt: 2020-12-21T05:26:31Z
+    updatedAt: 2020-12-21T05:26:31Z
+  rulesList: []
+  lastCachedRulesList: []
+  addedRulesIDs: []
+  updatedRulesIDs: []
+  deletedRulesIDs: []

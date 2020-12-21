@@ -32,7 +32,7 @@ public class MatInputController : MonoBehaviour
     void Update()
     {
         GetMatUIKeyboardInputs();
-        //ManageMatActions();
+        ManageMatActions();
     }
 
     public void SetProperClusterID(int clusterID)
@@ -50,27 +50,8 @@ public class MatInputController : MonoBehaviour
 
     private void ManageMatActions()
     {
-        //string fmActionData = InitBLE.PluginClass.CallStatic<string>("_getFMResponse");
         string fmActionData = InitBLE.GetFMResponse();
         Debug.Log("Json Data from Fmdriver : " + fmActionData);
-
-        /* New FmDriver Response Format
-           {
-              "count": 1,                 # Updates every time new action is detected
-              "timestamp": 1597237057689, # Time at which response was packaged/created by Driver
-              "playerdata": [                      # Array containing player data
-                {
-                  "id": 1,                         # Player ID (For Single-player-1 , Multiplayer it could be 1 or 2 )
-                  "fmresponse": {
-                    "action_id": "9D6O",           # Action ID-Unique ID for each action. Refer below table for all action IDs
-                    "action_name": "Jump",         # Action Name for debugging (Gamers should strictly check action ID)
-                    "properties": "null"           # Any properties action has - ex. Running could have Step Count, Speed
-                  }
-                },
-                {null}
-              ]
-            }
-        */
 
         FmDriverResponseInfo singlePlayerResponse = JsonUtility.FromJson<FmDriverResponseInfo>(fmActionData);
 

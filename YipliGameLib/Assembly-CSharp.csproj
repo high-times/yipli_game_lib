@@ -81,7 +81,9 @@
     <Compile Include="Assets\Scripts\SacaleOutApprearance.cs" />
     <Compile Include="Assets\Scripts\ScaleUpdownAnimation.cs" />
     <Compile Include="Assets\Scripts\UserDataPersistence.cs" />
+    <Compile Include="Assets\Scripts\Vismay\MaintenancePanel.cs" />
     <Compile Include="Assets\Scripts\Vismay\MatInputController.cs" />
+    <Compile Include="Assets\Scripts\Vismay\TutorialManager.cs" />
     <Compile Include="Assets\Scripts\Vismay\UiButtonSelection.cs" />
     <Compile Include="Assets\Scripts\YipliAudioManager.cs" />
     <Compile Include="Assets\Scripts\YipliConfig.cs" />
@@ -130,6 +132,15 @@
     <Reference Include="UnityEngine.Advertisements">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/UnityEngine.Advertisements.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.RemoteConfig.Editor">
+      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.RemoteConfig.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Purchasing">
+      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/UnityEditor.Purchasing.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
@@ -144,6 +155,9 @@
     </Reference>
     <Reference Include="com.unity.multiplayer-weaver.Editor">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/com.unity.multiplayer-weaver.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RemoteConfig">
+      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.RemoteConfig.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XR.LegacyInputHelpers">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/UnityEngine.XR.LegacyInputHelpers.dll</HintPath>
