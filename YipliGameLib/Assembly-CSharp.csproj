@@ -811,6 +811,10 @@
       <Project>{060DCFB7-36D6-C868-B945-C605722138CE}</Project>
       <Name>UnityEngine.Advertisements</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.RemoteConfig.Editor.csproj">
+      <Project>{3A7F269B-B7CC-4AB5-5C9F-F89723F60F91}</Project>
+      <Name>Unity.RemoteConfig.Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
       <Project>{D5F0EF89-F078-7755-5D9D-259AB59403DD}</Project>
       <Name>Unity.TextMeshPro.Editor</Name>
@@ -830,6 +834,10 @@
     <ProjectReference Include="com.unity.multiplayer-weaver.Editor.csproj">
       <Project>{40CB2206-97E7-CD03-ED67-5B5EE19A3CB7}</Project>
       <Name>com.unity.multiplayer-weaver.Editor</Name>
+    </ProjectReference>
+    <ProjectReference Include="Unity.RemoteConfig.csproj">
+      <Project>{6A83D1D4-5C08-9A9D-A2EC-8784CD9E73FD}</Project>
+      <Name>Unity.RemoteConfig</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEngine.XR.LegacyInputHelpers.csproj">
       <Project>{F79A3B9D-BB27-E349-D1EA-A7D2A6ED7C38}</Project>
@@ -874,14 +882,6 @@
     <ProjectReference Include="com.unity.multiplayer-hlapi.Runtime.csproj">
       <Project>{1A282840-9B23-9A89-D2DB-92011FF2DD61}</Project>
       <Name>com.unity.multiplayer-hlapi.Runtime</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.RemoteConfig.Editor.csproj">
-      <Project>{3A7F269B-B7CC-4AB5-5C9F-F89723F60F91}</Project>
-      <Name>Unity.RemoteConfig.Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Unity.RemoteConfig.csproj">
-      <Project>{6A83D1D4-5C08-9A9D-A2EC-8784CD9E73FD}</Project>
-      <Name>Unity.RemoteConfig</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

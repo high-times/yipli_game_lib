@@ -39,7 +39,7 @@ public class PlayerSelection : MonoBehaviour
 
     public TextMeshProUGUI GameVersionUpdateText;
     public TextMeshProUGUI RemotePlayCodeErrorText;
-    
+
     private string PlayerName;
 
     private List<GameObject> generatedObjects = new List<GameObject>();
@@ -158,7 +158,7 @@ public class PlayerSelection : MonoBehaviour
         {
             Debug.Log("Calling RedirectToYipliAppForNoUserFound()");
             //Automatically redirect to Yipli App
-            StartCoroutine(RedirectToYipliAppForNoUserFound());     
+            StartCoroutine(RedirectToYipliAppForNoUserFound());
         }
     }
 
@@ -479,6 +479,9 @@ public class PlayerSelection : MonoBehaviour
                 }
                 else
                 {
+                    //Mat coection would be required for Mat tutorials and Gamelib Navigation
+                    matSelectionScript.EstablishMatConnection();
+
                     //Uncomment following line to always start the flow from phoneHolder panel
                     if (!currentYipliConfig.bIsMatIntroDone && currentYipliConfig.playerInfo != null)
                         playPhoneHolderTutorial();
@@ -529,7 +532,7 @@ public class PlayerSelection : MonoBehaviour
     private IEnumerator ImageUploadAndPlayerUIInit()
     {
         //Activate the PlayerName and Image display object
-        if(currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
+        if (currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
         {
             if (!bIsProfilePicLoaded)
                 yield return loadProfilePicAsync(profilePicImage, currentYipliConfig.playerInfo.profilePicUrl);
@@ -752,7 +755,7 @@ public class PlayerSelection : MonoBehaviour
             gameObj.sprite = defaultProfilePicSprite;
         }
         else
-        {   
+        {
             // Create local filesystem URL
             string onDeviceProfilePicPath = Application.persistentDataPath + "/" + profilePicUrl;
             Sprite downloadedSprite = await FirebaseDBHandler.GetImageAsync(profilePicUrl, onDeviceProfilePicPath);
