@@ -13,9 +13,11 @@ public class MaintenancePanel : MonoBehaviour
 
     private bool isGameUnderMaintanance = false;
     private string gameNameThatisUnderMaintenance = "";
+    private string maintenanceMessage = "";
 
     public bool IsGameUnderMaintanance { get => isGameUnderMaintanance; set => isGameUnderMaintanance = value; }
     public string GameNameThatisUnderMaintenance { get => gameNameThatisUnderMaintenance; set => gameNameThatisUnderMaintenance = value; }
+    public string MaintenanceMessage { get => maintenanceMessage; set => maintenanceMessage = value; }
 
     private void Awake()
     {
@@ -41,16 +43,25 @@ public class MaintenancePanel : MonoBehaviour
     private void ManagePanel(ConfigResponse response)
     {
         IsGameUnderMaintanance = ConfigManager.appConfig.GetBool("isGameUnderMaintenance");
-        GameNameThatisUnderMaintenance = ConfigManager.appConfig.GetString("gameNameThatisUndermaintenance");
 
-        if (GameNameThatisUnderMaintenance == currentYipliConfig.gameId)
+        if (!IsGameUnderMaintanance) return;
+
+        GameNameThatisUnderMaintenance = ConfigManager.appConfig.GetString("gameNameThatisUndermaintenance");
+        MaintenanceMessage = ConfigManager.appConfig.GetString("maintenanceMessage");
+
+        string[] gameIds = GameNameThatisUnderMaintenance.Split(',');
+
+        foreach (string game in gameIds)
         {
-            message.text = GameNameThatisUnderMaintenance + " is Under Maintance. It will be available soon to play.\nThank You";
-            maintenancePanel.SetActive(true);
-        }
-        else
-        {
-            maintenancePanel.SetActive(false);
+            if (IsGameUnderMaintanance && game.Equals(currentYipliConfig.gameId))
+            {
+                message.text = char.ToUpper(GameNameThatisUnderMaintenance[0]) + GameNameThatisUnderMaintenance.Substring(1) + " is under maintanance.\n\n" + MaintenanceMessage + "\n\nStay tuned.";
+                maintenancePanel.SetActive(true);
+            }
+            else
+            {
+                maintenancePanel.SetActive(false);
+            }
         }
     }
 

@@ -78,12 +78,16 @@
     <Compile Include="Assets\Scripts\PlayerSelection.cs" />
     <Compile Include="Assets\Scripts\PlayerSession.cs" />
     <Compile Include="Assets\Scripts\PostPlayerSessions.cs" />
+    <Compile Include="Assets\Scripts\ProductMessages.cs" />
     <Compile Include="Assets\Scripts\SacaleOutApprearance.cs" />
     <Compile Include="Assets\Scripts\ScaleUpdownAnimation.cs" />
     <Compile Include="Assets\Scripts\UserDataPersistence.cs" />
+    <Compile Include="Assets\Scripts\Vismay\AnimationEvents.cs" />
     <Compile Include="Assets\Scripts\Vismay\MaintenancePanel.cs" />
     <Compile Include="Assets\Scripts\Vismay\MatInputController.cs" />
-    <Compile Include="Assets\Scripts\Vismay\TutorialManager.cs" />
+    <Compile Include="Assets\Scripts\Vismay\PortTestings.cs" />
+    <Compile Include="Assets\Scripts\Vismay\SetOnClickButtonName.cs" />
+    <Compile Include="Assets\Scripts\Vismay\TutorialManagerGL.cs" />
     <Compile Include="Assets\Scripts\Vismay\UiButtonSelection.cs" />
     <Compile Include="Assets\Scripts\YipliAudioManager.cs" />
     <Compile Include="Assets\Scripts\YipliConfig.cs" />
@@ -393,8 +397,8 @@
     <Reference Include="IKVM.Runtime.JNI">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/Plugins/Windows/PCFMDriver/IKVM.Runtime.JNI.dll</HintPath>
     </Reference>
-    <Reference Include="PCFMDriver">
-      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/Plugins/Windows/PCFMDriver/PCFMDriver.dll</HintPath>
+    <Reference Include="PCFMDriver024-6">
+      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/Plugins/Windows/PCFMDriver/PCFMDriver024-6.dll</HintPath>
     </Reference>
     <Reference Include="Firebase.App">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.app@6.15.2/Firebase/Plugins/Firebase.App.dll</HintPath>

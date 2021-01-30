@@ -34,6 +34,11 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         return getGameDataForCurrentPlayerQueryStatus;
     }
 
+    public static void SetGameDataForCurrenPlayerQueryStatus(QueryStatus queryStatus)
+    {
+        getGameDataForCurrentPlayerQueryStatus = queryStatus;
+    }
+
     public static QueryStatus GetPlayersQueryStatus()
     {
         return getAllPlayersQureyStatus;
@@ -150,7 +155,8 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     {
         Debug.Log("Syncing data from the Firebase backend");
         Firebase.Auth.FirebaseAuth auth = Firebase.Auth.FirebaseAuth.DefaultInstance;
-        Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
+        //Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
+        Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
         Debug.LogFormat("Dummy user signed in successfully: {0} ({1})",
         newUser.DisplayName, newUser.UserId);
 
@@ -200,7 +206,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
             }
         }
 
-        if (!isDefaultPlayerPresent || !isSavedPlayerInfoAvailabe)
+        if (currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING && (!isDefaultPlayerPresent || !isSavedPlayerInfoAvailabe))
         {
             Debug.Log("Removing saved player as it don't exist.");
             UserDataPersistence.ClearDefaultPlayer(currentYipliConfig);

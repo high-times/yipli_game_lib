@@ -25,6 +25,12 @@ MonoBehaviour:
       key: gameNameThatisUndermaintenance
       type: string
       value: 
+  - metadata:
+      entityId: 44873373-596c-4fef-a574-4f335510c370
+    rs:
+      key: maintenanceMessage
+      type: string
+      value: 
   rsLastCachedKeyList:
   - metadata:
       entityId: 1c3d1ac3-47d7-4c33-a215-08f7d51196d9
@@ -36,6 +42,12 @@ MonoBehaviour:
       entityId: 12cd9e46-fcea-473b-a89e-26077b80abec
     rs:
       key: gameNameThatisUndermaintenance
+      type: string
+      value: 
+  - metadata:
+      entityId: 44873373-596c-4fef-a574-4f335510c370
+    rs:
+      key: maintenanceMessage
       type: string
       value: 
   configId: bb4c150f-e7e1-4a29-a8cf-17229c836b7b

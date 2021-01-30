@@ -16,7 +16,9 @@ public class PlayerSelection : MonoBehaviour
 {
     public GameObject phoneHolderInfo;
     public GameObject LaunchFromYipliAppPanel;
-    public TextMeshProUGUI[] TextsToBeChanged;
+    public TextMeshProUGUI[] TextsToBeChangedAndroidPhone;
+    public TextMeshProUGUI[] TextsToBeChangedAndroidTv;
+    public TextMeshProUGUI[] TextsToBeChangedAndroidWindowsPC;
     public GameObject playerSelectionPanel;
     public TextMeshProUGUI playerNameText;
     public TextMeshProUGUI onlyOnePlayerText;
@@ -36,9 +38,12 @@ public class PlayerSelection : MonoBehaviour
     public GameObject RemotePlayCodePanel;
     public GameObject Minimum2PlayersPanel;
     public GameObject GameVersionUpdatePanel;
+    public GameObject TutorialPanel;
 
     public TextMeshProUGUI GameVersionUpdateText;
     public TextMeshProUGUI RemotePlayCodeErrorText;
+
+    public TextMeshProUGUI gameAndDriverVersionText;
 
     private string PlayerName;
 
@@ -48,6 +53,10 @@ public class PlayerSelection : MonoBehaviour
     private Sprite defaultProfilePicSprite;
 
     private bool isSkipUpdateCalled = false;
+    private bool isTutorialDoneWithoutPlayerInfo = false;
+
+    private float currentTimePassed = 0;
+    private bool allowPhoneHolderAudioPlay = false;
 
     //Delegates for Firebase Listeners
     public delegate void OnUserFound();
@@ -65,12 +74,57 @@ public class PlayerSelection : MonoBehaviour
     }
 
     // When the game starts
-    public void Start()
+#if UNITY_STANDALONE_WIN
+    public async void Start()
+#elif UNITY_ANDROID
+    void Start()
+#endif
     {
+        TurnOffAllDeviceSpecificTextObject();
+
+        StartCoroutine(CheckNoInternetConnection());
+        UpdateGameAndDriverVersionText();
+
         // Game info and update check before player selection
         GetGameInfo();
 
+#if UNITY_STANDALONE_WIN
+        //keep yipli app Download Url ready
+        FileReadWrite.YipliAppDownloadUrl = await FirebaseDBHandler.GetYipliWinAppUpdateUrl();
+#endif
+
         FetchUserAndInitializePlayerEnvironment();
+
+        // turn of all devicespecific tutorial objects invisible
+    }
+
+    private void Update()
+    {
+        CheckInternectConnection();
+
+        if (allowPhoneHolderAudioPlay)
+        {
+            PlayComeAndJumpAudio();
+        }
+    }
+
+    // turn of all devicespecific tutorial objects invisible
+    private void TurnOffAllDeviceSpecificTextObject()
+    {
+        foreach (var str in TextsToBeChangedAndroidPhone)
+        {
+            str.gameObject.SetActive(false);
+        }
+
+        foreach (var str in TextsToBeChangedAndroidTv)
+        {
+            str.gameObject.SetActive(false);
+        }
+
+        foreach (var str in TextsToBeChangedAndroidWindowsPC)
+        {
+            str.gameObject.SetActive(false);
+        }
     }
 
     public void OnUpdateGameClick()
@@ -116,29 +170,93 @@ public class PlayerSelection : MonoBehaviour
         StartCoroutine(InitializeAndStartPlayerSelection());
     }
 
-    public void playPhoneHolderTutorial()
+    public void playDeviceSpecificMatTutorial()
     {
-        TurnOffAllPanelsExceptLoading();
-        Debug.Log("Starting PhoneHolder Tutorial for " + currentYipliConfig.playerInfo.playerName);
-        Debug.Log("Is profilePicLoaded = " + bIsProfilePicLoaded);
+        TurnOffAllPanels();
 
-        StartCoroutine(ImageUploadAndPlayerUIInit());
+        try
+        {
+            StartCoroutine(ImageUploadAndPlayerUIInit());
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("ImageUploadAndPlayerUIInit() couritine failed, Error : " + e.Message);
+        }
 
         phoneHolderInfo.SetActive(true);
-        StartCoroutine(ChangeTextMessage());
+
+        if (YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+            phoneHolderInfo.GetComponent<AudioSource>().Play();
+
+        allowPhoneHolderAudioPlay = true;
+
+#if UNITY_ANDROID
+        //StartCoroutine(ChangeTextMessageAndoridPhone());
+        ChangeTextMessageAndoridPhone();
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+        //StartCoroutine(ChangeTextMessageWindowsPC());
+        ChangeTextMessageWindowsPC();
+#endif
     }
 
-    IEnumerator ChangeTextMessage()
+    private void PlayComeAndJumpAudio()
     {
+        if (YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+        {
+            currentTimePassed += Time.deltaTime;
+
+            if (currentTimePassed > 30f)
+            {
+                phoneHolderInfo.GetComponent<AudioSource>().Play();
+            }
+        }
+    }
+
+    void ChangeTextMessageAndoridPhone()
+    {
+        TextsToBeChangedAndroidPhone[1].gameObject.SetActive(true);
+
+        /*
         while (true)//Infinite loop
         {
-            foreach (var str in TextsToBeChanged)
+            foreach (var str in TextsToBeChangedAndroidPhone)
             {
                 str.gameObject.SetActive(true);
                 yield return new WaitForSecondsRealtime(5f);
                 str.gameObject.SetActive(false);
             }
         }
+        */
+    }
+
+    IEnumerator ChangeTextMessageAndoridTV()
+    {
+        while (true)//Infinite loop
+        {
+            foreach (var str in TextsToBeChangedAndroidTv)
+            {
+                str.gameObject.SetActive(true);
+                yield return new WaitForSecondsRealtime(5f);
+                str.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    void ChangeTextMessageWindowsPC()
+    {
+        TextsToBeChangedAndroidWindowsPC[1].gameObject.SetActive(true);
+
+        /*
+        while (true)//Infinite loop
+        {
+            foreach (var str in TextsToBeChangedAndroidWindowsPC)
+            {
+                str.gameObject.SetActive(true);
+                yield return new WaitForSecondsRealtime(5f);
+                str.gameObject.SetActive(false);
+            }
+        }
+        */
     }
 
     private void NoUserFoundInGameFlow()
@@ -169,7 +287,7 @@ public class PlayerSelection : MonoBehaviour
         LaunchFromYipliAppPanel.SetActive(true);
         yield return new WaitForSecondsRealtime(1f);
         FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(4f);
 
         LaunchFromYipliAppPanel.SetActive(false);
         LoadingPanel.SetActive(true);
@@ -297,12 +415,15 @@ public class PlayerSelection : MonoBehaviour
         string pic = extras.Call<string>("getString", "pPicUrl");
         string mId = extras.Call<string>("getString", "mId");
         string mMac = extras.Call<string>("getString", "mMac");
+        string pTutDone = extras.Call<string>("getString", "pTutDone");
+
+        // TODO : pass mat-tut-done also from yipli android app
 
         Debug.Log("Found intents : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + pic);
 
         if (pId != null && pName != null)
         {
-            currentYipliConfig.playerInfo = new YipliPlayerInfo(pId, pName, pDOB, pHt, pWt, pic);
+            currentYipliConfig.playerInfo = new YipliPlayerInfo(pId, pName, pDOB, pHt, pWt, pic, YipliHelper.StringToIntConvert(pTutDone));
         }
 
         if (mId != null && mMac != null)
@@ -324,6 +445,7 @@ public class PlayerSelection : MonoBehaviour
         LaunchFromYipliAppPanel.SetActive(false);
         LoadingPanel.SetActive(false);
         GameVersionUpdatePanel.SetActive(false);
+        TutorialPanel.SetActive(false);
     }
 
     private void TurnOffAllPanelsExceptLoading()
@@ -338,6 +460,7 @@ public class PlayerSelection : MonoBehaviour
         GuestUserPanel.SetActive(false);
         LaunchFromYipliAppPanel.SetActive(false);
         GameVersionUpdatePanel.SetActive(false);
+        TutorialPanel.SetActive(false);
     }
 
     private void FetchUserDetails()
@@ -361,10 +484,11 @@ public class PlayerSelection : MonoBehaviour
             currentYipliConfig.matInfo = null;
 
             //Fill dummy data in user/player, for testing from Editor
-#if UNITY_EDITOR
-            //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1";
-            //currentYipliConfig.playerInfo = new YipliPlayerInfo("-M2iG0P2_UNsE2VRcU5P", "rooo", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg");
-            //currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
+#if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
+            currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
+            //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
+            currentYipliConfig.playerInfo = new YipliPlayerInfo("-MQHc-Ija9odZdIXkFYB", "kauva biryani", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg"); // vismay user
+            currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
 #endif
         }
 
@@ -402,7 +526,7 @@ public class PlayerSelection : MonoBehaviour
 
             // if change player is called, do not check for game update as user has already skipped it.
             // isSkipUpdateCalled is here to make sure update panel only come once on game start.
-            if (!currentYipliConfig.bIsChangePlayerCalled && !isSkipUpdateCalled)
+            if (!currentYipliConfig.bIsChangePlayerCalled && !isSkipUpdateCalled && Application.platform == RuntimePlatform.Android) // add || or case for ios in future
             {
                 //If GameVersion latest then proceed
                 if (currentYipliConfig.gameInventoryInfo == null)
@@ -445,6 +569,12 @@ public class PlayerSelection : MonoBehaviour
                     yield return new WaitForSecondsRealtime(0.1f);
                 }
 
+                //Mat coection would be required for Mat tutorials and Gamelib Navigation
+                matSelectionScript.EstablishMatConnection();
+
+                //Check if current player has completed the Mat tutorial or not.
+                //GetPlayersMatTutorialCompletionStatus();
+
                 //Special handling in case of Multiplayer games
                 if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)
                 {
@@ -462,7 +592,6 @@ public class PlayerSelection : MonoBehaviour
                         matSelectionScript.MatConnectionFlow();
                     }
                 }
-
                 else if (currentYipliConfig.bIsChangePlayerCalled == true)
                 {
                     currentYipliConfig.bIsChangePlayerCalled = false;
@@ -479,14 +608,14 @@ public class PlayerSelection : MonoBehaviour
                 }
                 else
                 {
-                    //Mat coection would be required for Mat tutorials and Gamelib Navigation
-                    matSelectionScript.EstablishMatConnection();
-
-                    //Uncomment following line to always start the flow from phoneHolder panel
-                    if (!currentYipliConfig.bIsMatIntroDone && currentYipliConfig.playerInfo != null)
-                        playPhoneHolderTutorial();
+                    if (currentYipliConfig.playerInfo == null || currentYipliConfig.playerInfo.isMatTutDone == 0 || currentYipliConfig.bIsRetakeTutorialFlagActivated)
+                    {
+                        playDeviceSpecificMatTutorial();
+                    }
                     else
+                    {
                         SwitchPlayerFlow();
+                    }
                 }
             }
         }
@@ -535,7 +664,7 @@ public class PlayerSelection : MonoBehaviour
         if (currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
         {
             if (!bIsProfilePicLoaded)
-                yield return loadProfilePicAsync(profilePicImage, currentYipliConfig.playerInfo.profilePicUrl);
+                loadProfilePicAsync(profilePicImage, currentYipliConfig.playerInfo.profilePicUrl);
             playerNameText.text = "Hi, " + currentYipliConfig.playerInfo.playerName;
             playerNameText.gameObject.SetActive(true);
         }
@@ -595,7 +724,9 @@ public class PlayerSelection : MonoBehaviour
     {
         playerSelectionPanel.SetActive(false);
         FindObjectOfType<YipliAudioManager>().Play("ButtonClick");
-        PlayerName = EventSystem.current.currentSelectedGameObject != null ? EventSystem.current.currentSelectedGameObject.name : FindObjectOfType<MatInputController>().GetCurrentButton().name;
+        //PlayerName = EventSystem.current.currentSelectedGameObject != null ? EventSystem.current.currentSelectedGameObject.name : FindObjectOfType<MatInputController>().GetCurrentButton().name;
+
+        PlayerName = FindObjectOfType<MatInputController>().CurrentPlayerName;
 
         // first of all destroy all PlayerButton prefabs. This is required to remove stale prefabs.
         foreach (var obj1 in generatedObjects)
@@ -603,7 +734,6 @@ public class PlayerSelection : MonoBehaviour
             Destroy(obj1);
         }
         Debug.Log("Player Selected :  " + PlayerName);
-
 
         //Changing the currentSelected player in the Scriptable object
         //No Making this player persist in the device. This will be done on continue press.
@@ -618,7 +748,25 @@ public class PlayerSelection : MonoBehaviour
         StartCoroutine(ImageUploadAndPlayerUIInit());
 
         TurnOffAllPanels();
-        switchPlayerPanel.SetActive(true);
+
+        if (currentYipliConfig.playerInfo.isMatTutDone == 0)
+        {
+            // write tut flag to backend here or start the tutorial
+            if (isTutorialDoneWithoutPlayerInfo)
+            {
+                FirebaseDBHandler.UpdateTutStatusData(currentYipliConfig.userId, currentYipliConfig.playerInfo.playerId, 1);
+                UserDataPersistence.SavePropertyValue("player-tutDone", 1.ToString());
+                switchPlayerPanel.SetActive(true);
+            }
+            else
+            {
+                playDeviceSpecificMatTutorial();
+            }
+        }
+        else
+        {
+            switchPlayerPanel.SetActive(true);
+        }
     }
 
     private YipliPlayerInfo GetPlayerInfoFromPlayerName(string playerName)
@@ -653,9 +801,56 @@ public class PlayerSelection : MonoBehaviour
 
     public void OnJumpOnMat()
     {
+        // activate mat tutorial here
+        allowPhoneHolderAudioPlay = false;
+
+        TurnOffAllPanels();
+        TutorialPanel.SetActive(true);
+        TutorialPanel.GetComponent<TutorialManagerGL>().ActivateTutorial();
+
+        /*
         currentYipliConfig.bIsMatIntroDone = true;
         phoneHolderInfo.SetActive(false);
         StopCoroutine(ChangeTextMessage());
+        SwitchPlayerFlow();
+        */
+    }
+
+    // This function is attached to Continue button on Tutorial panel. This will be the end of tutorial.
+    public void OnTutorialContinuePress()
+    {
+        if (currentYipliConfig.bIsRetakeTutorialFlagActivated)
+        {
+            currentYipliConfig.bIsRetakeTutorialFlagActivated = false;
+            matSelectionScript.MatConnectionFlow();
+            return;
+        }
+
+
+        if (currentYipliConfig.playerInfo != null)
+        {
+            if (currentYipliConfig.playerInfo.isMatTutDone == 0)
+            {
+                FirebaseDBHandler.UpdateTutStatusData(currentYipliConfig.userId, currentYipliConfig.playerInfo.playerId, 1);
+                UserDataPersistence.SavePropertyValue("player-tutDone", 1.ToString());
+            }
+        }
+        else
+        {
+            // set tut flag after player selection is done in backend
+            isTutorialDoneWithoutPlayerInfo = true;
+        }
+
+        phoneHolderInfo.SetActive(false);
+
+#if UNITY_ANDROID
+        //StopCoroutine(ChangeTextMessageAndoridPhone());
+        ChangeTextMessageAndoridPhone();
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+        //StopCoroutine(ChangeTextMessageWindowsPC());
+        ChangeTextMessageWindowsPC();
+#endif
+
         SwitchPlayerFlow();
     }
 
@@ -746,38 +941,94 @@ public class PlayerSelection : MonoBehaviour
     //    }
     //}
 
-    async private Task loadProfilePicAsync(Image gameObj, string profilePicUrl)
+    async private void loadProfilePicAsync(Image gameObj, string profilePicUrl)
     {
-        if (profilePicUrl == null || profilePicUrl == "" || gameObj == null)
+        try
         {
-            Debug.Log("Something went wrong. Returning.");
-            //Set the profile pic to a default one.
-            gameObj.sprite = defaultProfilePicSprite;
-        }
-        else
-        {
-            // Create local filesystem URL
-            string onDeviceProfilePicPath = Application.persistentDataPath + "/" + profilePicUrl;
-            Sprite downloadedSprite = await FirebaseDBHandler.GetImageAsync(profilePicUrl, onDeviceProfilePicPath);
-            if (downloadedSprite != null)
+            if (profilePicUrl == null || profilePicUrl == "" || gameObj == null)
             {
-                gameObj.sprite = downloadedSprite;
-                bIsProfilePicLoaded = true;
+                Debug.Log("Something went wrong. Returning.");
+                //Set the profile pic to a default one.
+                gameObj.sprite = defaultProfilePicSprite;
             }
             else
             {
-                //Actual profile pic in the backend
-                gameObj.sprite = defaultProfilePicSprite;
+                // Create local filesystem URL
+                string onDeviceProfilePicPath = Application.persistentDataPath + "/" + profilePicUrl;
+                Sprite downloadedSprite = await FirebaseDBHandler.GetImageAsync(profilePicUrl, onDeviceProfilePicPath);
+                if (downloadedSprite != null)
+                {
+                    gameObj.sprite = downloadedSprite;
+                    bIsProfilePicLoaded = true;
+                }
+                else
+                {
+                    //Actual profile pic in the backend
+                    gameObj.sprite = defaultProfilePicSprite;
+                }
             }
+            bIsProfilePicLoaded = false;
         }
-        bIsProfilePicLoaded = false;
+        catch (Exception e)
+        {
+            Debug.LogError("Loading of profile pic failed : " + e.Message);
+        }
     }
 
 #if UNITY_STANDALONE_WIN
     private void ReadFromWindowsFile()
     {
         currentYipliConfig.userId = FileReadWrite.ReadFromFile();
-        currentYipliConfig.playerInfo = null;
+        //currentYipliConfig.playerInfo = null;
     }
 #endif
+
+    // retake tutorial button function
+    public void RetakeMatTutorialButton()
+    {
+        if (currentYipliConfig.playerInfo == null) return;
+
+        playDeviceSpecificMatTutorial();
+    }
+
+    // gamelib quit button
+    public void QuitFromGameLibButton()
+    {
+        Application.Quit();
+    }
+
+    // no internet check coroutine
+    private IEnumerator CheckNoInternetConnection()
+    {
+        while(true)
+        {
+            noNetworkPanel.SetActive(false);
+
+            yield return new WaitForSecondsRealtime(1f);
+
+            if (!YipliHelper.checkInternetConnection())
+            {
+                yield return new WaitForSecondsRealtime(2f);
+
+                if (YipliHelper.checkInternetConnection()) continue; 
+
+                noNetworkPanelText.text = "No Internet connection.\nGame will resume when network is available.";
+                noNetworkPanel.SetActive(true);
+            }
+        }
+    }
+
+    // true internet connection check
+    private void CheckInternectConnection()
+    {
+        if (YipliHelper.checkInternetConnection())
+        {
+            noNetworkPanel.SetActive(false);
+        }
+    }
+
+    private void UpdateGameAndDriverVersionText()
+    {
+        gameAndDriverVersionText.text = YipliHelper.GetFMDriverVersion() + " : " + Application.version;
+    }
 }

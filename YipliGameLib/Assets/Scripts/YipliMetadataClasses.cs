@@ -11,13 +11,14 @@ public class YipliPlayerInfo
     public string playerHeight; //Current height of the player
     public string playerWeight; //Current height of the player
     //public string playerExpertyLevel;//The Experty level of the player at time of playing the game.
-    public string gender;
+    //public string gender;
     public string profilePicUrl;
+    public int isMatTutDone;
     //public string difficultyLevel; // to be decided by the game.
 
     public YipliPlayerInfo() { }
 
-    public YipliPlayerInfo(string playerId, string playerName, string playerDob, string playerHeight, string playerWeight, string profilePicUrl = null, string gender = "")
+    public YipliPlayerInfo(string playerId, string playerName, string playerDob, string playerHeight, string playerWeight, string profilePicUrl = null, int pTutDone = 0)
     {
         this.playerId = playerId;
         this.playerName = char.ToUpper(playerName[0]) + playerName.Substring(1);
@@ -33,8 +34,8 @@ public class YipliPlayerInfo
         }
         this.playerHeight = playerHeight;
         this.playerWeight = playerWeight;
-        this.gender = gender;
         this.profilePicUrl = profilePicUrl;
+        this.isMatTutDone = pTutDone;
     }
 
     public YipliPlayerInfo(DataSnapshot snapshot, string key)
@@ -50,6 +51,7 @@ public class YipliPlayerInfo
                 playerWeight = snapshot.Child("weight").Value?.ToString() ?? "";
                 playerHeight = snapshot.Child("height").Value?.ToString() ?? "";
                 playerDob = snapshot.Child("dob").Value?.ToString() ?? "";
+                isMatTutDone = snapshot.Child("mat-tut-done").Value == null ? 0 : YipliHelper.StringToIntConvert(snapshot.Child("mat-tut-done").Value.ToString());
 
                 //DOB is stored in the format "mm-dd-yyyy" in the backend
                 Debug.Log("DOB recieved from backend : " + playerDob);
@@ -63,7 +65,6 @@ public class YipliPlayerInfo
                     playerAge = CalculateAge(playerDob);
                     Debug.Log("Got Player age : " + playerAge);
                 }
-                gender = snapshot.Child("gender").Value?.ToString() ?? "";
 
                 profilePicUrl = snapshot.Child("profile-pic-url").Value?.ToString() ?? "";
 

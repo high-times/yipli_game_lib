@@ -28,8 +28,8 @@ public class YipliConfig : ScriptableObject
     
     public string gameId;
 
-    [HideInInspector]
-    public bool bIsMatIntroDone = false;
+    //[HideInInspector]
+    //public bool bIsMatIntroDoneForCurrentPlayer = false;
 
     [HideInInspector]
     public MP_GameStateManager MP_GameStateManager;
@@ -44,6 +44,9 @@ public class YipliConfig : ScriptableObject
     public bool bIsChangePlayerCalled = false;
 
     public bool onlyMatPlayMode = true;
+
+    [HideInInspector]
+    public bool bIsRetakeTutorialFlagActivated = false;
 
     [HideInInspector]
     public bool bIsInternetConnected;

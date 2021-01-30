@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   callbackLevel: DemoGameScene
   userId: lC4qqZCFEaMogYswKjd0ObE6nD43
-  gameId: na
-  bIsMatIntroDone: 1
+  gameId: trapped
   bIsChangePlayerCalled: 0
   onlyMatPlayMode: 1
+  bIsRetakeTutorialFlagActivated: 0
   bIsInternetConnected: 1
   oldFMResponseCount: 0
   gameType: 0

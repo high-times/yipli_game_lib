@@ -11,10 +11,15 @@ public static class YipliHelper
     public static string userName = "bhansali.saurabh20@gmail.com";
     public static string password = "abcdefg123456789";
 
-
     public static int GetGameClusterId()
     {
         return InitBLE.getGameClusterID();
+    }
+
+    // based on player
+    public static int GetGameClusterId(int playerID)
+    {
+        return InitBLE.getGameClusterID(playerID);
     }
 
     public static string GetFMDriverVersion()
@@ -25,6 +30,12 @@ public static class YipliHelper
     public static void SetGameClusterId(int gameClusterId)
     {
         InitBLE.setGameClusterID(gameClusterId);
+    }
+
+    // for 2 players
+    public static void SetGameClusterId(int p1gameClusterId, int p2gameClusterId)
+    {
+        InitBLE.setGameClusterID(p1gameClusterId, p2gameClusterId);
     }
 
     public static void SetGameMode(int gameMode)
@@ -93,7 +104,9 @@ public static class YipliHelper
     //Returns true if YipliApp is installed, else returns false
     public static bool IsYipliAppInstalled()
     {
-#if UNITY_ANDROID
+#if UNITY_EDITOR
+        return true;
+#elif UNITY_ANDROID
         AndroidJavaObject launchIntent = null;
         try
         {
@@ -147,5 +160,18 @@ public static class YipliHelper
         return versionCode;
     }
 
+    public static int StringToIntConvert(string text)
+    {
+        try
+        {
+            int convertedVal = int.Parse(text);
+            return convertedVal;
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log("String to int conversion error : " + e.Message);
+            return 0;
+        }
+    }
 }
 

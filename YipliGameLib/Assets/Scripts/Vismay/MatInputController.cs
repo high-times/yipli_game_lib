@@ -6,33 +6,55 @@ using YipliFMDriverCommunication;
 
 public class MatInputController : MonoBehaviour
 {
+    // required variables
+    [Header("current yipli config")]
+    public YipliConfig currentYipliConfig;
+
+    // fix switch cases
     const string LEFT = "left";
     const string RIGHT = "right";
     const string ENTER = "enter";
 
+    // current button this value will keep changing with mat left and right
     [SerializeField] Button currentB;
-    [SerializeField] private List<Button> currentMenuButtons;
+    [SerializeField] private List<Button> currentMenuButtons; // list of current buttons for mat controls. This list will change based on current active panel
     [SerializeField] int currentButtonIndex = 0;
 
     YipliUtils.PlayerActions detectedAction;
 
+    // canvas object for keeping the active button top to the list. Yhis part is only used for PlayerSelection panel.
     [SerializeField] ScrollRect playerSelectionScrollRect;
     [SerializeField] RectTransform playerSelectionContentRectTransform;
 
+    // flag to check if current panel is playerselection panel or not.
     bool isThisPlayerSelectionPanel = false;
 
+    // flag to disable the MatControls when tutorial is active.
+    bool isTutorialRunning = false;
+
+    // string to store current playername
+    string currentPlayerName = null;
+
+    // required getters and setters.
     public YipliUtils.PlayerActions DetectedAction { get => detectedAction; set => detectedAction = value; }
     public bool IsThisPlayerSelectionPanel { get => isThisPlayerSelectionPanel; set => isThisPlayerSelectionPanel = value; }
+    public bool IsTutorialRunning { get => isTutorialRunning; set => isTutorialRunning = value; }
+    public string CurrentPlayerName { get => currentPlayerName; set => currentPlayerName = value; }
 
     void Start()
     {
+        // set cluster id to 0 as it is the only cluster id needed till main menu arrives.
         SetProperClusterID(0);
     }
 
     void Update()
     {
-        GetMatUIKeyboardInputs();
-        ManageMatActions();
+        // mat and keyboard controls will be stopped when tutorial is active.
+        if (!IsTutorialRunning)
+        {
+            GetMatUIKeyboardInputs();
+            ManageMatActions();
+        }
     }
 
     public void SetProperClusterID(int clusterID)
@@ -51,13 +73,13 @@ public class MatInputController : MonoBehaviour
     private void ManageMatActions()
     {
         string fmActionData = InitBLE.GetFMResponse();
-        Debug.Log("Json Data from Fmdriver : " + fmActionData);
+        Debug.Log("Json Data from Fmdriver in matinput : " + fmActionData);
 
         FmDriverResponseInfo singlePlayerResponse = JsonUtility.FromJson<FmDriverResponseInfo>(fmActionData);
 
         if (singlePlayerResponse == null) return;
 
-        if (PlayerSession.Instance.currentYipliConfig.oldFMResponseCount < singlePlayerResponse.count)
+        if (currentYipliConfig.oldFMResponseCount != singlePlayerResponse.count)
         {
             PlayerSession.Instance.currentYipliConfig.oldFMResponseCount = singlePlayerResponse.count;
 
@@ -160,6 +182,8 @@ public class MatInputController : MonoBehaviour
                     currentMenuButtons[i].transform.GetChild(0).GetComponent<Animator>().enabled = true;
                     currentB = currentMenuButtons[i];
 
+                    CurrentPlayerName = currentB.name;
+
                     ScrollButtonList(currentB);
                 }
                 else
@@ -202,7 +226,7 @@ public class MatInputController : MonoBehaviour
             ProcessMatInputs(RIGHT);
         }
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown(KeyCode.L))
         {
             ProcessMatInputs(ENTER);
         }

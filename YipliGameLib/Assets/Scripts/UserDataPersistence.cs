@@ -30,6 +30,7 @@ public static class UserDataPersistence
         SavePropertyValue("player-dob", playerInfo.playerDob);
         SavePropertyValue("player-height", playerInfo.playerHeight);
         SavePropertyValue("player-weight", playerInfo.playerWeight);
+        SavePropertyValue("player-tutDone", playerInfo.isMatTutDone.ToString());
 
         if(playerInfo.profilePicUrl != null)
         SavePropertyValue("player-profilePicUrl", playerInfo.profilePicUrl);
@@ -77,7 +78,8 @@ public static class UserDataPersistence
                 GetPropertyValue("player-dob"), 
                 GetPropertyValue("player-height"), 
                 GetPropertyValue("player-weight"),
-                GetPropertyValue("player-profilePicUrl"));
+                GetPropertyValue("player-profilePicUrl"),
+                YipliHelper.StringToIntConvert(GetPropertyValue("player-tutDone")));
 
         Debug.Log("Return null for GetSavedPlayer");
         return null;

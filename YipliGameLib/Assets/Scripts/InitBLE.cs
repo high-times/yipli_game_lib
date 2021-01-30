@@ -212,7 +212,7 @@ public class InitBLE
         try
         {
 #if UNITY_ANDROID
-                return PluginInstance.CallStatic<int>("_getGameID");
+                return PluginInstance.Call<int>("_getGameID");
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR
             return DeviceControlActivity._getGameID();
 #endif
@@ -238,6 +238,39 @@ public class InitBLE
         {
             Debug.Log("Exception in Driver Version" + exp.Message);
             return null;
+        }
+    }
+
+    public static void setGameClusterID(int P1_gameID, int P2_gameID)
+    {
+        try
+        {
+#if UNITY_ANDROID
+            PluginInstance.Call("_setGameID", P1_gameID, P2_gameID);
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+                DeviceControlActivity._setGameID(P1_gameID, P2_gameID);
+#endif
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Exception in setGameClusterID() : " + e.Message);
+        }
+    }
+
+    public static int getGameClusterID(int playerID)
+    {
+        try
+        {
+#if UNITY_ANDROID
+            return PluginInstance.Call<int>("_getGameID", playerID);
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+                return DeviceControlActivity._getGameID(playerID);
+#endif
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Exception in getGameClusterID() : " + e.Message);
+            return 1000;//1000 will be flagged as an invalid GameId on game side.
         }
     }
 }

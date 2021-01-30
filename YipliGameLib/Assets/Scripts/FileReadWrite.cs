@@ -12,10 +12,13 @@ namespace yipli.Windows
         static readonly string yipliFolder = "Yipli";
         static readonly string yipliFile = "userinfo.txt";
         
-        static readonly string yipliAppDownloadUrl = "https://www.playyipli.com/download.html";
+        //static readonly string yipliAppDownloadUrl = "https://www.playyipli.com/download.html";
+        static string yipliAppDownloadUrl = "";
         
         static RegistryKey rk = Registry.CurrentUser;
-        
+
+        public static string YipliAppDownloadUrl { get => yipliAppDownloadUrl; set => yipliAppDownloadUrl = value; }
+
         public static string ReadFromFile()
         {
             try
@@ -71,7 +74,7 @@ namespace yipli.Windows
         
         public static void OpenYipliApp()
         {
-            string yipliAppExeLoc = GetApplictionInstallPath("yipliapp") + "\\" + "YipliApp.exe";
+            string yipliAppExeLoc = GetApplictionInstallPath("yipliapp") + "\\" + "Yipli.exe";
             
             if (ValidateFile(yipliAppExeLoc))
             {
@@ -79,7 +82,7 @@ namespace yipli.Windows
             }
             else
             {
-                Process.Start(yipliAppDownloadUrl);
+                Process.Start(YipliAppDownloadUrl);
             }
             
             //UnityEngine.Debug.LogError("Application is switched");
