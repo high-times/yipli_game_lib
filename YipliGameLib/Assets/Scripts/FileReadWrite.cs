@@ -14,10 +14,19 @@ namespace yipli.Windows
         
         //static readonly string yipliAppDownloadUrl = "https://www.playyipli.com/download.html";
         static string yipliAppDownloadUrl = "";
-        
+
+        static bool logOutFlag = false;
+        static string userIdInFile = null;
+        static string skippedVersion = null;
+        static bool driverInstalledFinished = false;
+
         static RegistryKey rk = Registry.CurrentUser;
 
         public static string YipliAppDownloadUrl { get => yipliAppDownloadUrl; set => yipliAppDownloadUrl = value; }
+        public static bool LogOutFlag { get => logOutFlag; set => logOutFlag = value; }
+        public static string UserIdInFile { get => userIdInFile; set => userIdInFile = value; }
+        public static string SkippedVersion { get => skippedVersion; set => skippedVersion = value; }
+        public static bool DriverInstalledFinished { get => driverInstalledFinished; set => driverInstalledFinished = value; }
 
         public static string ReadFromFile()
         {
@@ -27,21 +36,58 @@ namespace yipli.Windows
                 // The using statement also closes the StreamReader.
                 if (File.Exists(myDocLoc + "/Yipli/userinfo.txt"))
                 {
-                    /* Dont remove this : Uncomment below code if line by line read is needed.
-                    using (StreamReader sr = new StreamReader(myDocLoc + "/Yipli/userinfo.txt"))
+                    string[] allLines = File.ReadAllLines(myDocLoc + "/Yipli/userinfo.txt");
+
+                    for (int i = 0; i < allLines.Length; i++)
                     {
-                        string line;
-                        // Read and display lines from the file until
-                        // the end of the file is reached.
-                        while ((line = sr.ReadLine()) != null)
+                        if (!string.IsNullOrEmpty(allLines[i]))
                         {
-                            linedata = line.Substring(17);
-                            //UnityEngine.Debug.LogError("received line : " + linedata);
+                            switch (i)
+                            {
+                                case 0:
+                                    UserIdInFile = allLines[i].Substring(startIndex: 17);
+                                    break;
+
+                                case 1:
+                                    if (allLines[i].Substring(18) != null || allLines[i].Substring(startIndex: 18) != "")
+                                    {
+                                        LogOutFlag = Boolean.Parse(allLines[i].Substring(startIndex: 18));
+                                    }
+                                    else
+                                    {
+                                        LogOutFlag = true;
+                                    }
+                                    break;
+
+                                case 2:
+                                    SkippedVersion = allLines[i].Substring(startIndex: 18);
+                                    break;
+
+                                case 3:
+                                    if (allLines[i].Substring(26) != null || allLines[i].Substring(startIndex: 26) != "")
+                                    {
+                                        DriverInstalledFinished = Boolean.Parse(allLines[i].Substring(startIndex: 26));
+                                    }
+                                    else
+                                    {
+                                        DriverInstalledFinished = false;
+                                    }
+                                    break;
+
+                                case 4:
+                                    break;
+
+                                default:
+                                    UserIdInFile = null;
+                                    LogOutFlag = true;
+                                    SkippedVersion = null;
+                                    DriverInstalledFinished = false;
+                                    break;
+                            }
                         }
                     }
-                    */
-                    string[] allLines = File.ReadAllLines(myDocLoc + "/Yipli/userinfo.txt");
-                    return allLines[0].Substring(17);
+
+                    return UserIdInFile;
                 }
                 else
                 {
@@ -55,23 +101,49 @@ namespace yipli.Windows
                 return null;
             }
         }
-        
-        public static void WriteToFile(string userID)
+
+        public static void WriteToFile(bool isUserLoggedOut = false)
         {
             if (!Directory.Exists(myDocLoc + "/" + yipliFolder))
             {
                 Directory.CreateDirectory(myDocLoc + "/" + yipliFolder);
                 var yipliFileToCreate = File.Create(myDocLoc + "/" + yipliFolder + "/" + yipliFile);
+
                 yipliFileToCreate.Close();
             }
-            
+
+            string writeLine = "Current UserID : " + UserIdInFile + "\nisUserLoggedOut : " + isUserLoggedOut + "\nskipped version : " + SkippedVersion + "\nDriverInstalledFinished : " + DriverInstalledFinished;
+            //UnityEngine.Debug.LogError("writeline is : " + writeLine); // 26
+
             StreamWriter sw = new StreamWriter(myDocLoc + "/Yipli/userinfo.txt");
-            sw.WriteLine("Current UserID : " + userID);
+            //sw.WriteLine(TripleDES.Encrypt(writeLine));
+            sw.WriteLine(writeLine);
             sw.Close();
-            
+
             //ReadFromFile();
         }
-        
+
+        public static void WriteToFileForDriverSetup(string gameID, bool isUserLoggedOut = false)
+        {
+            if (!Directory.Exists(myDocLoc + "/" + yipliFolder))
+            {
+                Directory.CreateDirectory(myDocLoc + "/" + yipliFolder);
+                var yipliFileToCreate = File.Create(myDocLoc + "/" + yipliFolder + "/" + yipliFile);
+
+                yipliFileToCreate.Close();
+            }
+
+            string writeLine = "Current UserID : " + UserIdInFile + "\nisUserLoggedOut : " + isUserLoggedOut + "\nskipped version : " + SkippedVersion + "\nDriverInstalledFinished : " + false + "\nGameID : " + gameID;
+            //UnityEngine.Debug.LogError("writeline is : " + writeLine); // 26
+
+            StreamWriter sw = new StreamWriter(myDocLoc + "/Yipli/userinfo.txt");
+            //sw.WriteLine(TripleDES.Encrypt(writeLine));
+            sw.WriteLine(writeLine);
+            sw.Close();
+
+            //ReadFromFile();
+        }
+
         public static void OpenYipliApp()
         {
             string yipliAppExeLoc = GetApplictionInstallPath("yipliapp") + "\\" + "Yipli.exe";
@@ -98,7 +170,7 @@ namespace yipli.Windows
             try
             {
                 installPath = subKey.GetValue("InstallPath").ToString();
-                //UnityEngine.Debug.LogError("sub key : " + subKey.GetValue("InstallPath"));
+                UnityEngine.Debug.LogError("sub key : " + subKey.GetValue("InstallPath"));
             }
             catch (Exception e)
             {
@@ -118,6 +190,30 @@ namespace yipli.Windows
             string yipliAppExeLoc = GetApplictionInstallPath("yipliapp") + "\\" + "YipliApp.exe";
 
             return ValidateFile(yipliAppExeLoc);
+        }
+
+        public static void CheckIfMatDriverIsInstalled(string gameID)
+        {
+            Process.Start(GetMatDriverExePath(gameID));
+        }
+
+        public static string GetMatDriverExePath(string gameID)
+        {
+            string exePath = null;
+
+            RegistryKey subKey = rk.OpenSubKey(gameID);
+
+            try
+            {
+                exePath = subKey.GetValue("MatDriverCheck").ToString();
+                UnityEngine.Debug.LogError("Exepath : " + exePath);
+            }
+            catch (Exception e)
+            {
+               UnityEngine.Debug.LogError("Exepath sub key not found. Error : " + e.Message);
+            }
+
+            return exePath;
         }
     }
 }

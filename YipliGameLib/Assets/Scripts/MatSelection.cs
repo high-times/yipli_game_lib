@@ -8,6 +8,11 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+#if UNITY_STANDALONE_WIN
+using yipli.Windows;
+#endif
+
+
 public class MatSelection : MonoBehaviour
 {
     private const int MaxBleCheckCount = 20;
@@ -26,6 +31,13 @@ public class MatSelection : MonoBehaviour
     private string connectionState;
     private int checkMatStatusCount;
     public GameObject tick;
+
+    public GameObject troubleshootButton;
+    public GameObject yipliHomeButton;
+    public GameObject retryButton;
+    public GameObject installDriverButton;
+
+    int retriesDone = 0;
 
     private bool autoSkipMatConnection;
 
@@ -48,6 +60,9 @@ public class MatSelection : MonoBehaviour
         {
             SkipMatButton.SetActive(false);
         }
+
+        // make troubleshoot button disable by default
+        DisableTroubleshootButton();
     }
 
     // This function is to be called before Mat tutorial.
@@ -151,11 +166,22 @@ public class MatSelection : MonoBehaviour
 
     public void ReCheckMatConnection()
     {
+
         Debug.Log("ReCheckMatConnection() called");
         if (bIsMatFlowInitialized)
             MatConnectionFlow();
         else
             EstablishMatConnection();
+
+#if UNITY_STANDALONE_WIN
+        retriesDone++;
+
+        if (retriesDone > 2)
+        {
+            //EnableTroubleshootButton();
+            TroubleshootButton();
+        }
+#endif
     }
 
 
@@ -323,14 +349,79 @@ public class MatSelection : MonoBehaviour
     private void RetryMatConnectionOnPC()
     {
         //Initiate the connection with the mat.
-        //InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0);
-        InitBLE.reconnectMat();
+        InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0);
+        //InitBLE.reconnectMat();
     }
 
     public void OnGoToYipliPress()
     {
         YipliHelper.GoToYipli();
     }
+
+    private void DisableTroubleshootButton()
+    {
+        troubleshootButton.transform.GetChild(1).gameObject.SetActive(true);
+        troubleshootButton.SetActive(false);
+        installDriverButton.SetActive(false);
+    }
+
+    private void EnableTroubleshootButton()
+    {
+        troubleshootButton.SetActive(true);
+        troubleshootButton.transform.GetChild(1).gameObject.SetActive(false);
+    }
+
+#if UNITY_STANDALONE_WIN
+    // troubole mat drivers and connection
+    public void TroubleshootButton()
+    {
+        EnableTroubleshootingPanel();
+    }
+
+    public void TroubleshootSystem()
+    {
+        FileReadWrite.WriteToFileForDriverSetup(currentYipliConfig.gameId);
+        FileReadWrite.ReadFromFile();
+
+        StartCoroutine(StartValidationUI());
+
+        FileReadWrite.CheckIfMatDriverIsInstalled(currentYipliConfig.gameId);
+    }
+
+    private IEnumerator StartValidationUI()
+    {
+        while (!FileReadWrite.DriverInstalledFinished) 
+        {
+            troubleshootButton.transform.GetChild(1).gameObject.SetActive(true);
+
+            noMatText.text = string.Empty;
+            yield return new WaitForSecondsRealtime(1f);
+
+            FileReadWrite.ReadFromFile();
+        }
+
+        // after validation is done
+        //noMatText.text = ProductMessages.Err_mat_connection_retry;
+        troubleshootButton.transform.GetChild(1).gameObject.SetActive(false);
+
+        yipliHomeButton.SetActive(true);
+        retryButton.SetActive(true);
+        troubleshootButton.SetActive(true);
+        installDriverButton.SetActive(false);
+
+        ReCheckMatConnection();
+    }
+
+    private void EnableTroubleshootingPanel()
+    {
+        noMatText.text = ProductMessages.Err_mat_connection_no_driver;
+
+        yipliHomeButton.SetActive(false);
+        retryButton.SetActive(false);
+        troubleshootButton.SetActive(false);
+        installDriverButton.SetActive(true);
+    }
+#endif
 }
 
 //Register the YIPLI fitness mat from Yipli Hub to continue playing.

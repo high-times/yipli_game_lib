@@ -260,7 +260,8 @@ public class PlayerSession : MonoBehaviour
 #if UNITY_ANDROID
             InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", YipliHelper.GetGameClusterId() != 1000 ? YipliHelper.GetGameClusterId() : 0);
 #else
-            InitBLE.reconnectMat();
+            InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0);
+            //InitBLE.reconnectMat();
 #endif
         }
         catch (Exception exp)

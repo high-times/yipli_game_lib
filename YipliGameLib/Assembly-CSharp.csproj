@@ -397,8 +397,8 @@
     <Reference Include="IKVM.Runtime.JNI">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/Plugins/Windows/PCFMDriver/IKVM.Runtime.JNI.dll</HintPath>
     </Reference>
-    <Reference Include="PCFMDriver024-6">
-      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/Plugins/Windows/PCFMDriver/PCFMDriver024-6.dll</HintPath>
+    <Reference Include="PCFMDriver025R">
+      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/Plugins/Windows/PCFMDriver/PCFMDriver025R.dll</HintPath>
     </Reference>
     <Reference Include="Firebase.App">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Library/PackageCache/com.google.firebase.app@6.15.2/Firebase/Plugins/Firebase.App.dll</HintPath>
