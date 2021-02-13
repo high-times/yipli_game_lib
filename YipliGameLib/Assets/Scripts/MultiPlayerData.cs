@@ -12,8 +12,9 @@ public class PlayerDetails
     public string playerAge = ""; //Current age of the player
     public string playerHeight = ""; //Current height of the player
     public string playerWeight = ""; //Current height of the player
-    public string matId = "";
-    public string matMacAddress;
+    //public string matId = "";
+    //public string matMacAddress;
+    public string minigameId = "";
     public float duration;
     public float calories;
     public float fitnesssPoints;

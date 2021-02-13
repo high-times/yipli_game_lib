@@ -2,51 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Multiplayer Game State Manager
+ * Handles current data of Multiplayer Game
+ * Sets player one data
+ * Sets player two data
+ * Handles game data of active players
+ */
+
+
 public class MP_GameStateManager
 {
+
+    #region Variable declaration
+
     public MultiPlayerData playerData;
 
     public List<string> playerNames = new List<string>();
     public string playerOne, playerTwo;
     public bool isSinglePlayer;
+    public string minigameId;
 
     private YipliPlayerInfo tempPlayer;
 
     public PlayerDetails playerOneDetails = new PlayerDetails();
     public PlayerDetails playerTwoDetails = new PlayerDetails();
 
-    [SerializeField] private Sprite computerSprite, playerSprite;
-
-    private void Start()
-    {
-        // Force set screen resolution
-        Screen.SetResolution(1280, 720, true);
-    }
-
+    #endregion
 
     public void SetPlayerData(MultiPlayerData multiPlayerData)
     {
-        playerData=multiPlayerData;
+        playerData = multiPlayerData;
     }
-
-
-
-    #region PlayerImageRetrieval
-
-    //public Sprite playerImage;
-
-    //public Sprite GetCurrentPlayerImage()
-    //{
-    //    return playerImage;
-    //}
-
-
-    //public void SetCurrentPlayerImage(Sprite image)
-    //{
-    //    playerImage = image;
-    //}
-
-    #endregion
 
     private YipliPlayerInfo GetPlayerInfoFromPlayerName(string playerName)
     {
@@ -69,20 +55,16 @@ public class MP_GameStateManager
         return null;
     }
 
-
-
-
     public void SetPlayerOne(string name)
     {
         playerOne = name;
         playerData.PlayerOneName = playerOne;
-        playerData.PlayerOneImage = playerSprite;
 
-        tempPlayer= GetPlayerInfoFromPlayerName(playerOne);
+        tempPlayer = GetPlayerInfoFromPlayerName(playerOne);
 
         playerOneDetails.userId = PlayerSession.Instance.currentYipliConfig.userId;
-        playerOneDetails.matId = PlayerSession.Instance.currentYipliConfig.matInfo.matId;
-        playerOneDetails.matMacAddress = PlayerSession.Instance.currentYipliConfig.matInfo.macAddress;
+        //playerOneDetails.matId = PlayerSession.Instance.currentYipliConfig.matInfo.matId;
+        //playerOneDetails.matMacAddress = PlayerSession.Instance.currentYipliConfig.matInfo.macAddress;
         playerOneDetails.playerId = tempPlayer.playerId;
         playerOneDetails.playerAge = tempPlayer.playerAge;
         playerOneDetails.playerHeight = tempPlayer.playerHeight;
@@ -91,21 +73,26 @@ public class MP_GameStateManager
         playerOneDetails.playerGameData = new Dictionary<string, string>();
 
         playerData.PlayerOneDetails = playerOneDetails;
-
-        //YipliPlayerInfo yipliPlayer = PlayerSession.Instance.
     }
+
     public void SetPlayerTwo(string name)
     {
+        if (name == null)
+        {
+            playerTwo = null;
+            playerData.PlayerTwoName = null;
+            playerData.PlayerTwoDetails = null;
+            return;
+        }
         playerTwo = name;
         playerData.PlayerTwoName = playerTwo;
-        playerData.PlayerTwoImage = playerSprite;
         playerData.IsSinglePlayer = false;
 
         tempPlayer = GetPlayerInfoFromPlayerName(playerTwo);
 
         playerTwoDetails.userId = PlayerSession.Instance.currentYipliConfig.userId;
-        playerTwoDetails.matId = PlayerSession.Instance.currentYipliConfig.matInfo.matId;
-        playerTwoDetails.matMacAddress = PlayerSession.Instance.currentYipliConfig.matInfo.macAddress;
+        //playerTwoDetails.matId = PlayerSession.Instance.currentYipliConfig.matInfo.matId;
+        //playerTwoDetails.matMacAddress = PlayerSession.Instance.currentYipliConfig.matInfo.macAddress;
         playerTwoDetails.playerId = tempPlayer.playerId;
         playerTwoDetails.playerAge = tempPlayer.playerAge;
         playerTwoDetails.playerHeight = tempPlayer.playerHeight;
@@ -116,14 +103,6 @@ public class MP_GameStateManager
         playerData.PlayerTwoDetails = playerTwoDetails;
 
         isSinglePlayer = false;
-    }
-    public void SetSinglePlayer()
-    {
-        playerTwo = "Yipli AI";
-        playerData.PlayerTwoName = playerTwo;
-        playerData.PlayerTwoImage = computerSprite;
-        playerData.IsSinglePlayer = true;
-        isSinglePlayer = true;
     }
 
 }

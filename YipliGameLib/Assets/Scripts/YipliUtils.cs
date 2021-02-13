@@ -245,12 +245,21 @@ public class YipliUtils
                 break;
 
             case PlayerActions.LEFT_TAP:
-                fp = 10.0f;
+                fp = 4.0f;
                 break;
 
             case PlayerActions.RIGHT_TAP:
-                fp = 10.0f;
+                fp = 4.0f;
                 break;
+
+            case PlayerActions.LEFT_TOUCH:
+                fp = 3.0f;
+                break;
+
+            case PlayerActions.RIGHT_TOUCH:
+                fp = 3.0f;
+                break;
+
             default:
                 Debug.Log("Invalid action found while calculating the FP. FP returned would be 0.");
                 break;
@@ -323,6 +332,8 @@ public class YipliUtils
         BASIC2, // Running, Running Stop
         BASIC3, // High-knee
         BASIC4, // skier-jack
+        LEFT_TOUCH,
+        RIGHT_TOUCH,
         INVALID_ACTION,
     }
 
@@ -475,6 +486,12 @@ public class YipliUtils
                 break;
             case PlayerActions.RIGHT_TAP:
                 calories = 0.04f;
+                break;
+            case PlayerActions.LEFT_TOUCH:
+                calories = 0.03f;
+                break;
+            case PlayerActions.RIGHT_TOUCH:
+                calories = 0.03f;
                 break;
             default:
                 Debug.Log("Invalid action found while calculating the calories. Calories returned would be 0.");

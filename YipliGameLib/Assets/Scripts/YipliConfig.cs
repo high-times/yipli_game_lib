@@ -14,7 +14,7 @@ public enum GameType
 [CreateAssetMenu]
 public class YipliConfig : ScriptableObject
 {
-    [HideInInspector]
+    //[HideInInspector]
     public string callbackLevel;
 
     [HideInInspector]
@@ -23,7 +23,7 @@ public class YipliConfig : ScriptableObject
     [HideInInspector]
     public YipliMatInfo matInfo;
 
-    [HideInInspector]
+    //[HideInInspector]
     public string userId;
     
     public string gameId;
@@ -59,4 +59,6 @@ public class YipliConfig : ScriptableObject
 
     [HideInInspector]
     public GameType gameType = GameType.FITNESS_GAMING;
+
+    public bool troubleshootingDone = false;
 }

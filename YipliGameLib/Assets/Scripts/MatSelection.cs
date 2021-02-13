@@ -308,10 +308,13 @@ public class MatSelection : MonoBehaviour
         loadingPanel.gameObject.GetComponentInChildren<Text>().text = "launching game..";
         loadingPanel.SetActive(true);
 
-        while (firebaseDBListenersAndHandlers.GetGameDataForCurrenPlayerQueryStatus() != QueryStatus.Completed)
+        if (currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
         {
-            Debug.Log("waiting to finish new player's game data");
-            yield return new WaitForSecondsRealtime(0.1f);
+            while (firebaseDBListenersAndHandlers.GetGameDataForCurrenPlayerQueryStatus() != QueryStatus.Completed)
+            {
+                Debug.Log("waiting to finish new player's game data");
+                yield return new WaitForSecondsRealtime(0.1f);
+            }
         }
 
 

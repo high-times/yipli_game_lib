@@ -73,6 +73,7 @@ public class PlayerSession : MonoBehaviour
         {
             if (currentYipliConfig.userId == null || currentYipliConfig.userId.Length < 1)
             {
+                _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
                 SceneManager.LoadScene("yipli_lib_scene");
             }
         }
@@ -461,9 +462,9 @@ public class PlayerSession : MonoBehaviour
         Calories += YipliUtils.GetCaloriesPerAction(action) * count;
     }
 
-#endregion
+    #endregion
 
-#region Multi Player Session Functions
+    #region Multi Player Session Functions
 
     public IDictionary<YipliUtils.PlayerActions, int> getMultiPlayerActionCounts(PlayerDetails playerDetails)
     {
@@ -512,13 +513,18 @@ public class PlayerSession : MonoBehaviour
         Debug.Log("Starting multi player session.");
         currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
         currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
-        
-        ActionAndGameInfoManager.SetYipliMultiplayerGameInfo(currentYipliConfig.gameId);
+
+        ActionAndGameInfoManager.SetYipliMultiplayerGameInfo(currentYipliConfig.MP_GameStateManager.minigameId);
 
         currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.points = 0;
         currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.points = 0;
         currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.duration = 0;
         currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.duration = 0;
+
+        currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.calories = 0;
+        currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.fitnesssPoints = 0;
+        currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.calories = 0;
+        currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.fitnesssPoints = 0;
 
         duration = 0;
 
@@ -532,11 +538,8 @@ public class PlayerSession : MonoBehaviour
 
         Debug.Log("Storing current player session to backend database.");
 
-        currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.calories = currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.calories;
-        currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.fitnesssPoints = currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.fitnesssPoints;
+        Debug.Log("Count Test- " + currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.playerActionCounts.Count + " , " + currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.playerActionCounts.Count);
 
-        currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.calories = currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.calories;
-        currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.fitnesssPoints = currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.fitnesssPoints;
 
         currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.points = playerOneGamePoints;
         currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.points = playerTwoGamePoints;
@@ -557,7 +560,7 @@ public class PlayerSession : MonoBehaviour
         if (0 == ValidateMPSessionBeforePosting(currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails))
         {
             //Store the session data to backend.
-            FirebaseDBHandler.PostMultiPlayerSession(Instance, currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails, mpSessionUUID, () => { Debug.Log("Session stored in db"); });
+            FirebaseDBHandler.PostMultiPlayerSession(Instance, currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails, mpSessionUUID, () => { Debug.Log("Session stored in db"); });
             Debug.Log("Player 2 session stored successfully.");
         }
         else
@@ -609,7 +612,7 @@ public class PlayerSession : MonoBehaviour
         playerDetails.fitnesssPoints += YipliUtils.GetFitnessPointsPerAction(action) * count * UnityEngine.Random.Range(0.92f, 1.04f); // this is to hide direct mapping between calories and fitnesspoint. small random multiplier is added fitness points to keep it random on single action level
     }
 
-#endregion
+    #endregion
 
     // get game and driver version
     public string GetDriverAndGameVersion()
