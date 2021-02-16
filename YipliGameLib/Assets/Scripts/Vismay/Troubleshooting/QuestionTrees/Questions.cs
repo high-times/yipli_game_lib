@@ -1,10 +1,20 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Questions/QuestionList")]
+[CreateAssetMenu(menuName = "TroubleShoot/Questions/QuestionList")]
 public class Questions : ScriptableObject
 {
     [SerializeField] List<QuestionModel> questions;
+
+    public List<QuestionModel> GetQuestions()
+    {
+        return questions;
+    }
+
+    public void SetQuestions(List<QuestionModel> value)
+    {
+        questions = value;
+    }
 
     [System.Serializable]
     public class QuestionModel

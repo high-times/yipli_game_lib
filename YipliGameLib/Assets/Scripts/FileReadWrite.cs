@@ -20,6 +20,12 @@ namespace yipli.Windows
         static string skippedVersion = null;
         static bool driverInstalledFinished = false;
 
+        static string[] otherPorcessList = { 
+            "Metro Rush",
+            "Trapped",
+            "Joyful Jumps"
+        };
+
         static RegistryKey rk = Registry.CurrentUser;
 
         public static string YipliAppDownloadUrl { get => yipliAppDownloadUrl; set => yipliAppDownloadUrl = value; }
@@ -27,6 +33,7 @@ namespace yipli.Windows
         public static string UserIdInFile { get => userIdInFile; set => userIdInFile = value; }
         public static string SkippedVersion { get => skippedVersion; set => skippedVersion = value; }
         public static bool DriverInstalledFinished { get => driverInstalledFinished; set => driverInstalledFinished = value; }
+        public static string[] OtherPorcessList { get => otherPorcessList; set => otherPorcessList = value; }
 
         public static string ReadFromFile()
         {
@@ -214,6 +221,31 @@ namespace yipli.Windows
             }
 
             return exePath;
+        }
+
+        public static bool CheckIfOtherProcessesAreRunning()
+        {
+            int totalYipliProcess = 0;
+
+            for (int i = 0; i < OtherPorcessList.Length; i++)
+            {
+                Process[] allProcess = Process.GetProcessesByName(OtherPorcessList[i]);
+
+                if (allProcess.Length > 0)
+                {
+                    totalYipliProcess++;
+                }
+            }
+
+            if (totalYipliProcess > 0)
+            {
+                return true;
+            }
+            else
+            { 
+                return false;
+            }
+
         }
     }
 }

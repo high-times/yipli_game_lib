@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\Vismay\TroubleShootGL.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\QuestionDisplay.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\Questions.cs" />
+    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\TroubleShootManagerS.cs" />
     <Compile Include="Assets\Scripts\Vismay\TutorialManagerGL.cs" />
     <Compile Include="Assets\Scripts\Vismay\UiButtonSelection.cs" />
     <Compile Include="Assets\Scripts\YipliAudioManager.cs" />

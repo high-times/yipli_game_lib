@@ -66,6 +66,7 @@ MonoBehaviour:
     question: Have you added  the Mat to your  account that  you are using ?
     solutions:
     - Add Mat in Yipli app
+    - Please make the current mat active in yipli app to connect
     choices:
     - Yes
     - No
@@ -97,7 +98,8 @@ MonoBehaviour:
     - No
   - id: 6
     question: Is mat connected to USB ?
-    solutions: []
+    solutions:
+    - Connect Mat via USB
     choices:
     - Yes
     - No
