@@ -15,21 +15,21 @@ public class YipliUtils
     }
     */
 
-/* ******Gamification*******
-* Function to be called after the gameplay for Report card screen for every game
-* Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
-*/
-/*
-    public static float GetFitnessPointsWithRandomization(IDictionary<PlayerActions, int> playerActionCounts)
-    {
-        float fp = 0.0f;
-        foreach (KeyValuePair<PlayerActions, int> action in playerActionCounts)
+    /* ******Gamification*******
+    * Function to be called after the gameplay for Report card screen for every game
+    * Calculations are aligned to actual cloud functions formulas which gets stored to the player backend
+    */
+    /*
+        public static float GetFitnessPointsWithRandomization(IDictionary<PlayerActions, int> playerActionCounts)
         {
-            fp += GetFitnessPointsPerAction(action.Key) * action.Value;
+            float fp = 0.0f;
+            foreach (KeyValuePair<PlayerActions, int> action in playerActionCounts)
+            {
+                fp += GetFitnessPointsPerAction(action.Key) * action.Value;
+            }
+            return fp * Random.Range(0.92f, 1.04f);
         }
-        return fp * Random.Range(0.92f, 1.04f);
-    }
-*/
+    */
 
     /* ******Gamification*******
     * Function to be called after the gameplay for Experience Points for every game
@@ -335,6 +335,7 @@ public class YipliUtils
         LEFT_TOUCH,
         RIGHT_TOUCH,
         INVALID_ACTION,
+        TROUBLESHOOTING
     }
 
     /* 

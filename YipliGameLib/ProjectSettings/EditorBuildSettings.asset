@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/yipli_lib_scene.unity
     guid: 74ba795358342f24fa7753aa486a54d5
+  - enabled: 1
+    path: Assets/TroubleshootingModule/Troubleshooting.unity
+    guid: f3d10143928070a43a86264cfd5fbd4d
   m_configObjects: {}

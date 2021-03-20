@@ -1,9 +1,9 @@
-﻿namespace BLEFramework.Unity
+namespace BLEFramework.Unity
 {
     using UnityEngine;
     using System.Collections;
     using System.Collections.Generic;
-    //using BLEFramework.MiniJSON;
+    using BLEFramework.MiniJSON;
 
     public class BLEControllerEventHandler : MonoBehaviour
     {
@@ -20,9 +20,8 @@
         public delegate void OnBleDidInitializeEventDelegate(string error);
         public static event OnBleDidInitializeEventDelegate OnBleDidInitializeEvent;
 
-        public delegate void OnBleDidCompletePeripheralScanEventDelegate(List<object> peripherals, string error);
-        public static event OnBleDidCompletePeripheralScanEventDelegate OnBleDidCompletePeripheralScanEvent;
-
+        public delegate void OnBleDidCompletePeripheralScanEventDelegate(string peripherals, string error);
+        public static event OnBleDidCompletePeripheralScanEventDelegate OnBleDidCompletePeripheralScanEvent = HandleOnBleDidCompletePeripheralScanEvent;
 
         //Instance methods used by iOS Unity Send Message
         void OnBleDidInitializeMessage(string message)
@@ -33,7 +32,12 @@
         public static void OnBleDidInitialize(string message)
         {
             string errorMessage = message != "Success" ? message : null;
+#if UNITY_IPHONE
+                Debug.Log("calling scanning peripherals.");
+                InitBLE.ScanForPeripherals();
+#else
             OnBleDidInitializeEvent?.Invoke(errorMessage);
+#endif
         }
 
 
@@ -84,21 +88,84 @@
         {
             BLEControllerEventHandler.OnBleDidCompletePeripheralScan(message);
         }
+
         public static void OnBleDidCompletePeripheralScan(string message)
         {
             string errorMessage = message != "Success" ? message : null;
-            List<object> peripheralsList = new List<object>();
-            /* string peripheralJsonList = (errorMessage == null) ? BLEController.GetListOfDevices() : null;
-             if (peripheralJsonList != null)
-             {
-                 Dictionary<string, object> dictObject = Json.Deserialize(peripheralJsonList) as Dictionary<string, object>;
-                 object receivedByteDataArray;
-                 if (dictObject.TryGetValue("data", out receivedByteDataArray))
-                 {
-                     peripheralsList = (List<object>)receivedByteDataArray;
-                 }
-             }
-             OnBleDidCompletePeripheralScanEvent?.Invoke(peripheralsList, errorMessage);*/
+            string peripheralJsonList = (errorMessage == null) ? InitBLE.GetListOfDevices() : null;
+
+            /*
+            if (peripheralJsonList != null)
+            {
+                Dictionary<string, object> dictObject = Json.Deserialize(peripheralJsonList) as Dictionary<string, object>;
+
+                object receivedByteDataArray;
+                if (dictObject.TryGetValue("deviceList", out receivedByteDataArray))
+                {
+                    peripheralsList = (List<object>)receivedByteDataArray;
+                }
+            }
+            */
+
+
+            Debug.LogError("peripheralJsonList from ble controller : " + peripheralJsonList);
+
+            OnBleDidCompletePeripheralScanEvent?.Invoke(peripheralJsonList, errorMessage);
+        }
+
+        static void HandleOnBleDidCompletePeripheralScanEvent(string peripherals, string errorMessage)
+        {
+            if (errorMessage == null)
+            {
+                if (InitBLE.isInitActive)
+                {
+                    string[] allBleDevices = peripherals.Split(',');
+                    for (int i = 0; i < allBleDevices.Length; i++)
+                    {
+                        string[] tempSplits = allBleDevices[i].Split('|');
+
+                        Debug.Log(tempSplits[0] + " " + tempSplits[1]);
+                        if (tempSplits[1].Contains("YIPLI") && tempSplits[1].Length > 5)
+                        {
+                            string[] matID = tempSplits[1].Split('-');
+                            //TODO
+                            //Get data from FB for matID
+                            Debug.Log("Fetching data of Mat ID: " + matID[1]);
+
+                            //MAC received from FB based on MAT ID
+                            string macAddress = "A4:DA:32:4F:C2:54";
+
+                            //string macAddress = "A4:34:F1:A5:99:18";
+                            Debug.Log(macAddress + " " + InitBLE.MAC_ADDRESS);
+                            if (InitBLE.MAC_ADDRESS == macAddress)
+                            {
+                                InitBLE.ConnectPeripheral(tempSplits[0]);
+                            }
+                        }
+                        else if (tempSplits[1].Contains("YIPLI") && tempSplits[1].Length == 5)
+                        {
+
+                            //------------
+                            // FOR NRF Boards and Batch 1 boards
+                            //-----------
+
+                            //string[] matID = tempSplits[1].Split('-');
+
+                            //Debug.Log("Fetching data of Mat ID: "+matID[1]);
+                            string macAddress = "A4:DA:32:4F:C2:54";
+                            //string macAddress = "A4:34:F1:A5:99:18";
+                            Debug.Log(macAddress + " " + InitBLE.MAC_ADDRESS);
+                            if (InitBLE.MAC_ADDRESS == macAddress)
+                            {
+                                InitBLE.ConnectPeripheral(tempSplits[0]);
+                            }
+
+                        }
+                    }
+
+
+                }
+            }
         }
     }
 }

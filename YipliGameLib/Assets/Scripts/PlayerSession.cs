@@ -691,4 +691,10 @@ public class PlayerSession : MonoBehaviour
         currentYipliConfig.onlyMatPlayMode = true;   
 #endif
     }
+
+    // TroubleShoot System
+    public void TroubleShootSystem()
+    {
+        SceneManager.LoadScene("Troubleshooting");
+    }
 }

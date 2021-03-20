@@ -10,6 +10,16 @@
     const string err_mat_connection_retry = "Please Retry Mat connection.";
     const string err_mat_connection_no_driver = "Mat Driver setup is incomplete.\nYou need to install driver to play games.";
 
+    // go to yipli cases
+    public const string noMatCase = "No Mat Added";
+    public const string noUserFound = "No User Found";
+    public const string noPlayerAdded = "No Player Added";
+
+    // firebase deep links urls
+    const string addMatAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DmatListScreen";
+    const string userFoundAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DplayerListScreen";
+    const string addPlayerAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DplayerListScreen";
+
     public static string Err_mat_connection_android_phone => err_mat_connection_android_phone;
 
     public static string Err_mat_connection_android_tv => err_mat_connection_android_tv;
@@ -25,4 +35,10 @@
     public static string Err_mat_connection_retry => err_mat_connection_retry;
 
     public static string Err_mat_connection_no_driver => err_mat_connection_no_driver;
+
+    public static string AddMatAppPageUrl => addMatAppPageUrl;
+
+    public static string UserFoundAppPageUrl => userFoundAppPageUrl;
+
+    public static string AddPlayerAppPageUrl => addPlayerAppPageUrl;
 }

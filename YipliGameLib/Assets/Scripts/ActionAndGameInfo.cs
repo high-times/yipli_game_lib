@@ -115,6 +115,8 @@ namespace YipliFMDriverCommunication
                     return YipliUtils.PlayerActions.LEFT_TOUCH;
                 case "AL0N":
                     return YipliUtils.PlayerActions.RIGHT_TOUCH;
+                case "TRBL":
+                    return YipliUtils.PlayerActions.TROUBLESHOOTING;
             }
             Debug.Log("Invalid action. Returning null Action ID.");
             return YipliUtils.PlayerActions.INVALID_ACTION;
@@ -282,6 +284,9 @@ namespace YipliFMDriverCommunication
 
                 case YipliUtils.PlayerActions.RIGHT_TOUCH:
                     return "AL0N";
+
+                case YipliUtils.PlayerActions.TROUBLESHOOTING:
+                    return "TRBL";
             }
 
             Debug.Log("Invalid action. Returning null Action ID.");

@@ -12,7 +12,7 @@ public class TroubleShootGL : MonoBehaviour
 
     public void TroubleShootGameLib()
     {
-        if (currentYipliConfig.troubleshootingDone) return;
+        if (currentYipliConfig.troubleshootingPOSTDone) return;
 
         if (currentYipliConfig.gameId == null) return;
 
@@ -24,6 +24,6 @@ public class TroubleShootGL : MonoBehaviour
 
         // activate driver troubleshoot module here
 
-        currentYipliConfig.troubleshootingDone = true;
+        currentYipliConfig.troubleshootingPOSTDone = true;
     }
 }

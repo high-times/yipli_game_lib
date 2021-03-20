@@ -75,9 +75,45 @@ public static class YipliHelper
 #endif
     }
 
-    public static void GoToYipli()
+    public static void GoToYipli(string direction = "NoDir")
     {
+        // add ios part also
 #if UNITY_ANDROID
+
+        switch(direction)
+        {
+            case ProductMessages.noMatCase:
+                Application.OpenURL(ProductMessages.AddMatAppPageUrl);
+                break;
+
+            case ProductMessages.noUserFound:
+                Application.OpenURL(ProductMessages.UserFoundAppPageUrl);
+                break;
+
+            case ProductMessages.noPlayerAdded:
+                Application.OpenURL(ProductMessages.AddPlayerAppPageUrl);
+                break;
+
+            default:
+                try
+                {
+                    AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+                    AndroidJavaObject ca = up.GetStatic<AndroidJavaObject>("currentActivity");
+                    AndroidJavaObject packageManager = ca.Call<AndroidJavaObject>("getPackageManager");
+
+                    AndroidJavaObject launchIntent = null;
+                    launchIntent = packageManager.Call<AndroidJavaObject>("getLaunchIntentForPackage", yipliAppBundleId);
+                    ca.Call("startActivity", launchIntent);
+                }
+                catch (AndroidJavaException e)
+                {
+                    Debug.Log(e);
+                    Application.OpenURL("market://details?id=" + yipliAppBundleId);
+                }
+                break;
+        }
+
+        /*
         try
         {
             AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -93,7 +129,8 @@ public static class YipliHelper
             Debug.Log(e);
             Application.OpenURL("market://details?id=" + yipliAppBundleId);
         }
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+        */
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
         FileReadWrite.OpenYipliApp();
 #else
         Debug.Log("Unsupported os");

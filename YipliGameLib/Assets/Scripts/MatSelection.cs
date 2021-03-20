@@ -101,6 +101,11 @@ public class MatSelection : MonoBehaviour
         {
             StartCoroutine(ConnectMat());
         }
+#elif UNITY_IOS
+        if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+        {
+            StartCoroutine(ConnectMat());
+        }
 #endif
 
         StartCoroutine(MatConnectionCheck());
@@ -161,6 +166,11 @@ public class MatSelection : MonoBehaviour
         {
             StartCoroutine(ConnectMat(true));
         }
+#elif UNITY_IOS
+        if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+        {
+            StartCoroutine(ConnectMat(true));
+        }
 #endif
     }
 
@@ -176,9 +186,9 @@ public class MatSelection : MonoBehaviour
 #if UNITY_STANDALONE_WIN
         retriesDone++;
 
-        if (retriesDone > 2)
+        if (retriesDone > 5)
         {
-            //EnableTroubleshootButton();
+            //EnableTroubleshootButton();// ask users if they wants to start it.
             TroubleshootButton();
         }
 #endif
@@ -233,7 +243,11 @@ public class MatSelection : MonoBehaviour
         while (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase)
             && iTryCount < MaxBleCheckCount)
         {
+#if UNITY_IOS
+            yield return new WaitForSecondsRealtime(1f);
+#else
             yield return new WaitForSecondsRealtime(0.25f);
+#endif
             iTryCount++;
         }
 
@@ -246,9 +260,9 @@ public class MatSelection : MonoBehaviour
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
             Debug.Log("Mat not reachable.");
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
                 noMatText.text = ProductMessages.Err_mat_connection_mat_off;
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
             if (PortTestings.CheckAvailableComPorts() == 0)
             {
                 noMatText.text = ProductMessages.Err_mat_connection_no_ports;

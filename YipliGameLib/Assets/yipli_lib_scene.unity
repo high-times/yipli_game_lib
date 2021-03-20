@@ -21857,7 +21857,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e12f3a39e9330e847b84bc341bafbce6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentYipliConfig: {fileID: 0}
+  currentYipliConfig: {fileID: 11400000, guid: 4f87967ea03eb1743a90e503a6dc0a22, type: 2}
 --- !u!4 &1998909099
 Transform:
   m_ObjectHideFlags: 0

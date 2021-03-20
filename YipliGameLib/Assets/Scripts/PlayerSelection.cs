@@ -76,7 +76,7 @@ public class PlayerSelection : MonoBehaviour
     // When the game starts
 #if UNITY_STANDALONE_WIN
     public async void Start()
-#elif UNITY_ANDROID
+#else
     void Start()
 #endif
     {
@@ -297,7 +297,7 @@ public class PlayerSelection : MonoBehaviour
         StartCoroutine(KeepFindingUserId());
 
         Debug.Log("Redirecting to Yipli App");
-        YipliHelper.GoToYipli();
+        YipliHelper.GoToYipli(ProductMessages.noUserFound);
     }
 
     public async void OnEnterPressedAfterCodeInput()
@@ -470,8 +470,13 @@ public class PlayerSelection : MonoBehaviour
             Debug.Log("In player Selection Start()");
 #if UNITY_ANDROID
             ReadAndroidIntents();
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
             ReadFromWindowsFile();
+#elif UNITY_IOS
+            currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
+            currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg"); // vismay user
+            currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
+
 #endif
         }
         catch (System.Exception exp)// handling of game directing opening, without yipli app
@@ -910,7 +915,7 @@ public class PlayerSelection : MonoBehaviour
 
     public void OnGoToYipliPress()
     {
-        YipliHelper.GoToYipli();
+        YipliHelper.GoToYipli(ProductMessages.noMatCase);
     }
 
     public void OnBackButtonPress()

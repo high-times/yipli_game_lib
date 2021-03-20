@@ -60,5 +60,5 @@ public class YipliConfig : ScriptableObject
     [HideInInspector]
     public GameType gameType = GameType.FITNESS_GAMING;
 
-    public bool troubleshootingDone = false;
+    public bool troubleshootingPOSTDone = false;
 }

@@ -8,6 +8,9 @@ TagManager:
   - YipliPlayers
   - YipliPlayerContainer
   - PlayerSelectionPanel
+  - tempFoot
+  - ExtraObjects
+  - matPixel
   layers:
   - Default
   - TransparentFX
