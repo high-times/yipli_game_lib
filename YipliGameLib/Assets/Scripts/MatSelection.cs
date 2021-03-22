@@ -38,6 +38,7 @@ public class MatSelection : MonoBehaviour
     public GameObject installDriverButton;
 
     int retriesDone = 0;
+    const int totalMatConnectionRetriesOnRecheck = 5;
 
     private bool autoSkipMatConnection;
 
@@ -183,15 +184,23 @@ public class MatSelection : MonoBehaviour
         else
             EstablishMatConnection();
 
-#if UNITY_STANDALONE_WIN
         retriesDone++;
 
-        if (retriesDone > 5)
+        if (retriesDone > totalMatConnectionRetriesOnRecheck)
         {
-            //EnableTroubleshootButton();// ask users if they wants to start it.
-            TroubleshootButton();
+            EnableTroubleshootButton();// ask users if they wants to start it.
         }
-#endif
+        /*
+        #if UNITY_STANDALONE_WIN
+                retriesDone++;
+
+                if (retriesDone > totalMatConnectionRetriesOnRecheck)
+                {
+                    //EnableTroubleshootButton();// ask users if they wants to start it.
+                    TroubleshootButton();
+                }
+        #endif
+        */
     }
 
 
@@ -439,6 +448,12 @@ public class MatSelection : MonoBehaviour
         installDriverButton.SetActive(true);
     }
 #endif
+
+    // TroubleShoot System
+    public void TroubleShootSystemFromMS()
+    {
+        SceneManager.LoadScene("Troubleshooting");
+    }
 }
 
 //Register the YIPLI fitness mat from Yipli Hub to continue playing.

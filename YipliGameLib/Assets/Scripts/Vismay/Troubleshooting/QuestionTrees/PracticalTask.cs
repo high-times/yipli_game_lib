@@ -2,6 +2,7 @@
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PracticalTask : MonoBehaviour
 {
@@ -46,6 +47,8 @@ public class PracticalTask : MonoBehaviour
 
     Sectiuons playersCurrentStandSection = Sectiuons.Out;
 
+    private List<string> fmResponseList = null;
+
     public int TotalActivePixelsInFarSection { get => totalActivePixelsInFarSection; set => totalActivePixelsInFarSection = value; }
     public int TotalActivePixelsInNearSection { get => totalActivePixelsInNearSection; set => totalActivePixelsInNearSection = value; }
     public bool CheckForPosition { get => checkForPosition; set => checkForPosition = value; }
@@ -72,6 +75,8 @@ public class PracticalTask : MonoBehaviour
 
     public void ManagePracticalTaskStepOne()
     {
+        fmResponseList = new List<string>();
+
         // step 1
         instructionText.text = "Stand on the LEFT section of Mat as shown";
         legsParent.transform.GetChild(0).gameObject.SetActive(true);
@@ -103,14 +108,23 @@ public class PracticalTask : MonoBehaviour
         // step 4
         tss.CheckMatActions = false;
 
+        // save all responses to file
+        FmResponseFile.WriteResponseToFile(fmResponseList);
+
         // generate Ticket
         Debug.LogError("Ticket is generated");
         StepFourDone = true;
+
+        ResetPracticalTaskFlags();
+        tss.ResetTroubleShooter();
+        tss.TurnOnMessageBoxPanel("Ticket is generated with #123234234.");
     }
 
 
     public void ManagePracticaltask(string fmData, string extraAction = "NoAction")
     {
+        fmResponseList.Add(fmData);
+
         char[] fmDataArray = fmData.ToCharArray();
 
         // check if JJ is received
@@ -280,5 +294,13 @@ public class PracticalTask : MonoBehaviour
         {
             matPanel.transform.GetChild(i).gameObject.SetActive(false);
         }
+    }
+
+    private void ResetPracticalTaskFlags()
+    {
+        StepOneDone = false;
+        StepTwoDone = false;
+        StepThreeDone = false;
+        StepFourDone = false;
     }
 }

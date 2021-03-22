@@ -514,6 +514,33 @@ public static class FirebaseDBHandler
         return appUpdateUrl.ToString();
     }
 
+    /* The function call to be allowed only if network is available 
+       Get yipli pc app url from backend */
+    public static async Task UploadLogsFileToDB(string userID, string fileName, string filePath)
+    {
+        StorageReference storageRef = yipliStorage.RootReference;
+
+        string storageChildRef = "customer-tickets/" + userID + "/" + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year + "/" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "/" + fileName;
+
+        StorageReference fmResponseLogRef = storageRef.Child(storageChildRef);
+
+        await fmResponseLogRef.PutFileAsync(filePath).ContinueWith((Task<StorageMetadata> task) => {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.Log(task.Exception.ToString());
+                // Uh-oh, an error occurred!
+            }
+            else
+            {
+                // Metadata contains file metadata such as size, content-type, and download URL.
+                StorageMetadata metadata = task.Result;
+                string md5Hash = metadata.Md5Hash;
+                Debug.Log("Finished uploading...");
+                Debug.Log("md5 hash = " + md5Hash);
+            }
+        });
+    }
+
     //************************ Test Harness code. Do Not modify (- Saurabh) ***************************
     // Adds a PlayerSession to the Firebase Database
     public static void _T_PostDummyPlayerSession(Dictionary<string, dynamic> tempData)

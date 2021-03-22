@@ -90,7 +90,7 @@ public class TroubleShootSystem : MonoBehaviour
         ResetTroubleShooter();
     }
 
-    private void ResetTroubleShooter()
+    public void ResetTroubleShooter()
     {
         TurnOffAllPanels();
         TurnOnEntryPanel();
@@ -698,7 +698,7 @@ public class TroubleShootSystem : MonoBehaviour
         practicalTaskPanel.SetActive(false);
     }
 
-    private void TurnOnMessageBoxPanel(string message)
+    public void TurnOnMessageBoxPanel(string message)
     {
         messageBoxText.text = message;
         messageBoxPanel.SetActive(true);
@@ -1165,13 +1165,10 @@ public class TroubleShootSystem : MonoBehaviour
 
 #region Test functions
 
-    public void TestYipliList()
+    public async void TestYipliList()
     {
-        StartCoroutine(IsBLEListHasYipliAndroid());
-
-        //List<object> peripheralsList = new List<object>();
-
-        //string peripheralJsonList = "deviceList" + ": [{" + "address" + ":" + "F4: BF: 80:63:E3: 7A" + "," + "name" + ":" + "honor Band 4 - 37A" + "},{" + "address" + ":" + "F9: 4B: 4A: BF: 66:C1" + "," + "name" + ":" + "Amazfit Bip U" + "},{" + "address" + ":" + "F5: FB: 4A: 55:76:22" + "," + "name" + ":" + "Mi Smart Band 4" + "}]";
+        // test code
+        await FmResponseFile.UploadLogsAsync(currentYipliConfig.userId);
     }
 
 #endregion

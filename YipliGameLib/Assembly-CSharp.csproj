@@ -90,6 +90,7 @@
     <Compile Include="Assets\Scripts\Vismay\PortTestings.cs" />
     <Compile Include="Assets\Scripts\Vismay\SetOnClickButtonName.cs" />
     <Compile Include="Assets\Scripts\Vismay\TroubleShootGL.cs" />
+    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\FileManagement\FmResponseFile.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\AllQuestions.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\BlobData.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\PracticalTask.cs" />
@@ -117,6 +118,7 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
+    <None Include="Assets\TroubleshootingModule\FmResponseLogs.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\JsonDotNet\link.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />

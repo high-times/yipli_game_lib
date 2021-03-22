@@ -476,9 +476,11 @@ public class PlayerSession : MonoBehaviour
 
         Dictionary<string, dynamic> x;
         x = new Dictionary<string, dynamic>();
+
         x.Add("game-id", playerDetails.gameId);
         x.Add("user-id", playerDetails.userId);
         x.Add("player-id", playerDetails.playerId);
+        x.Add("minigame-id", playerDetails.minigameId);
         x.Add("age", int.Parse(playerDetails.playerAge));
         x.Add("points", (int)playerDetails.points);
         x.Add("height", playerDetails.playerHeight);
@@ -490,6 +492,7 @@ public class PlayerSession : MonoBehaviour
         x.Add("calories", (int)playerDetails.calories);
         x.Add("fitness-points", (int)playerDetails.fitnesssPoints);
         x.Add("xp", xp);
+
         if (playerGameData != null)
         {
             if (playerGameData.Count > 0)
