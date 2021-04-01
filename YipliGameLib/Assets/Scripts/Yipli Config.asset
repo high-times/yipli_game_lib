@@ -16,8 +16,10 @@ MonoBehaviour:
   userId: lC4qqZCFEaMogYswKjd0ObE6nD43
   gameId: trapped
   bIsChangePlayerCalled: 0
-  onlyMatPlayMode: 1
+  onlyMatPlayMode: 0
   bIsRetakeTutorialFlagActivated: 0
   bIsInternetConnected: 1
   oldFMResponseCount: 0
   gameType: 0
+  troubleshootingPOSTDone: 0
+  currentGameBlockData: 

@@ -108,6 +108,7 @@ public class InitBLE
             initializeHandler?.Invoke(message);
         }
     }
+#endif
 
     //STEP 4 - Init Android Class & Objects
     public static AndroidJavaClass PluginClass
@@ -134,9 +135,6 @@ public class InitBLE
             return _pluginInstance;
         }
     }
-
-
-#endif
 
     public static string GetFMResponse()
     {
@@ -233,7 +231,7 @@ public class InitBLE
             }
             */
         }
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
             Debug.Log("Calling DeviceControlActivity.InitPCFramework()");
             DeviceControlActivity.InitPCFramework(gameID);
 #endif
@@ -248,7 +246,7 @@ public class InitBLE
                 _setGameMode(gameMode);
 #elif UNITY_ANDROID
             PluginInstance.Call("_setGameMode", gameMode);
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
                 DeviceControlActivity._setGameMode(gameMode);
 #endif
         }
@@ -266,7 +264,7 @@ public class InitBLE
                 return _getGameMode();
 #elif UNITY_ANDROID
             return PluginInstance.Call<int>("_getGameMode");
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
                 return DeviceControlActivity._getGameMode();
 #endif
         }
@@ -287,7 +285,7 @@ public class InitBLE
                 _setGameID(gameID);
 #elif UNITY_ANDROID
             PluginInstance.Call("_setGameID", gameID);
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
                 //Debug.Log("Setting cluter ID : " + gameID);
                 DeviceControlActivity._setGameID(gameID);
 #endif
@@ -306,7 +304,7 @@ public class InitBLE
                 return _getGameID();
 #elif UNITY_ANDROID
             return PluginInstance.Call<int>("_getGameID");
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
                 return DeviceControlActivity._getGameID();
 #endif
         }
@@ -331,7 +329,7 @@ public class InitBLE
 #elif UNITY_ANDROID
             return PluginInstance.Call<string>("_getDriverVersion");
 
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
                 return DeviceControlActivity._getDriverVersion();
 #endif
         }
@@ -351,7 +349,7 @@ public class InitBLE
                 _setGameID_Multiplayer(P1_gameID, P2_gameID);
 #elif UNITY_ANDROID
             PluginInstance.Call("_setGameID", P1_gameID, P2_gameID);
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
             
                 DeviceControlActivity._setGameID(P1_gameID, P2_gameID);
 #endif
@@ -371,7 +369,7 @@ public class InitBLE
                 return _getGameID_Multiplayer(playerID);
 #elif UNITY_ANDROID
             return PluginInstance.Call<int>("_getGameID", playerID);
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
                 return DeviceControlActivity._getGameID(playerID);
 #endif
         }
@@ -430,7 +428,7 @@ public class InitBLE
         bool result = false;
         Debug.Log("Connecting at peripheral : " + peripheralID);
         // We check for UNITY_IPHONE again so we don't try this if it isn't iOS platform.
-#if UNITY_IPHONE
+#if UNITY_IOS
 			// Now we check that it's actually an iOS device/simulator, not the Unity Player. You only get plugins on the actual device or iOS Simulator.
 			if (Application.platform == RuntimePlatform.IPhonePlayer)
 			{

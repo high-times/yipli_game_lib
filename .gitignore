@@ -60,9 +60,6 @@ YipliGameLib/Temp/UnityLockfile
 YipliGameLib/Library/ArtifactDB
 YipliGameLib/Library/SourceAssetDB
 *.ide
-*.meta
-*.meta
 YipliGameLib/Temp/UnityLockfile
-YipliGameLib/Assets/Plugins/Windows/PCFMDriver/ikvm-native-win32-x86.dll.meta
-*.meta
 YipliGameLib/Assets/TroubleshootingModule/FmResponseLogs.txt
+YipliGameLib/Assets/TroubleshootingModule/FmResponseFlowDetails.json

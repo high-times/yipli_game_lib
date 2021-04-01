@@ -98,7 +98,7 @@
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\Questions.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\TroubleShootManagerS.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\TroubleShootSystem.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TicketSystem\CreateTicket.cs" />
+    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TicketSystem\FreshDeskManager.cs" />
     <Compile Include="Assets\Scripts\Vismay\TutorialManagerGL.cs" />
     <Compile Include="Assets\Scripts\Vismay\UiButtonSelection.cs" />
     <Compile Include="Assets\Scripts\YipliAudioManager.cs" />
@@ -132,6 +132,7 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Masking.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF Overlay.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap-Mobile.shader" />
+    <None Include="Assets\Firebase\m2repository\com\google\firebase\firebase-dynamic-links-unity\maven-metadata.xml" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
     <Reference Include="UnityEngine">
@@ -310,6 +311,9 @@
     </Reference>
     <Reference Include="UnityEditor">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.9f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.DynamicLinks">
+      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.DynamicLinks.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>

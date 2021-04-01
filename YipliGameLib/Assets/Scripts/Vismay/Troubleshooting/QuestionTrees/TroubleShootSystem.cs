@@ -34,6 +34,8 @@ public class TroubleShootSystem : MonoBehaviour
     [SerializeField] TextMeshProUGUI solutionText;
     [SerializeField] TextMeshProUGUI sampleText;
     [SerializeField] TextMeshProUGUI messageBoxText;
+    [SerializeField] TextMeshProUGUI notesText;
+
     // buttons
     [SerializeField] Button yesButton;
     [SerializeField] Button noButton;
@@ -48,6 +50,7 @@ public class TroubleShootSystem : MonoBehaviour
     [SerializeField] GameObject questionAnswerPage;
     [SerializeField] GameObject practicalTaskPanel;
     [SerializeField] GameObject messageBoxPanel;
+    [SerializeField] GameObject notesPanel;
 
     private PracticalTask practicalTaskManager;
 
@@ -70,6 +73,9 @@ public class TroubleShootSystem : MonoBehaviour
     // fm response variables
     private string lastPixelSituations = null;
 
+    // file data variables
+    private string flowInfo = "Start->";
+
     public bool QuestionAsked { get => questionAsked; set => questionAsked = value; }
     public bool SolutionProvided { get => solutionProvided; set => solutionProvided = value; }
     public string LastPixelSituations { get => lastPixelSituations; set => lastPixelSituations = value; }
@@ -77,6 +83,9 @@ public class TroubleShootSystem : MonoBehaviour
     public bool NotSureClicked { get => notSureClicked; set => notSureClicked = value; }
     public bool NoClicked { get => noClicked; set => noClicked = value; }
     public bool CheckMatActions { get => checkMatActions; set => checkMatActions = value; }
+    public string FlowInfo { get => flowInfo; set => flowInfo = value; }
+    public TroubleShootManagerS TroubleshootManager { get => troubleshootManager; set => troubleshootManager = value; }
+    public YipliConfig CurrentYipliConfig { get => currentYipliConfig; set => currentYipliConfig = value; }
 
     private void Awake()
     {
@@ -86,14 +95,14 @@ public class TroubleShootSystem : MonoBehaviour
 
     private void Start()
     {
-        troubleshootManager.ResetTroubleShootChecks();
+        TroubleshootManager.ResetTroubleShootChecks();
         ResetTroubleShooter();
     }
 
     public void ResetTroubleShooter()
     {
         TurnOffAllPanels();
-        TurnOnEntryPanel();
+        TurnOnNotesPanel(ProductMessages.StartNote);
     }
 
     private void Update()
@@ -111,13 +120,15 @@ public class TroubleShootSystem : MonoBehaviour
     {
         SetGameQuestionText(2);
 
+        FlowInfo += "G2->";
+
         //troubleshootManager.OsUpdateCheck = true;
     }
 
     // Game question 3
     public void IsStuckOnPlayerFetchingDetails()
     {
-        if (currentYipliConfig.playerInfo == null)
+        if (CurrentYipliConfig.playerInfo == null)
         {
             if (IsInternetAvailable())
             {
@@ -129,6 +140,7 @@ public class TroubleShootSystem : MonoBehaviour
             }
         }
 
+        FlowInfo += "G3->";
         //troubleshootManager.PlayerFetchingCheckDone = true;
     }
 
@@ -154,12 +166,14 @@ public class TroubleShootSystem : MonoBehaviour
 #endif
         }
 
+        FlowInfo += "G4->";
         //troubleshootManager.NoMatPanelCheckDone = true;
     }
 
     // Game question 5
     public bool IsInternetAvailable()
     {
+        FlowInfo += "G5->";
         //troubleshootManager.InternetConnectionTest = true;
         return YipliHelper.checkInternetConnection();
     }
@@ -167,6 +181,7 @@ public class TroubleShootSystem : MonoBehaviour
     // Game question 6
     public bool IsMatConnectedToUSB()
     {
+        FlowInfo += "G6->";
         //troubleshootManager.MatUsbConnectionTest = true;
         // check if driver can check it
         return true;
@@ -175,6 +190,7 @@ public class TroubleShootSystem : MonoBehaviour
     // Game question 7
     public bool IsPhoneBleOn()
     {
+        FlowInfo += "G7->";
         //troubleshootManager.PhoneBleTest = true;
         // check if driver can check it
         return true;
@@ -192,6 +208,7 @@ public class TroubleShootSystem : MonoBehaviour
             SetGameSolutionText(8, 2);
         }
 
+        FlowInfo += "G8->";
         //troubleshootManager.MatInYipliAccountCheckDone = true;
     }
 
@@ -214,6 +231,7 @@ public class TroubleShootSystem : MonoBehaviour
 
         troubleshootManager.BackgroundAppsRunningCheckDone = true;
 #endif
+        FlowInfo += "G9->";
     }
 
     // Game question 10
@@ -221,7 +239,7 @@ public class TroubleShootSystem : MonoBehaviour
     {
         // compare version here
         int gameVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(Application.version);
-        int inventoryVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(currentYipliConfig.gameInventoryInfo.gameVersion);
+        int inventoryVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(CurrentYipliConfig.gameInventoryInfo.gameVersion);
 
 
         if (inventoryVersionCode > gameVersionCode)
@@ -230,6 +248,7 @@ public class TroubleShootSystem : MonoBehaviour
             SetGameSolutionText(10, 0);
         }
 
+        FlowInfo += "G10->";
         //troubleshootManager.GamesAndAppUpdateCheckDone = true;
     }
 
@@ -239,137 +258,150 @@ public class TroubleShootSystem : MonoBehaviour
     // Game question 11
     public void IsBehaviourSameGames()
     {
-        if (troubleshootManager.SameBehaviourGamesAsked && troubleshootManager.SameBehaviourGamessolutionProvided) return;
+        if (TroubleshootManager.SameBehaviourGamesAsked && TroubleshootManager.SameBehaviourGamessolutionProvided) return;
 
-        if (!troubleshootManager.SameBehaviourGamesAsked)
+        if (!TroubleshootManager.SameBehaviourGamesAsked)
         {
-            troubleshootManager.SameBehaviourGamesAsked = true;
+            TroubleshootManager.SameBehaviourGamesAsked = true;
             SetGameQuestionText(11); // provide question id from the flowchart
         }
-        else if (NotSureClicked && !troubleshootManager.SameBehaviourGamessolutionProvided)
+        else if (NotSureClicked && !TroubleshootManager.SameBehaviourGamessolutionProvided)
         {
             SetGameSolutionText(11, 0);
-            troubleshootManager.SameBehaviourGamessolutionProvided = true;
+            TroubleshootManager.SameBehaviourGamessolutionProvided = true;
         }
+
+        FlowInfo += "G11->";
     }
 
     // Game question 12
     public void IsBehaviourSamePlatform()
     {
-        if (troubleshootManager.SameBehaviourPlatformAsked && troubleshootManager.SameBehaviourPlatformsolutionProvided) return;
+        if (TroubleshootManager.SameBehaviourPlatformAsked && TroubleshootManager.SameBehaviourPlatformsolutionProvided) return;
 
-        if (!troubleshootManager.SameBehaviourPlatformAsked)
+        if (!TroubleshootManager.SameBehaviourPlatformAsked)
         {
-            troubleshootManager.SameBehaviourPlatformAsked = true;
+            TroubleshootManager.SameBehaviourPlatformAsked = true;
             SetGameQuestionText(12); // provide question id from the flowchart
         }
-        else if (NotSureClicked && !troubleshootManager.SameBehaviourPlatformsolutionProvided)
+        else if (NotSureClicked && !TroubleshootManager.SameBehaviourPlatformsolutionProvided)
         {
             SetGameSolutionText(12, 0);
-            troubleshootManager.SameBehaviourPlatformsolutionProvided = true;
+            TroubleshootManager.SameBehaviourPlatformsolutionProvided = true;
         }
+
+        FlowInfo += "G12->";
     }
 
     // Game question 13
     public void IsBehaviourRandomOrPersistent()
     {
-        if (troubleshootManager.BehaviourRondomOrPersistentAsked && troubleshootManager.BehaviourRondomOrPersistentProvided) return;
+        if (TroubleshootManager.BehaviourRondomOrPersistentAsked && TroubleshootManager.BehaviourRondomOrPersistentProvided) return;
 
-        if (!troubleshootManager.BehaviourRondomOrPersistentAsked)
+        if (!TroubleshootManager.BehaviourRondomOrPersistentAsked)
         {
-            troubleshootManager.BehaviourRondomOrPersistentAsked = true;
+            TroubleshootManager.BehaviourRondomOrPersistentAsked = true;
             SetGameQuestionText(13); // provide question id from the flowchart
         }
-        else if (NotSureClicked && !troubleshootManager.BehaviourRondomOrPersistentProvided)
+        else if (NotSureClicked && !TroubleshootManager.BehaviourRondomOrPersistentProvided)
         {
             // set something for persistent or random behaviour
-            troubleshootManager.BehaviourRondomOrPersistentProvided = true;
+            TroubleshootManager.BehaviourRondomOrPersistentProvided = true;
         }
+        FlowInfo += "G13->";
     }
 
     #endregion
 
     #region Mat questions
     // Mat flow questions
+    /*
     // Mat question 1
     public void IsMatOn()
     {
-        if (troubleshootManager.MatOnCheck && troubleshootManager.IsMatOnSolutionProvided) return;
+        if (TroubleshootManager.MatOnCheck && TroubleshootManager.IsMatOnSolutionProvided) return;
 
-        if (!troubleshootManager.MatOnCheck)
+        if (!TroubleshootManager.MatOnCheck)
         {
             SetMatQuestionText(1);
-            troubleshootManager.MatOnCheck = true;
+            TroubleshootManager.MatOnCheck = true;
         }
 
         // if question is asked or solution is provided that return;
         if (StopFurtherProcesses()) return;
 
-        if (NoClicked && !troubleshootManager.IsMatOnSolutionProvided)
+        if (NoClicked && !TroubleshootManager.IsMatOnSolutionProvided)
         {
             SetMatSolutionText(1, 0);
-            troubleshootManager.IsMatOnSolutionProvided = true;
+            TroubleshootManager.IsMatOnSolutionProvided = true;
         }
         else
         {
-            troubleshootManager.IsMatOnSolutionProvided = true;
+            TroubleshootManager.IsMatOnSolutionProvided = true;
         }
 
         // if question is asked or solution is provided that return;
         if (StopFurtherProcesses()) return;
+
+        FlowInfo += "M1->";
     }
 
     // Mat question 2
     public void WhatIsTheColorOfLED()
     {
-        if (troubleshootManager.ColorOfLED && troubleshootManager.RedLedSolutionProvided) return;
+        if (TroubleshootManager.ColorOfLED && TroubleshootManager.RedLedSolutionProvided) return;
 
-        if (!troubleshootManager.ColorOfLED)
+        if (!TroubleshootManager.ColorOfLED)
         {
             // if (battery level < 15)
             SetMatQuestionText(2);
 
-            troubleshootManager.ColorOfLED = true;
+            TroubleshootManager.ColorOfLED = true;
         }
 
         // if question is asked or solution is provided that return;
         if (StopFurtherProcesses()) return;
 
-        if (NoClicked && !troubleshootManager.RedLedSolutionProvided)
+        if (NoClicked && !TroubleshootManager.RedLedSolutionProvided)
         {
             SetMatSolutionText(2, 0);
-            troubleshootManager.RedLedSolutionProvided = true;
+            TroubleshootManager.RedLedSolutionProvided = true;
         }
         else
         {
-            troubleshootManager.RedLedSolutionProvided = true;
+            TroubleshootManager.RedLedSolutionProvided = true;
         }
 
         // if question is asked or solution is provided that return;
         if (StopFurtherProcesses()) return;
+
+        FlowInfo += "M2->";
     }
+    */
 
     // Mat question 3
     public void IsChargingLightVisible()
     {
-        if (troubleshootManager.CharginglightVisibility && troubleshootManager.ChargingLightVisibilitySolutionProvided) return;
+        if (TroubleshootManager.CharginglightVisibility && TroubleshootManager.ChargingLightVisibilitySolutionProvided) return;
 
-        if (!troubleshootManager.CharginglightVisibility)
+        if (!TroubleshootManager.CharginglightVisibility)
         {
             SetMatQuestionText(3);
-            troubleshootManager.CharginglightVisibility = true;
+            TroubleshootManager.CharginglightVisibility = true;
 
         }
 
-        if ((NoClicked || NotSureClicked) && !troubleshootManager.ChargingLightVisibilitySolutionProvided)
+        if ((NoClicked || NotSureClicked) && !TroubleshootManager.ChargingLightVisibilitySolutionProvided)
         {
             SetMatSolutionText(3, 0);
-            troubleshootManager.ChargingLightVisibilitySolutionProvided = true;
+            TroubleshootManager.ChargingLightVisibilitySolutionProvided = true;
         }
         else
         {
-            troubleshootManager.ChargingLightVisibilitySolutionProvided = true;
+            TroubleshootManager.ChargingLightVisibilitySolutionProvided = true;
         }
+
+        FlowInfo += "M3->";
     }
 
     // Mat question 4
@@ -396,14 +428,14 @@ public class TroubleShootSystem : MonoBehaviour
 
             if (tempSplits[1].Equals("YIPLI", StringComparison.OrdinalIgnoreCase))
             {
-                troubleshootManager.BleScannedMacAddress = tempSplits[0];
+                TroubleshootManager.BleScannedMacAddress = tempSplits[0];
                 break;
             }
         }
         
         TurnOffLoadingPanel();
 
-        if (troubleshootManager.BleScannedMacAddress == null || troubleshootManager.BleScannedMacAddress == "" || troubleshootManager.BleScannedMacAddress == string.Empty)
+        if (TroubleshootManager.BleScannedMacAddress == null || TroubleshootManager.BleScannedMacAddress == "" || TroubleshootManager.BleScannedMacAddress == string.Empty)
         {
             AreThereAnyOtherDeviceConectedToMat();
 
@@ -413,15 +445,18 @@ public class TroubleShootSystem : MonoBehaviour
             // ble is not shown
             SetMatSolutionText(4, 0);
 
+            // generate ticket here for ble module
+            FmResponseFile.GenerateFilesAndUpload(null, FlowInfo, TroubleshootManager.CurrentAlgorithmID, CurrentYipliConfig.userId, "playerEmail", "BLE Module Failure");
+
             // if question is asked or solution is provided that return;
             if (StopFurtherProcesses()) yield break;
         }
         else
         {
-            Debug.LogError("scan has ble. mac address is : " + troubleshootManager.BleScannedMacAddress);
-            sampleText.text = "all mac addresses : " + InitBLE.PeripheralJsonList + "\nscan has ble. mac address is : " + troubleshootManager.BleScannedMacAddress;
+            Debug.LogError("scan has ble. mac address is : " + TroubleshootManager.BleScannedMacAddress);
+            sampleText.text = "all mac addresses : " + InitBLE.PeripheralJsonList + "\nscan has ble. mac address is : " + TroubleshootManager.BleScannedMacAddress;
 
-            IsThisSameMatAddedInYipliAccountAndroid(troubleshootManager.BleScannedMacAddress);
+            IsThisSameMatAddedInYipliAccountAndroid(TroubleshootManager.BleScannedMacAddress);
 
             // if question is asked or solution is provided that return;
             if (StopFurtherProcesses()) yield break;
@@ -431,6 +466,8 @@ public class TroubleShootSystem : MonoBehaviour
 
             TurnOffLoadingPanel();
         }
+
+        FlowInfo += "M4->";
     }
 
 #if UNITY_STANDALONE_WIN
@@ -443,6 +480,8 @@ public class TroubleShootSystem : MonoBehaviour
         {
             TroubleshootSystem();
         }
+
+        FlowInfo += "M5->";
     }
 
     public void TroubleshootSystem()
@@ -486,8 +525,11 @@ public class TroubleShootSystem : MonoBehaviour
     {
 #if UNITY_STANDALONE_WIN
         troubleshootManager.SiliconPortAvailability = true;
+
+        FlowInfo += "M6->";
         return FileReadWrite.DriverInstalledFinished;
 #else
+        FlowInfo += "M6->";
         return true;
 #endif
     }
@@ -495,41 +537,45 @@ public class TroubleShootSystem : MonoBehaviour
     // Mat question 7
     public void AreThereAnyOtherDeviceConectedToMat()
     {
-        if (troubleshootManager.IsMatConnectedToOtherDeviceCheckDone && troubleshootManager.IsMatConnectedToOtherDeviceSolutionProvided) return;
+        if (TroubleshootManager.IsMatConnectedToOtherDeviceCheckDone && TroubleshootManager.IsMatConnectedToOtherDeviceSolutionProvided) return;
 
-        if (!troubleshootManager.IsMatConnectedToOtherDeviceCheckDone)
+        if (!TroubleshootManager.IsMatConnectedToOtherDeviceCheckDone)
         {
             // ask driver to confirm
             SetMatQuestionText(7);
-            troubleshootManager.IsMatConnectedToOtherDeviceCheckDone = true;
+            TroubleshootManager.IsMatConnectedToOtherDeviceCheckDone = true;
         }
 
-        if (YesClicked && !troubleshootManager.IsMatConnectedToOtherDeviceSolutionProvided)
+        if (YesClicked && !TroubleshootManager.IsMatConnectedToOtherDeviceSolutionProvided)
         {
             // on Yes click
             SetMatSolutionText(7, 0);
         }
         else
         {
-            troubleshootManager.IsMatConnectedToOtherDeviceSolutionProvided = true;
+            TroubleshootManager.IsMatConnectedToOtherDeviceSolutionProvided = true;
         }
+
+        FlowInfo += "M7->";
     }
 
     // Mat question 8
     public void IsThisSameMatAddedInYipliAccountAndroid(string scannedMacAddress)
     {
-        if (!troubleshootManager.SameMatFromYipliCheckDone && !currentYipliConfig.matInfo.macAddress.Equals(scannedMacAddress, StringComparison.OrdinalIgnoreCase))
+        if (!TroubleshootManager.SameMatFromYipliCheckDone && !CurrentYipliConfig.matInfo.macAddress.Equals(scannedMacAddress, StringComparison.OrdinalIgnoreCase))
         {
             SetMatQuestionText(8); // provide question id from the flowchart
-            troubleshootManager.SameMatFromYipliCheckDone = true;
+            TroubleshootManager.SameMatFromYipliCheckDone = true;
         }
 
-        if ((NoClicked || NotSureClicked) && !troubleshootManager.SameMatFromYipliSolutionProvided)
+        if ((NoClicked || NotSureClicked) && !TroubleshootManager.SameMatFromYipliSolutionProvided)
         {
             // else provide solution to make it active and reconnect
             SetMatSolutionText(8, 0);
-            troubleshootManager.SameMatFromYipliSolutionProvided = true;
+            TroubleshootManager.SameMatFromYipliSolutionProvided = true;
         }
+
+        FlowInfo += "M8->";
     }
 
     #endregion
@@ -658,6 +704,7 @@ public class TroubleShootSystem : MonoBehaviour
         questionAnswerPage.SetActive(false);
         practicalTaskPanel.SetActive(false);
         messageBoxPanel.SetActive(false);
+        notesPanel.SetActive(false);
     }
 
     private void TurnOnLoadingPanel()
@@ -670,8 +717,9 @@ public class TroubleShootSystem : MonoBehaviour
         loadingPanel.SetActive(false);
     }
 
-    private void TurnOnEntryPanel()
+    public void TurnOnEntryPanel()
     {
+        TurnOffAllPanels();
         entryPanel.SetActive(true);
     }
 
@@ -710,6 +758,18 @@ public class TroubleShootSystem : MonoBehaviour
         messageBoxPanel.SetActive(false);
     }
 
+    private void TurnOnNotesPanel(string msg)
+    {
+        notesText.text = msg;
+        notesPanel.SetActive(true);
+    }
+
+    private void TurnOffNotesPanel()
+    {
+        notesText.text = "";
+        notesPanel.SetActive(false);
+    }
+
     #endregion
 
     #region Flow Algorithms
@@ -742,7 +802,7 @@ public class TroubleShootSystem : MonoBehaviour
         StartUserInteraction();
 
         // assuming game is not crashing as applications is working
-        troubleshootManager.CurrentAlgorithmID = 1;
+        TroubleshootManager.CurrentAlgorithmID = 1;
 
         // Game questions flow
         IsStuckOnPlayerFetchingDetails();
@@ -767,9 +827,11 @@ public class TroubleShootSystem : MonoBehaviour
         if (StopFurtherProcesses()) return;
 
         // mat questions flow
+        /*
         IsMatOn();
 
         WhatIsTheColorOfLED();
+        */
 
         StartPracticalTask();
 
@@ -786,30 +848,30 @@ public class TroubleShootSystem : MonoBehaviour
         StartUserInteraction();
 
         // games are already crashing
-        troubleshootManager.CurrentAlgorithmID = 2;
+        TroubleshootManager.CurrentAlgorithmID = 2;
 
-        if (!troubleshootManager.OsUpdateCheck)
+        if (!TroubleshootManager.OsUpdateCheck)
         {
             SetGameQuestionText(2);
-            troubleshootManager.OsUpdateCheck = true;
+            TroubleshootManager.OsUpdateCheck = true;
         }
 
         // if question is asked or solution is provided that return;
         if (StopFurtherProcesses()) return;
 
-        if ((NoClicked || NotSureClicked) && !troubleshootManager.OsUpdateSolutionProvided)
+        if ((NoClicked || NotSureClicked) && !TroubleshootManager.OsUpdateSolutionProvided)
         {
             SetGameSolutionText(2, 1);
-            troubleshootManager.OsUpdateSolutionProvided = true;
+            TroubleshootManager.OsUpdateSolutionProvided = true;
         }
         else if (YesClicked)
         {
             SetGameSolutionText(2, 0);
-            troubleshootManager.OsUpdateSolutionProvided = true;
+            TroubleshootManager.OsUpdateSolutionProvided = true;
         }
         else
         {
-            troubleshootManager.OsUpdateSolutionProvided = true;
+            TroubleshootManager.OsUpdateSolutionProvided = true;
         }
 
         // if question is asked or solution is provided that return;
@@ -834,12 +896,14 @@ public class TroubleShootSystem : MonoBehaviour
     {
         StartUserInteraction();
 
-        troubleshootManager.CurrentAlgorithmID = 3;
+        TroubleshootManager.CurrentAlgorithmID = 3;
 
         // mat questions flow
+        /*
         IsMatOn();
 
         WhatIsTheColorOfLED();
+        */
 
         StartPracticalTask();
 
@@ -859,12 +923,14 @@ public class TroubleShootSystem : MonoBehaviour
 
         StartUserInteraction();
 
-        troubleshootManager.CurrentAlgorithmID = 4;
+        TroubleshootManager.CurrentAlgorithmID = 4;
 
         // mat questions flow
+        /*
         IsMatOn();
 
         WhatIsTheColorOfLED();
+        */
 
         // ask for charging light
         IsChargingLightVisible();
@@ -882,13 +948,14 @@ public class TroubleShootSystem : MonoBehaviour
     {
         StartUserInteraction();
 
-        troubleshootManager.CurrentAlgorithmID = 5;
+        TroubleshootManager.CurrentAlgorithmID = 5;
 
         // mat questions flow
+        /*
         IsMatOn();
 
         WhatIsTheColorOfLED();
-
+        */
         Debug.LogError("MatIsNotGettingConnected : color of led is done.");
 
 #if UNITY_STANDALONE_WIN
@@ -913,7 +980,7 @@ public class TroubleShootSystem : MonoBehaviour
     {
         StartUserInteraction();
 
-        troubleshootManager.CurrentAlgorithmID = 6;
+        TroubleshootManager.CurrentAlgorithmID = 6;
         // start yipli app trouble shooting flow
 
         TurnOffLoadingPanel();
@@ -924,7 +991,7 @@ public class TroubleShootSystem : MonoBehaviour
     {
         StartUserInteraction();
 
-        troubleshootManager.CurrentAlgorithmID = 7;
+        TroubleshootManager.CurrentAlgorithmID = 7;
         // start ticket system flow
 
         TurnOffLoadingPanel();
@@ -935,7 +1002,7 @@ public class TroubleShootSystem : MonoBehaviour
     {
         StartUserInteraction();
 
-        troubleshootManager.CurrentAlgorithmID = 8;
+        TroubleshootManager.CurrentAlgorithmID = 8;
         // start ticket system flow
 
         TurnOffLoadingPanel();
@@ -943,7 +1010,7 @@ public class TroubleShootSystem : MonoBehaviour
 
 #endregion
 
-#region Button Functions
+    #region Button Functions
     // button functions
     public void YesButtonFunction()
     {
@@ -1008,7 +1075,7 @@ public class TroubleShootSystem : MonoBehaviour
     // current algorithm manager
     public void ManageCurrentAlgorithm()
     {
-        switch (troubleshootManager.CurrentAlgorithmID)
+        switch (TroubleshootManager.CurrentAlgorithmID)
         {
             case 1:
                 GameplayActionsAreNotWorking();
@@ -1050,7 +1117,7 @@ public class TroubleShootSystem : MonoBehaviour
 
 #endregion
 
-#region PracticalTaskManager
+    #region PracticalTaskManager
 
     // specific practical task
     public void StartPracticalTask()
@@ -1066,7 +1133,7 @@ public class TroubleShootSystem : MonoBehaviour
 
 #endregion
 
-#region DriverResponseMnaagers
+    #region DriverResponseMnaagers
 
     public async Task<object> GetPracticalTaskDriverResponse()
     {
@@ -1119,7 +1186,7 @@ public class TroubleShootSystem : MonoBehaviour
                                     LastPixelSituations = tokens[1];
 
                                     Debug.LogError("array - response : " + tokens[1]);
-                                    practicalTaskManager.ManagePracticaltask(tokens[1]);
+                                    practicalTaskManager.ManagePracticaltask(tokens[1], singlePlayerResponse.playerdata[0].fmresponse.ToString());
                                 }
                             }
                         }
@@ -1138,7 +1205,7 @@ public class TroubleShootSystem : MonoBehaviour
                         {
                             if (tokens[0].Equals("array"))
                             {
-                                practicalTaskManager.ManagePracticaltask(tokens[1], "JJ");
+                                practicalTaskManager.ManagePracticaltask(tokens[1], singlePlayerResponse.playerdata[0].fmresponse.ToString(), "JJ");
 
                                 /*
                                 if (LastPixelSituations != tokens[1])
@@ -1161,15 +1228,63 @@ public class TroubleShootSystem : MonoBehaviour
         }
     }
 
-#endregion
+    #endregion
 
-#region Test functions
+    #region Ticket System functions
 
-    public async void TestYipliList()
+    private void SetTicketToFireBase()
     {
-        // test code
-        await FmResponseFile.UploadLogsAsync(currentYipliConfig.userId);
+        string ticketID = currentYipliConfig.thisUserTicketInfo.ticketId;
+
+        Dictionary<string, object> ticketData = new Dictionary<string, object>();
+
+        ticketData.Add("ble-communication-info", "Done");
+        
+        if (currentYipliConfig.thisUserTicketInfo.wiredCommunicationInfo.Equals("NotDone", StringComparison.OrdinalIgnoreCase) && Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            ticketData.Add("wired-communication-info", "Done");
+        }
+        else
+        {
+            ticketData.Add("wired-communication-info", "NotDone");
+        }
+
+        ticketData.Add("ticket-status", "Open");
+
+        FirebaseDBHandler.SetTicketData(CurrentYipliConfig.userId, ticketID, ticketData);
     }
 
-#endregion
+    #endregion
+
+    #region Test functions
+
+    public void TestYipliList()
+    {
+        // test code
+        Debug.LogError("Systeminfo batterylevel : " + SystemInfo.batteryLevel);
+        Debug.LogError("Systeminfo batteryStatus : " + SystemInfo.batteryStatus);
+        Debug.LogError("Systeminfo deviceModel : " + SystemInfo.deviceModel);
+        Debug.LogError("Systeminfo deviceName : " + SystemInfo.deviceName);
+        Debug.LogError("Systeminfo deviceType : " + SystemInfo.deviceType);
+        Debug.LogError("Systeminfo deviceUniqueIdentifier : " + SystemInfo.deviceUniqueIdentifier);
+        Debug.LogError("Systeminfo graphicsDeviceID : " + SystemInfo.graphicsDeviceID);
+        Debug.LogError("Systeminfo graphicsDeviceName : " + SystemInfo.graphicsDeviceName);
+        Debug.LogError("Systeminfo graphicsDeviceType : " + SystemInfo.graphicsDeviceType);
+        Debug.LogError("Systeminfo graphicsDeviceVendor : " + SystemInfo.graphicsDeviceVendor);
+        Debug.LogError("Systeminfo graphicsDeviceVendorID : " + SystemInfo.graphicsDeviceVendorID);
+        Debug.LogError("Systeminfo graphicsDeviceVersion : " + SystemInfo.graphicsDeviceVersion);
+        Debug.LogError("Systeminfo graphicsMemorySize : " + SystemInfo.graphicsMemorySize);
+        Debug.LogError("Systeminfo graphicsMultiThreaded : " + SystemInfo.graphicsMultiThreaded);
+        Debug.LogError("Systeminfo graphicsShaderLevel : " + SystemInfo.graphicsShaderLevel);
+        Debug.LogError("Systeminfo hasDynamicUniformArrayIndexingInFragmentShaders : " + SystemInfo.hasDynamicUniformArrayIndexingInFragmentShaders);
+        Debug.LogError("Systeminfo hasHiddenSurfaceRemovalOnGPU : " + SystemInfo.hasHiddenSurfaceRemovalOnGPU);
+        Debug.LogError("Systeminfo hasMipMaxLevel : " + SystemInfo.hasMipMaxLevel);
+        Debug.LogError("Systeminfo operatingSystem : " + SystemInfo.operatingSystem);
+        Debug.LogError("Systeminfo operatingSystemFamily : " + SystemInfo.operatingSystemFamily);
+        Debug.LogError("Systeminfo processorCount : " + SystemInfo.processorCount);
+        Debug.LogError("Systeminfo processorFrequency : " + SystemInfo.processorFrequency);
+        Debug.LogError("Systeminfo processorType : " + SystemInfo.processorType);
+    }
+
+    #endregion
 }

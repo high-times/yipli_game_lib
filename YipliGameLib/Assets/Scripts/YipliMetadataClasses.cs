@@ -159,6 +159,12 @@ public class YipliInventoryGameInfo
     public string displayName;
     public string gamePackageId;
     public string gameVersion;
+    public int isGameUnderMaintenance = 0;
+    public string androidMinVersion;
+    public string iosMinVersion;
+    public string winMinVersion;
+    public string versionUpdateMessage;
+    public string maintenanceMessage;
 
     YipliInventoryGameInfo(string gameId)
     {
@@ -176,6 +182,13 @@ public class YipliInventoryGameInfo
                 displayName = snapshot.Child("name").Value?.ToString() ?? "";
                 gamePackageId = snapshot.Child("android-url").Value?.ToString() ?? "";
                 gameVersion = snapshot.Child("current-version").Value?.ToString() ?? "";
+
+                isGameUnderMaintenance = YipliHelper.StringToIntConvert(snapshot.Child("is-game-under-maintenance").Value.ToString());
+                androidMinVersion = snapshot.Child("android-min-version").Value.ToString();
+                iosMinVersion = snapshot.Child("ios-min-version").Value.ToString();
+                winMinVersion = snapshot.Child("win-min-version").Value.ToString();
+                maintenanceMessage = snapshot.Child("maintenance-message").Value.ToString();
+                versionUpdateMessage = snapshot.Child("version-update-message").Value.ToString();
             }
             else
             {
@@ -195,3 +208,42 @@ public class YipliInventoryGameInfo
     }
 }
 
+public class YipliThisUserTicketInfo
+{
+    public string bleCoomunicationInfo;
+    public string wiredCommunicationInfo;
+    public string ticketId;
+    public string ticketStatus;
+
+    public YipliThisUserTicketInfo(DataSnapshot snapshot)
+    {
+        try
+        {
+            if (snapshot != null)
+            {
+                Debug.Log("filling the Ticket info from Snapshot.");
+
+                bleCoomunicationInfo = snapshot.Child("ble-communication-info").Value?.ToString() ?? "";
+                wiredCommunicationInfo = snapshot.Child("wired-communication-info").Value?.ToString() ?? "";
+                ticketId = snapshot.Child("ticket-id").Value?.ToString() ?? "";
+                ticketStatus = snapshot.Child("ticket-status").Value.ToString();
+            }
+            else
+            {
+                Debug.Log("DataSnapshot is null. Can't create YipliGameInfo instance.");
+                bleCoomunicationInfo = string.Empty;
+                wiredCommunicationInfo = string.Empty;
+                ticketId = string.Empty;
+                ticketStatus = string.Empty;
+            }
+        }
+        catch (Exception exp)
+        {
+            Debug.Log("Exception in creating YipliMatInfo object from DataSnapshot : " + exp.Message);
+            bleCoomunicationInfo = string.Empty;
+            wiredCommunicationInfo = string.Empty;
+            ticketId = string.Empty;
+            ticketStatus = string.Empty;
+        }
+    }
+}

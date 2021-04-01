@@ -32,7 +32,7 @@ namespace BLEFramework.Unity
         public static void OnBleDidInitialize(string message)
         {
             string errorMessage = message != "Success" ? message : null;
-#if UNITY_IPHONE
+#if UNITY_IOS
                 Debug.Log("calling scanning peripherals.");
                 InitBLE.ScanForPeripherals();
 #else
@@ -113,7 +113,7 @@ namespace BLEFramework.Unity
             OnBleDidCompletePeripheralScanEvent?.Invoke(peripheralJsonList, errorMessage);
         }
 
-        static void HandleOnBleDidCompletePeripheralScanEvent(string peripherals, string errorMessage)
+        static async void HandleOnBleDidCompletePeripheralScanEvent(string peripherals, string errorMessage)
         {
             if (errorMessage == null)
             {
@@ -133,7 +133,8 @@ namespace BLEFramework.Unity
                             Debug.Log("Fetching data of Mat ID: " + matID[1]);
 
                             //MAC received from FB based on MAT ID
-                            string macAddress = "A4:DA:32:4F:C2:54";
+                            //string macAddress = "A4:DA:32:4F:C2:54";
+                            string macAddress = await FirebaseDBHandler.GetMacAddressFromMatIDAsync(matID[1]);
 
                             //string macAddress = "A4:34:F1:A5:99:18";
                             Debug.Log(macAddress + " " + InitBLE.MAC_ADDRESS);
@@ -146,24 +147,17 @@ namespace BLEFramework.Unity
                         {
 
                             //------------
-                            // FOR NRF Boards and Batch 1 boards
+                            // FOR Batch 1 boards
                             //-----------
+                            InitBLE.ConnectPeripheral(tempSplits[0]);
 
-                            //string[] matID = tempSplits[1].Split('-');
-
-                            //Debug.Log("Fetching data of Mat ID: "+matID[1]);
-                            string macAddress = "A4:DA:32:4F:C2:54";
-                            //string macAddress = "A4:34:F1:A5:99:18";
-                            Debug.Log(macAddress + " " + InitBLE.MAC_ADDRESS);
-                            if (InitBLE.MAC_ADDRESS == macAddress)
-                            {
-                                InitBLE.ConnectPeripheral(tempSplits[0]);
-                            }
-
+                            //------------
+                            // FOR NRF Boards
+                            //-----------
+                            // Connect based on charac.
+                            
                         }
                     }
-
-
                 }
             }
         }

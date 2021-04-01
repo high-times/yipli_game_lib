@@ -1,0 +1,73 @@
+//
+// Created by admin on 27-01-2021.
+//
+#pragma once
+#ifndef FMINTERFACE_CONST_H
+#define FMINTERFACE_CONST_H
+
+enum Constants
+{
+    NO_OF_CLUSTERS = 2,
+    MAT_COLUMNS = 20,
+    MAT_ROWS = 50,
+    MAT_SIZE = MAT_ROWS * MAT_COLUMNS,
+    BUFFER_SIZE = 127,
+    NO_OF_START_BYTES = 2,
+    BYTES_PER_COLUMN = 5,
+    BITS_PER_BYTE = 8,
+    ROWS_PER_COLUMN = BYTES_PER_COLUMN * BITS_PER_BYTE,
+    DETECTION_COUNT = 0,
+    FEED_SIZE = 254,
+
+};
+
+enum class Threshold
+{
+    //Running thresholds
+    RUNNING_DETECT_STEPS_COUNT = 3,
+    RUNNING_STOP_DETECTION_TIME = 200,
+
+    //Shorted pixels
+    ALLOWED_SHORTED_PIXELS = 3,
+
+    //Jumping Thresholds
+    JUMP_DOUBLE_BLOB_AREACOVERED = 10,
+    JUMP_SINGLE_BLOB_AREACOVERED = 8,
+
+    //Jumping Thresholds - LiveClasses
+    LC_JUMP_DOUBLE_BLOB_AREACOVERED = 10,
+    LC_JUMP_SINGLE_BLOB_AREACOVERED = 4,
+
+    LC_KIDS_JUMP_DOUBLE_BLOB_AREACOVERED = 8,
+    LC_KIDS_JUMP_SINGLE_BLOB_AREACOVERED = 4,
+
+
+    JUMP_DOUBLE_BLOB_LENGTH = 5,
+    JUMP_DOUBLE_BLOB_WIDTH = 5,
+    JUMP_TIMESTAMP_DIFFERENCE_LESS_THAN = 300,
+    JUMP_TIMESTAMP_DIFFERENCE_GREATER_THAN = 10,
+
+    // Foot Size
+    RUNNING_FOOT_SIZE = 15,
+    RUNNING_SPACE_BETWEEN_LEGS = 3,
+
+    //Movement Thresholds
+    MOVE_CELL_SHIFTED_COUNT = 10,
+
+    //Runnning
+    DETECT_STEPS_COUNT = 3,
+
+    //Bending distance
+    BENDING_DISTANCE = 4,
+
+    //Leg Movement Count
+    LEG_MOVE_COUNT = 5,
+    TWO_LEG_IDEAL_DISTANCE = 3,
+
+
+    GAME_PAUSE_TIMESTAMP = 1000,
+
+
+};
+
+#endif //FMINTERFACE_CONST_H

@@ -55,6 +55,9 @@ public class YipliConfig : ScriptableObject
     public YipliInventoryGameInfo gameInventoryInfo;
 
     [HideInInspector]
+    public YipliThisUserTicketInfo thisUserTicketInfo;
+
+    [HideInInspector]
     public int oldFMResponseCount;
 
     [HideInInspector]

@@ -20,6 +20,9 @@
     const string userFoundAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DplayerListScreen";
     const string addPlayerAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DplayerListScreen";
 
+    // troubleshooting notes
+    const string startNote = "Please make sure that your Mat is on and charged.\nMat should show green light in the button side.";
+
     public static string Err_mat_connection_android_phone => err_mat_connection_android_phone;
 
     public static string Err_mat_connection_android_tv => err_mat_connection_android_tv;
@@ -41,4 +44,6 @@
     public static string UserFoundAppPageUrl => userFoundAppPageUrl;
 
     public static string AddPlayerAppPageUrl => addPlayerAppPageUrl;
+
+    public static string StartNote => startNote;
 }

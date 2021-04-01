@@ -25,9 +25,18 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 
     //Track if the query exection is completed or not
     private static QueryStatus getGameInfoQueryStatus = global::QueryStatus.NotStarted;
-    
+
+    //Track if the query exection is completed or not
+    private static QueryStatus getThisUserTicketInfoQueryStatus = global::QueryStatus.NotStarted;
+
     //Track if the query exection is completed or not
     private static QueryStatus getGameDataForCurrentPlayerQueryStatus = global::QueryStatus.NotStarted;
+
+    //Track if the query exection is completed or not
+    private static QueryStatus getGameBlockDataForCurrentPlayerQueryStatus = global::QueryStatus.NotStarted;
+
+    public static QueryStatus GetGameBlockDataForCurrentPlayerQueryStatus { get => getGameBlockDataForCurrentPlayerQueryStatus; set => getGameBlockDataForCurrentPlayerQueryStatus = value; }
+    public static QueryStatus GetThisUserTicketInfoQueryStatus { get => getThisUserTicketInfoQueryStatus; set => getThisUserTicketInfoQueryStatus = value; }
 
     public static QueryStatus GetGameDataForCurrenPlayerQueryStatus()
     {
@@ -67,6 +76,8 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 #endif
         PlayerSelection.DefaultPlayerChanged += addGameDataListener;
         PlayerSelection.GetGameInfo += addListnerForGameInfo;
+
+        PlayerSelection.TicketData += addListnerForThisUserTicketDataInfo;
 
         StartCoroutine(TrackNetworkConnectivity());
     }
@@ -114,6 +125,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         PlayerSelection.NewUserFound -= addDefaultMatIdListener;
         PlayerSession.NewMatFound -= addDefaultMatIdListener;
 #endif
+        PlayerSelection.TicketData -= addListnerForThisUserTicketDataInfo;
     }
 
     private async void addDefaultMatIdListener()
@@ -239,4 +251,60 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         currentYipliConfig.gameDataForCurrentPlayer = args.Snapshot;
         getGameDataForCurrentPlayerQueryStatus = global::QueryStatus.Completed;
     }
+
+    // ticket data info
+    private async void addListnerForThisUserTicketDataInfo()
+    {
+        Debug.Log("addListnerForThisUserTicketDataInfo invoked");
+        await anonAuthenticate();
+        //FirebaseDatabase.DefaultInstance.GetReference("customer-tickets/" + currentYipliConfig.userId + "/").ValueChanged += HandleThisUserTicketDataInfoValueChanged;
+        FirebaseDatabase.DefaultInstance.GetReference("customer-tickets/")
+            .Child(currentYipliConfig.userId)
+            .OrderByChild("ticket-status")
+            .EqualTo("open")
+            .ValueChanged += HandleThisUserTicketDataInfoValueChanged;
+    }
+
+    private void HandleThisUserTicketDataInfoValueChanged(object sender, ValueChangedEventArgs e)
+    {
+        GetThisUserTicketInfoQueryStatus = global::QueryStatus.InProgress;
+        if (e.Snapshot.Value != null)    
+        {
+            //currentYipliConfig.thisUserTicketInfo = new YipliThisUserTicketInfo(e.Snapshot);
+
+            List<object> tickets = (List<object>)e.Snapshot.Value;
+
+            Dictionary<string, object> ticketsData = new Dictionary<string, object>();
+
+            int i = 0;
+
+            foreach (object o in tickets)
+            {
+                //Debug.LogError("received data : " + o);
+
+                if (o != null)
+                {
+                    Debug.LogError("received data : " + o);
+
+                    string temp = "ticket_" + i;
+                    ticketsData.Add(temp, o);
+                    i++;
+                }
+            }
+
+            foreach (KeyValuePair<string, object> kvp in ticketsData)
+            {
+                Debug.LogFormat("received data : Key: {0}, Value: {1}", kvp.Key, kvp.Value);
+            }
+
+            //string tempTwo = string.Empty;
+            //Debug.LogError("received data : " + ticketsData.Keys);
+        }
+        GetThisUserTicketInfoQueryStatus = global::QueryStatus.Completed;
+    }
+}
+
+public static class TestTicketObject
+{
+    
 }

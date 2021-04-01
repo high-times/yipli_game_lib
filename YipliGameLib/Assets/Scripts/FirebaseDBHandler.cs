@@ -516,28 +516,84 @@ public static class FirebaseDBHandler
 
     /* The function call to be allowed only if network is available 
        Get yipli pc app url from backend */
-    public static async Task UploadLogsFileToDB(string userID, string fileName, string filePath)
+    public static async Task<string> UploadLogsFileToDB(string userID, List<string> fileNames, List<string> filePaths)
     {
         StorageReference storageRef = yipliStorage.RootReference;
 
-        string storageChildRef = "customer-tickets/" + userID + "/" + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year + "/" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "/" + fileName;
+        string storageChildRef = "customer-tickets/" + userID + "/" + DateTime.Now.Day + DateTime.Now.Month + DateTime.Now.Year + "/" + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second + "/";
 
-        StorageReference fmResponseLogRef = storageRef.Child(storageChildRef);
+        for (int i = 0; i < fileNames.Count; i++)
+        {
+            StorageReference fmResponseLogRef = storageRef.Child(storageChildRef + fileNames[i]);
 
-        await fmResponseLogRef.PutFileAsync(filePath).ContinueWith((Task<StorageMetadata> task) => {
-            if (task.IsFaulted || task.IsCanceled)
+            await fmResponseLogRef.PutFileAsync(filePaths[i]).ContinueWith((Task<StorageMetadata> task) => {
+                if (task.IsFaulted || task.IsCanceled)
+                {
+                    Debug.Log(task.Exception.ToString());
+                    // Uh-oh, an error occurred!
+                }
+                else
+                {
+                    // Metadata contains file metadata such as size, content-type, and download URL.
+                    StorageMetadata metadata = task.Result;
+                    string md5Hash = metadata.Md5Hash;
+                    Debug.Log("Finished uploading...");
+                    Debug.Log("md5 hash = " + md5Hash);
+                }
+            });
+        }
+
+        return storageChildRef;
+    }
+
+    // only foir IOS get mac address from fb
+    public static async Task<string> GetMacAddressFromMatIDAsync(string MatID)
+    {
+        string macAddress = string.Empty;
+        DataSnapshot snapshot = null;
+        try
+        {
+            //Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
+            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+            Debug.LogFormat("User signed in successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
+
+            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+            snapshot = await reference.Child("/inventory/mats/").Child(MatID).Child("mac-address").GetValueAsync();
+            macAddress = snapshot.Value.ToString();
+        }
+        catch (Exception exp)
+        {
+            Debug.LogError("Failed to tutstatus : " + exp.Message);
+        }
+
+        //return macAddress;
+
+        return "A4:DA:32:4F:C2:54";
+    }
+
+    /* The function to store mat tutorial status to backend. */
+    public static async void SetTicketData(string strUserId, string ticketID, Dictionary<string, object> ticketData)
+    {
+        //await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password).ContinueWith(async task =>
+        await auth.SignInAnonymouslyAsync().ContinueWith(async task =>
+        {
+            if (task.IsCanceled)
             {
-                Debug.Log(task.Exception.ToString());
-                // Uh-oh, an error occurred!
+                Debug.LogError("SignInAnonymouslyAsync was canceled.");
+                return;
             }
-            else
+            if (task.IsFaulted)
             {
-                // Metadata contains file metadata such as size, content-type, and download URL.
-                StorageMetadata metadata = task.Result;
-                string md5Hash = metadata.Md5Hash;
-                Debug.Log("Finished uploading...");
-                Debug.Log("md5 hash = " + md5Hash);
+                Debug.LogError("SignInAnonymouslyAsync encountered an error: " + task.Exception);
+                return;
             }
+            Firebase.Auth.FirebaseUser newUser = task.Result;
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+                newUser.DisplayName, newUser.UserId);
+            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+            await reference.Child("/customer-tickets/").Child(strUserId).Child(ticketID).SetValueAsync(ticketData);
         });
     }
 

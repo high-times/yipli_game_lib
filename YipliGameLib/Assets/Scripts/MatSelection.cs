@@ -188,7 +188,7 @@ public class MatSelection : MonoBehaviour
 
         if (retriesDone > totalMatConnectionRetriesOnRecheck)
         {
-            EnableTroubleshootButton();// ask users if they wants to start it.
+            //EnableTroubleshootButton();// ask users if they wants to start it.
         }
         /*
         #if UNITY_STANDALONE_WIN

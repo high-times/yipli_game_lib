@@ -68,7 +68,7 @@ public class PracticalTask : MonoBehaviour
 
     private void Start()
     {
-        TurnOfAllPixels();
+        //TurnOfAllPixels();
 
         DeactivateLegsAnimationObjects();
     }
@@ -109,7 +109,8 @@ public class PracticalTask : MonoBehaviour
         tss.CheckMatActions = false;
 
         // save all responses to file
-        FmResponseFile.WriteResponseToFile(fmResponseList);
+        tss.FlowInfo += "PracticalDone->";
+        FmResponseFile.GenerateFilesAndUpload(fmResponseList, tss.FlowInfo, tss.TroubleshootManager.CurrentAlgorithmID, tss.CurrentYipliConfig.userId, "playerEmail", "subject");
 
         // generate Ticket
         Debug.LogError("Ticket is generated");
@@ -117,13 +118,13 @@ public class PracticalTask : MonoBehaviour
 
         ResetPracticalTaskFlags();
         tss.ResetTroubleShooter();
-        tss.TurnOnMessageBoxPanel("Ticket is generated with #123234234.");
+        tss.TurnOnMessageBoxPanel("Your problem Ticket is generated.");
     }
 
 
-    public void ManagePracticaltask(string fmData, string extraAction = "NoAction")
+    public void ManagePracticaltask(string fmData, string fmResponse, string extraAction = "NoAction")
     {
-        fmResponseList.Add(fmData);
+        fmResponseList.Add(fmResponse);
 
         char[] fmDataArray = fmData.ToCharArray();
 

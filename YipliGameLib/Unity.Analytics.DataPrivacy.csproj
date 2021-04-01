@@ -274,6 +274,9 @@
     <Reference Include="Google.VersionHandlerImpl_v1.2.156">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/ExternalDependencyManager/Editor/Google.VersionHandlerImpl_v1.2.156.dll</HintPath>
     </Reference>
+    <Reference Include="Firebase.DynamicLinks">
+      <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.DynamicLinks.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>C:/Users/User/Documents/Fitmat_Workspace/UP/GL/yipli_game_lib/YipliGameLib/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
     </Reference>

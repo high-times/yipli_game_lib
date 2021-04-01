@@ -78,23 +78,27 @@ public static class YipliHelper
     public static void GoToYipli(string direction = "NoDir")
     {
         // add ios part also
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
 
         switch(direction)
         {
             case ProductMessages.noMatCase:
+                Debug.LogError("case : " + ProductMessages.noMatCase);
                 Application.OpenURL(ProductMessages.AddMatAppPageUrl);
                 break;
 
             case ProductMessages.noUserFound:
+                Debug.LogError("case : " + ProductMessages.noUserFound);
                 Application.OpenURL(ProductMessages.UserFoundAppPageUrl);
                 break;
 
             case ProductMessages.noPlayerAdded:
+                Debug.LogError("case : " + ProductMessages.noPlayerAdded);
                 Application.OpenURL(ProductMessages.AddPlayerAppPageUrl);
                 break;
 
             default:
+                Debug.LogError("case : default");
                 try
                 {
                     AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -112,24 +116,6 @@ public static class YipliHelper
                 }
                 break;
         }
-
-        /*
-        try
-        {
-            AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
-            AndroidJavaObject ca = up.GetStatic<AndroidJavaObject>("currentActivity");
-            AndroidJavaObject packageManager = ca.Call<AndroidJavaObject>("getPackageManager");
-
-            AndroidJavaObject launchIntent = null;
-            launchIntent = packageManager.Call<AndroidJavaObject>("getLaunchIntentForPackage", yipliAppBundleId);
-            ca.Call("startActivity", launchIntent);
-        }
-        catch (AndroidJavaException e)
-        {
-            Debug.Log(e);
-            Application.OpenURL("market://details?id=" + yipliAppBundleId);
-        }
-        */
 #elif UNITY_STANDALONE_WIN && UNITY_EDITOR
         FileReadWrite.OpenYipliApp();
 #else

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Threading.Tasks;
+using Firebase.DynamicLinks;
 
 #if UNITY_STANDALONE_WIN
 using yipli.Windows;
@@ -68,9 +69,111 @@ public class PlayerSelection : MonoBehaviour
     public delegate void OnGameLaunch();
     public static event OnUserFound GetGameInfo;
 
+    public delegate void OnTicketData();
+    public static event OnTicketData TicketData;
+
+    // link informations
+    string uId = string.Empty;
+    string pId = string.Empty;
+    string pName = string.Empty;
+    string pDOB = string.Empty;
+    string pHt = string.Empty;
+    string pWt = string.Empty;
+    string pPicUrl = string.Empty;
+    string mId = string.Empty;
+    string mMac = string.Empty;
+    string pTutDone = string.Empty;
+
+    bool dataSetsAreFilled = false;
+
+#if UNITY_ANDROID || UNITY_IOS
+    private void Awake()
+    {
+        DynamicLinks.DynamicLinkReceived += ExtractUserDetailsFromLink;
+    }
+#endif
+
     public void OnEnable()
     {
         defaultProfilePicSprite = profilePicImage.sprite;
+    }
+
+    // user details link managemenhet
+    private void ExtractUserDetailsFromLink(object sender, EventArgs args)
+    {
+        if (!dataSetsAreFilled)
+        {
+            var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
+            string dynamicLinkOrig = dynamicLinkEventArgs.ReceivedDynamicLink.Url.OriginalString;
+            Debug.Log("Received dynamic link : " + dynamicLinkOrig);
+
+            dynamicLinkOrig.Remove(0, dynamicLinkOrig.IndexOf("?"));
+
+            int questionMarkIndex = dynamicLinkOrig.IndexOf("?");
+
+            string stringToParse = dynamicLinkOrig.Substring(questionMarkIndex + 1, dynamicLinkOrig.Length - 1 - questionMarkIndex);
+
+            string[] dataSets = stringToParse.Split('&');
+
+            for (int i = 0; i < dataSets.Length; i++)
+            {
+                string[] tempSplits = dataSets[i].Split('=');
+
+                switch (tempSplits[0])
+                {
+                    case "uId":
+                        uId = tempSplits[1];
+                        break;
+
+                    case "pId":
+                        pId = tempSplits[1];
+                        break;
+
+                    case "pName":
+                        pName = tempSplits[1];
+                        break;
+
+                    case "pDOB":
+                        pDOB = tempSplits[1];
+                        break;
+
+                    case "pWt":
+                        pWt = tempSplits[1];
+                        break;
+
+                    case "pHt":
+                        pHt = tempSplits[1];
+                        break;
+
+                    case "pPicUrl":
+                        pPicUrl = tempSplits[1];
+                        break;
+
+                    case "mId":
+                        mId = tempSplits[1];
+                        break;
+
+                    case "mMac":
+                        mMac = tempSplits[1];
+                        break;
+
+                    case "pTutDone":
+                        pTutDone = tempSplits[1];
+                        break;
+
+                    default:
+                        Debug.LogError("Wrong data set field : " + tempSplits[0]);
+                        break;
+                }
+            }
+
+            dataSetsAreFilled = true;
+            Debug.Log("Data sets are filled : " + dataSetsAreFilled);
+
+            SetLinkData();
+        }
+
+        //Debug.Log("Received dynamic link Argumanets : " + stringToParse);
     }
 
     // When the game starts
@@ -92,7 +195,6 @@ public class PlayerSelection : MonoBehaviour
         //keep yipli app Download Url ready
         FileReadWrite.YipliAppDownloadUrl = await FirebaseDBHandler.GetYipliWinAppUpdateUrl();
 #endif
-
         FetchUserAndInitializePlayerEnvironment();
 
         // turn of all devicespecific tutorial objects invisible
@@ -190,7 +292,7 @@ public class PlayerSelection : MonoBehaviour
 
         allowPhoneHolderAudioPlay = true;
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
         //StartCoroutine(ChangeTextMessageAndoridPhone());
         ChangeTextMessageAndoridPhone();
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR
@@ -334,7 +436,7 @@ public class PlayerSelection : MonoBehaviour
         {
             //If PlayerInfo is found in the Intents as an argument.
             //This code block will be called when the game App is launched from the Yipli app.
-            UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
+            //UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
         }
         else
         {
@@ -375,20 +477,21 @@ public class PlayerSelection : MonoBehaviour
         {
             //If UserId is found in the Intents as an argument.
             //This code block will be called when the game App is launched from the Yipli app.
-            UserDataPersistence.SavePropertyValue("user-id", currentYipliConfig.userId);
+            //UserDataPersistence.SavePropertyValue("user-id", currentYipliConfig.userId);
             //PlayerPrefs.Save();
         }
         else
         {
             //If there is no UserId found in the Intents as an argument.
             //This code block will be called when the game App is not launched from the Yipli app.
-            currentYipliConfig.userId = UserDataPersistence.GetPropertyValue("user-id");
+            //currentYipliConfig.userId = UserDataPersistence.GetPropertyValue("user-id");
         }
 
         if (currentYipliConfig.userId != null && currentYipliConfig.userId.Length > 1)
         {
             //Trigger the database listeners as sson as the user is found
             NewUserFound();
+            TicketData();
         }
     }
 
@@ -417,13 +520,26 @@ public class PlayerSelection : MonoBehaviour
         string mMac = extras.Call<string>("getString", "mMac");
         string pTutDone = extras.Call<string>("getString", "pTutDone");
 
-        // TODO : pass mat-tut-done also from yipli android app
-
         Debug.Log("Found intents : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + pic);
 
         if (pId != null && pName != null)
         {
             currentYipliConfig.playerInfo = new YipliPlayerInfo(pId, pName, pDOB, pHt, pWt, pic, YipliHelper.StringToIntConvert(pTutDone));
+        }
+
+        if (mId != null && mMac != null)
+        {
+            currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac);
+        }
+    }
+
+    private void SetLinkData()
+    {
+        Debug.Log("Found intents : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + pPicUrl);
+
+        if (pId != null && pName != null)
+        {
+            currentYipliConfig.playerInfo = new YipliPlayerInfo(pId, pName, pDOB, pHt, pWt, pPicUrl, YipliHelper.StringToIntConvert(pTutDone));
         }
 
         if (mId != null && mMac != null)
@@ -469,13 +585,18 @@ public class PlayerSelection : MonoBehaviour
         {
             Debug.Log("In player Selection Start()");
 #if UNITY_ANDROID
-            ReadAndroidIntents();
+            if (currentYipliConfig.userId == null || currentYipliConfig.userId == "")
+            {
+                ReadAndroidIntents();
+            }
 #elif UNITY_STANDALONE_WIN && UNITY_EDITOR
             ReadFromWindowsFile();
+            /*
 #elif UNITY_IOS
             currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
             currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg"); // vismay user
             currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
+            */
 
 #endif
         }
@@ -492,7 +613,7 @@ public class PlayerSelection : MonoBehaviour
 #if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
             currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
             //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
-            currentYipliConfig.playerInfo = new YipliPlayerInfo("-MQHc-Ija9odZdIXkFYB", "kauva biryani", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg"); // vismay user
+            //currentYipliConfig.playerInfo = new YipliPlayerInfo("-MQHc-Ija9odZdIXkFYB", "kauva biryani", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg"); // vismay user
             currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
 #endif
         }
@@ -507,7 +628,7 @@ public class PlayerSelection : MonoBehaviour
         //Setting User Id in the scriptable Object
         InitUserId();
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
         //Setting Deafult mat
         InitDefaultMat();
 
@@ -745,7 +866,7 @@ public class PlayerSelection : MonoBehaviour
         currentYipliConfig.playerInfo = GetPlayerInfoFromPlayerName(PlayerName);
 
         //Save the player to device
-        UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
+        //UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
 
         //Trigger the GetGameData for new player.
         DefaultPlayerChanged();
@@ -760,7 +881,7 @@ public class PlayerSelection : MonoBehaviour
             if (isTutorialDoneWithoutPlayerInfo)
             {
                 FirebaseDBHandler.UpdateTutStatusData(currentYipliConfig.userId, currentYipliConfig.playerInfo.playerId, 1);
-                UserDataPersistence.SavePropertyValue("player-tutDone", 1.ToString());
+                //UserDataPersistence.SavePropertyValue("player-tutDone", 1.ToString());
                 switchPlayerPanel.SetActive(true);
             }
             else
@@ -837,7 +958,7 @@ public class PlayerSelection : MonoBehaviour
             if (currentYipliConfig.playerInfo.isMatTutDone == 0)
             {
                 FirebaseDBHandler.UpdateTutStatusData(currentYipliConfig.userId, currentYipliConfig.playerInfo.playerId, 1);
-                UserDataPersistence.SavePropertyValue("player-tutDone", 1.ToString());
+                //UserDataPersistence.SavePropertyValue("player-tutDone", 1.ToString());
             }
         }
         else
@@ -848,7 +969,7 @@ public class PlayerSelection : MonoBehaviour
 
         phoneHolderInfo.SetActive(false);
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_IOS
         //StopCoroutine(ChangeTextMessageAndoridPhone());
         ChangeTextMessageAndoridPhone();
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR
@@ -1005,7 +1126,7 @@ public class PlayerSelection : MonoBehaviour
     // no internet check coroutine
     private IEnumerator CheckNoInternetConnection()
     {
-        while(true)
+        while (true)
         {
             noNetworkPanel.SetActive(false);
 
@@ -1015,7 +1136,7 @@ public class PlayerSelection : MonoBehaviour
             {
                 yield return new WaitForSecondsRealtime(2f);
 
-                if (YipliHelper.checkInternetConnection()) continue; 
+                if (YipliHelper.checkInternetConnection()) continue;
 
                 noNetworkPanelText.text = "No Internet connection.\nGame will resume when network is available.";
                 noNetworkPanel.SetActive(true);
