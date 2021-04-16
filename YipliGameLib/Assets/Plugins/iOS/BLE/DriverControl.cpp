@@ -26,16 +26,16 @@ DriverControl::DriverControl(int _playerCount) {
 
 bool DriverControl::initDriverProcessing(std::string _FMData) {
 
-    //ResponsePackager responsePackager;
+    bool MAT_ARRAY[ MAT_SIZE ];
     FMData = _FMData;
      
     if( FMData != LastFMData){
 
         //Producing FMData
 
-        Utils::resetTable(MAT_ARRAY);
+        //Utils::resetTable(MAT_ARRAY);
         transpose.parseHexString(MAT_ARRAY, FMData);
-        //bool *array = getMATArrayBasedOnPlayerType(MAT_ARRAY);
+        getMATArrayBasedOnPlayerType(MAT_ARRAY);
         Utils::ghostMatAlgo(MAT_ARRAY);
             
         // Setting flags
@@ -96,10 +96,9 @@ bool DriverControl::initDriverProcessing(std::string _FMData) {
 
             //----------- NEW CHECK FOR NO OF ACTIVE PIXELS -----------------
             setActiveMATPixelCount(0);
-            //Utils::resetTable(MAT_ARRAY);
-            //bool* array = getMATArrayBasedOnPlayerType(MAT_ARRAY);
+            transpose.parseHexString(MAT_ARRAY, FMData);
             int col = MAT_COLUMNS;
-            int row = MAT_ROWS/getTotalPlayerCount();
+            int row = MAT_ROWS;
             for (int i = 0; i < row; ++i) {
                 for (int j = 0; j < col; ++j) {
                     if(MAT_ARRAY[i * col + j] == 1) {
@@ -121,7 +120,7 @@ bool DriverControl::initDriverProcessing(std::string _FMData) {
                 if(getActiveMATPixelCount() < static_cast<int>(Threshold::ALLOWED_SHORTED_PIXELS) ) {
 
                     gamePaused = true;
-                    FMLOG(2, "FMResponse :", "GAME PAUSED");
+                    FMLOG(2, "FMResponse :", "Pause Stats-GAME PAUSED");
                     responsePackager.setResponsePackager(ActionIdentifierTable::PAUSE);
                     responsePackager.setPlayerData(playerID);
                     responseCount++;
@@ -168,15 +167,13 @@ int DriverControl::getTotalPlayerCount() {
     return playerCounter;
 }
 
-bool* DriverControl::getMATArrayBasedOnPlayerType(bool *_matArray) {
+void DriverControl::getMATArrayBasedOnPlayerType(bool* _matArray) {
 
-    if (playerCounter == 1) {
-        return _matArray;
-    } else if (playerCounter == 2) {
-
-        //return playerID == 1 ? copyOfRange(_matArray, 0, _matArray.length / 2) : copyOfRange(_matArray, _matArray.length / 2, _matArray.length);
+    if (playerID == 2) {
+        //std::copy(_matArray + (MAT_ROWS * MAT_COLUMNS)/2, _matArray + (MAT_ROWS * MAT_COLUMNS), _matArray);
+        for(int i = (MAT_ROWS * MAT_COLUMNS)/2; i < (MAT_ROWS * MAT_COLUMNS); i++)
+            _matArray[i - (MAT_ROWS * MAT_COLUMNS)/2] = _matArray[i];
     }
-    return NULL;
 }
 
 

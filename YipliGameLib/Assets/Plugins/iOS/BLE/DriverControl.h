@@ -6,7 +6,7 @@
 #ifndef FMINTERFACE_DRIVERCONTROL_H
 #define FMINTERFACE_DRIVERCONTROL_H
 
-#define DRIVER_VERSION "CPP_TV_0.0.7"
+#define DRIVER_VERSION "0.2.6"
 
 
 #include "blobprocessor/Processor.h"
@@ -29,7 +29,6 @@ public:
     *********************/
     std::string FMData{ "" };
     std::string LastFMData{ "" };
-    bool MAT_ARRAY[MAT_SIZE]{ 0 };
     std::vector<Blob> persistentBlobs;
     std::string FMResponse{ "" };
     int MATPixelCount{ 0 };
@@ -63,7 +62,7 @@ public:
     void setClusterID(int GameID);
     int getClusterID();
     static int getTotalPlayerCount();
-    bool* getMATArrayBasedOnPlayerType(bool* _matArray);
+    void getMATArrayBasedOnPlayerType(bool* _matArray);
     int getActiveMATPixelCount();
     void setActiveMATPixelCount(int foundNonBlankPattern);
     std::string getFMDriverVersion();

@@ -20,6 +20,7 @@ public class MaintenancePanel : MonoBehaviour
     private void Update()
     {
         ManageManitanenceOrBlocking();
+        BlockIfTroubleShootingIsOn();
     }
 
     public void QuitApp()
@@ -63,6 +64,32 @@ public class MaintenancePanel : MonoBehaviour
 
             maintenancePanel.SetActive(true);
             updateButton.SetActive(true);
+        }
+        else
+        {
+            maintenancePanel.SetActive(false);
+        }
+    }
+
+    private void BlockIfTroubleShootingIsOn()
+    {
+        if (currentYipliConfig.thisUserTicketInfo.ticketStatus == 0) return;
+
+#if UNITY_ANDROID || UNITY_IOS
+        TroubleShootBlockCheck(currentYipliConfig.thisUserTicketInfo.bleTest);
+#elif UNITY_STANDALONE_WIN
+        TroubleShootBlockCheck(currentYipliConfig.thisUserTicketInfo.usbTest);
+#endif
+    }
+
+    private void TroubleShootBlockCheck(string testStatusToCheck)
+    {
+        if (testStatusToCheck.Equals("done", System.StringComparison.OrdinalIgnoreCase))
+        {
+            message.text = "Your environment is currently under troubleshooting. The game is not playable here at this time.";
+            title.text = "Troubleshoot Notice";
+
+            maintenancePanel.SetActive(true);
         }
         else
         {

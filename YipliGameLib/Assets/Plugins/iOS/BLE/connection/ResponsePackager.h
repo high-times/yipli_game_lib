@@ -12,10 +12,10 @@ class ResponsePackager {
 
 public:
     static int m_responseCount;
-    std::string m_player{ NULL };;
+    std::string m_player{ "" };;
 
     ActionIdentifierTable m_actionId;
-    std::string m_actionName{ NULL };
+    std::string m_actionName{ "" };
     std::map<std::string, std::string> m_properties;
     
 
@@ -25,7 +25,7 @@ public:
     static std::string packageFMresponse(std::string _playersData);
     void setPlayerData(int _playerCount);
     void resestVariables();
-      
+
 
 };
 #endif //FMINTERFACE_RESPONSE_PACKAGER_H

@@ -110,7 +110,10 @@ public class PracticalTask : MonoBehaviour
 
         // save all responses to file
         tss.FlowInfo += "PracticalDone->";
-        FmResponseFile.GenerateFilesAndUpload(fmResponseList, tss.FlowInfo, tss.TroubleshootManager.CurrentAlgorithmID, tss.CurrentYipliConfig.userId, "playerEmail", "subject");
+
+        string desc = "Practical task is performed successfully, check data for MAT Cracks.";
+
+        FmResponseFile.GenerateFilesAndUpload(fmResponseList, tss.FlowInfo, tss.TroubleshootManager.CurrentAlgorithmID, tss.CurrentYipliConfig, desc, tss.TroubleshootManager.GetTroubleShootScriptableJson());
 
         // generate Ticket
         Debug.LogError("Ticket is generated");

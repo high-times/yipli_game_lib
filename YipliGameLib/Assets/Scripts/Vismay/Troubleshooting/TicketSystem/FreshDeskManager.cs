@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using UnityEngine;
+using System.Collections.Generic;
 
 public static class FreshDeskManager
 {
@@ -10,23 +11,15 @@ public static class FreshDeskManager
     static readonly string apiKey = "wLCOd8cgOBcXXNO4McNu";
     static readonly string apiPath = "/api/v2/tickets"; // API path
 
-    public static void SetTicketDataAndGenerate(string fileUploadLocation, string playerEmail, string priority, string subject)
+    public static void SetTicketDataAndGenerate(Dictionary<string, object> currentTicket)
     {
-        TicketStructure ts = new TicketStructure();
-
-        ts.status = "2";
-        ts.priority = priority;
-        ts.email = playerEmail;
-        ts.subject = subject;
-        ts.description = "Logs Location : " + fileUploadLocation + "\n";
-
-        Debug.LogError("Ticket data in json : " + ts.GetJson());
-        //GenerateTicket(ts.GetJson());
+        PlayerSession.Instance.UpdateCurrentTicketData(currentTicket);
     }
 
+    // freshdesk ticket generations
     private static void GenerateTicket(string ticketJsonData)
     {
-        //string json = "{\"status\": 2, \"priority\": 1, \"email\":\"bhansali.saurabh20@gmail.com\",\"subject\":\"Vismay chalu\",\"description\":\"Vismay is not programmer. He is maha feku\"}";
+        //string json = "{\"status\": 2, \"priority\": 1, \"email\":\"bhansali.saurabh20@gmail.com\",\"subject\":\"Vismay idiot\",\"description\":\"Vismay is not programmer. He is maha feku\"}";
 
         HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://" + fdDomain + ".freshdesk.com" + apiPath);
 

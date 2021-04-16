@@ -206,6 +206,9 @@ static int rssi = 0;
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error;
 {
     done = false;
+    
+    [self.CM connectPeripheral:self.activePeripheral options:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:CBConnectPeripheralOptionNotifyOnDisconnectionKey]];
+    
     self.activePeripheral = nil;
     [[self delegate] bleDidDisconnect];
     

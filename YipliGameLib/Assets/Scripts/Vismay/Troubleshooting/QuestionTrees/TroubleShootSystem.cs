@@ -446,7 +446,8 @@ public class TroubleShootSystem : MonoBehaviour
             SetMatSolutionText(4, 0);
 
             // generate ticket here for ble module
-            FmResponseFile.GenerateFilesAndUpload(null, FlowInfo, TroubleshootManager.CurrentAlgorithmID, CurrentYipliConfig.userId, "playerEmail", "BLE Module Failure");
+            string desc = "Bluetooth module is not working";
+            FmResponseFile.GenerateFilesAndUpload(null, FlowInfo, TroubleshootManager.CurrentAlgorithmID, CurrentYipliConfig, desc, TroubleshootManager.GetTroubleShootScriptableJson());
 
             // if question is asked or solution is provided that return;
             if (StopFurtherProcesses()) yield break;
@@ -993,6 +994,8 @@ public class TroubleShootSystem : MonoBehaviour
 
         TroubleshootManager.CurrentAlgorithmID = 7;
         // start ticket system flow
+        string desc = "Mat is not getting started";
+        FmResponseFile.GenerateFilesAndUpload(null, FlowInfo, TroubleshootManager.CurrentAlgorithmID, currentYipliConfig, desc, TroubleshootManager.GetTroubleShootScriptableJson());
 
         TurnOffLoadingPanel();
     }
@@ -1004,6 +1007,8 @@ public class TroubleShootSystem : MonoBehaviour
 
         TroubleshootManager.CurrentAlgorithmID = 8;
         // start ticket system flow
+        string desc = "Full trouble shoot is requested";
+        FmResponseFile.GenerateFilesAndUpload(null, FlowInfo, TroubleshootManager.CurrentAlgorithmID, currentYipliConfig, desc, TroubleshootManager.GetTroubleShootScriptableJson());
 
         TurnOffLoadingPanel();
     }
@@ -1230,37 +1235,12 @@ public class TroubleShootSystem : MonoBehaviour
 
     #endregion
 
-    #region Ticket System functions
-
-    private void SetTicketToFireBase()
-    {
-        string ticketID = currentYipliConfig.thisUserTicketInfo.ticketId;
-
-        Dictionary<string, object> ticketData = new Dictionary<string, object>();
-
-        ticketData.Add("ble-communication-info", "Done");
-        
-        if (currentYipliConfig.thisUserTicketInfo.wiredCommunicationInfo.Equals("NotDone", StringComparison.OrdinalIgnoreCase) && Application.platform == RuntimePlatform.WindowsPlayer)
-        {
-            ticketData.Add("wired-communication-info", "Done");
-        }
-        else
-        {
-            ticketData.Add("wired-communication-info", "NotDone");
-        }
-
-        ticketData.Add("ticket-status", "Open");
-
-        FirebaseDBHandler.SetTicketData(CurrentYipliConfig.userId, ticketID, ticketData);
-    }
-
-    #endregion
-
     #region Test functions
 
     public void TestYipliList()
     {
         // test code
+        /*
         Debug.LogError("Systeminfo batterylevel : " + SystemInfo.batteryLevel);
         Debug.LogError("Systeminfo batteryStatus : " + SystemInfo.batteryStatus);
         Debug.LogError("Systeminfo deviceModel : " + SystemInfo.deviceModel);
@@ -1284,6 +1264,9 @@ public class TroubleShootSystem : MonoBehaviour
         Debug.LogError("Systeminfo processorCount : " + SystemInfo.processorCount);
         Debug.LogError("Systeminfo processorFrequency : " + SystemInfo.processorFrequency);
         Debug.LogError("Systeminfo processorType : " + SystemInfo.processorType);
+        */
+
+        Debug.LogError("ts json : " + TroubleshootManager.GetTroubleShootScriptableJson());
     }
 
     #endregion

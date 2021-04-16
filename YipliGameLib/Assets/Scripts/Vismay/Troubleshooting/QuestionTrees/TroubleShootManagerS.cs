@@ -123,4 +123,9 @@ public class TroubleShootManagerS : ScriptableObject
         // extra informations
         BleScannedMacAddress = string.Empty;
     }
+
+    public string GetTroubleShootScriptableJson()
+    {
+        return JsonUtility.ToJson(this);
+    }
 }

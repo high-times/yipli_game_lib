@@ -79,7 +79,8 @@ public class PostPlayerSessions : MonoBehaviour
         dummyPlayerGameSessionData = new Dictionary<string, dynamic>();
         try
         {
-            dummyPlayerGameSessionData.Add("game-id", validGameIds[UnityEngine.Random.Range(0, validGameIds.Length - 1)]);
+            //dummyPlayerGameSessionData.Add("game-id", validGameIds[UnityEngine.Random.Range(0, validGameIds.Length - 1)]);
+            dummyPlayerGameSessionData.Add("game-id", "joyfuljumps");
             dummyPlayerGameSessionData.Add("user-id", "F9zyHSRJUCb0Ctc15F9xkLFSH5f1");
             dummyPlayerGameSessionData.Add("player-id", validPlayerIds[UnityEngine.Random.Range(0, validPlayerIds.Length - 1)]);
             dummyPlayerGameSessionData.Add("age", UnityEngine.Random.Range(6, 60));

@@ -260,6 +260,8 @@ public class PlayerSession : MonoBehaviour
             Debug.Log("ReconnectBle with Game clster ID : " + YipliHelper.GetGameClusterId());
 #if UNITY_ANDROID
             InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", YipliHelper.GetGameClusterId() != 1000 ? YipliHelper.GetGameClusterId() : 0);
+#elif UNITY_IOS
+            InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0, currentYipliConfig.matInfo?.matAdvertisingName ?? "YIPLI");
 #else
             InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0);
             //InitBLE.reconnectMat();
@@ -699,5 +701,16 @@ public class PlayerSession : MonoBehaviour
     public void TroubleShootSystem()
     {
         SceneManager.LoadScene("Troubleshooting");
+    }
+
+    // Ticket system
+    // Update current ticket data.
+    public void UpdateCurrentTicketData(Dictionary<string, object> currentTicketData)
+    {
+        FirebaseDBHandler.UpdateCurrentTicketData(
+            currentYipliConfig.userId,
+            currentTicketData,
+            () => { Debug.Log("Ticket Generated successfully"); }
+        );
     }
 }

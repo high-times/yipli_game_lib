@@ -40,11 +40,13 @@ void ResponsePackager::setResponsePackager(ActionIdentifierTable _actionID, std:
 
 
 
+
+
 std::string ResponsePackager::packageFMresponse(std::string _playersData)
 {
-    std::string FMResponse = "{\"count\":" + std::to_string(++m_responseCount) +
-                             ",\"timestamp\":" + std::to_string(Utils::getCurrentTimestamp()) +
-                             ",\"playerdata\":["+_playersData+"]}";
+    std::string FMResponse = "{ \"count\":" + std::to_string(++m_responseCount) +
+                             ", \"timestamp\":" + std::to_string(Utils::getCurrentTimestamp()) +
+                             ", \"playerdata\":["+_playersData+"]}";
     
 	return FMResponse;
 }
@@ -52,15 +54,15 @@ std::string ResponsePackager::packageFMresponse(std::string _playersData)
 void ResponsePackager::setPlayerData(int _playerCount)
 {
     std::string FMplayer = "{\"id\":"+ std::to_string(_playerCount) +
-                             ",\"fmresponse\":{\"action_id\":\""+ ActionIdentifier::getActionID(m_actionId) +
+                            ", \"fmresponse\":{\"action_id\":\""+ ActionIdentifier::getActionID(m_actionId) +
                             "\", \"action_name\" : \""+ ActionIdentifier::getActionName(m_actionId) +"\"" ;
     
     std::string properties;
     if(m_properties.size() == 0){
-        properties = ",\"properties\": \"null\"";
+        properties = ", \"properties\": \"null\"";
     }else{
         int j = 0;
-        properties += ",\"properties\": \"";
+        properties += ", \"properties\": \"";
         for ( const auto &myPair : m_properties ) {
             if(j++!=0)
                 properties+=",";

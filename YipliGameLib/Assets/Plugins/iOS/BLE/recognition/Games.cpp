@@ -86,14 +86,14 @@ bool Games::recogniseTapButtonClicked()
 
             if (abs(leftLegLocation - singleLegLocation) < 3)
             {
-                ControlButtonType = ActionIdentifierTable::RIGHT;
+                ControlButtonType = ActionIdentifierTable::RIGHT_TAP;
                 legMovedFlag = 0;
 
                 return true;
             }
             else if (abs(rightLegLocation - singleLegLocation) < 3)
             {
-                ControlButtonType = ActionIdentifierTable::LEFT;
+                ControlButtonType = ActionIdentifierTable::LEFT_TAP;
                 legMovedFlag = 0;
                 return true;
             }
@@ -120,14 +120,14 @@ bool Games::recogniseTouchButtonClicked() {
 
             if (abs(leftLegLocation - singleLegLocation) < 3)
             {
-                ControlButtonType = ActionIdentifierTable::RIGHT;
+                ControlButtonType = ActionIdentifierTable::RIGHT_TOUCH;
                 legMovedFlag = 0;
 
                 return true;
             }
             else if (abs(rightLegLocation - singleLegLocation) < 3)
             {
-                ControlButtonType = ActionIdentifierTable::LEFT;
+                ControlButtonType = ActionIdentifierTable::LEFT_TOUCH;
                 legMovedFlag = 0;
                 return true;
             }
@@ -478,6 +478,85 @@ bool Games::recogniseJumpingJackPattern () {
 }
 
 
+bool Games::recogniseHighKneeRunningPattern() {
+
+    if(m_persistentBlobs.size() == 1 && jumpFlag == 0){
+
+        leftLegLocation = m_persistentBlobs[0].miny;
+        jumpFlag = 1;
+        //Log.i("MAT_KNEE :", " 1 Blob - "+leftLegLocation);
+        timerHistoryHighKnee = Utils::getCurrentTimestamp();
+    }
+    else if(m_persistentBlobs.size() == 0 && jumpFlag == 1){
+        jumpFlag = 2;
+        //Log.i("MAT_KNEE :", " 0 Blob");
+    }
+    else if(m_persistentBlobs.size() == 1 && jumpFlag == 2){
+
+        long diffT =  abs(timerHistoryHighKnee - Utils::getCurrentTimestamp());
+
+        int diff = abs( leftLegLocation -  m_persistentBlobs[0].miny);
+        //Log.i("MAT_KNEE :", " 1 Blob - "+leftLegLocation+" "+m_persistentBlobs[0].miny+" "+diff+" "+diffT);
+        if( diff <= 15 && diffT >= 100) {
+
+            return true;
+        }
+        jumpFlag = 0;
+    }
+    
+    return false;
+}
+
+
+bool Games::recogniseNinjaKickPattern() {
+    if(m_persistentBlobs.size() == 1 && jumpFlag==0){
+
+        leftLegLocation = m_persistentBlobs[0].miny;
+        jumpFlag = 1;
+        //Log.i("MAT_NINJA :", " 1 Blob - "+leftLegLocation);
+    }
+    else if(m_persistentBlobs.size() == 0 && jumpFlag == 1){
+        jumpFlag = 2;
+        //Log.i("MAT_NINJA :", " 0 Blob");
+    }
+    else if(m_persistentBlobs.size() == 1 && jumpFlag == 2){
+
+        int diff = abs( leftLegLocation -  m_persistentBlobs[0].miny);
+        //Log.i("MAT_NINJA :", " 1 Blob - "+leftLegLocation+" "+m_persistentBlobs[0].miny+" "+diff);
+        if( diff <= 15) {
+
+            return true;
+        }
+        jumpFlag = 0;
+    }
+    return false;
+}
+
+
+bool Games::recogniseSkierJumpingJackPattern() {
+
+    if( m_persistentBlobs.size() == 0){
+        sjjFlag = 1;
+        //Log.i("SJJ :", "Found blank pattern");
+    }
+
+    else if (m_persistentBlobs.size() == 2 ) {
+
+        rightLegLocation = m_persistentBlobs[0].miny;
+        leftLegLocation = m_persistentBlobs[1].maxy;
+
+        int d = abs(rightLegLocation - leftLegLocation);
+
+        //Log.i("SJJ :", "" + (d));
+        if ( sjjFlag == 1 && d >= 10 ) {
+            sjjFlag = 0;
+            return true;
+        }
+    }
+    return false;
+}
+
+
 void Games::resetAllActionFlags()
 {
     ControlButtonType = ActionIdentifierTable::NULL_ID;
@@ -494,4 +573,6 @@ void Games::resetAllActionFlags()
 
 
 }
+
+
 

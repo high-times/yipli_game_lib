@@ -78,6 +78,12 @@ public:
     //Beat
     int footLocations[4]{ 0 };
 
+    //Skier Jack
+    int sjjFlag { 0 };
+    int jumpFlag { 0 };
+
+    //High Knee
+    long timerHistoryHighKnee { 0 };
     
     /*****************************************
     * Member functions / Constructors
@@ -98,6 +104,12 @@ public:
     bool recogniseLegMovementPattern();
     bool recogniseJumpingJackPattern();
     bool recogniseTouchButtonClicked();
+
+    bool recogniseHighKneeRunningPattern();
+
+    bool recogniseNinjaKickPattern();
+
+    bool recogniseSkierJumpingJackPattern();
 };
 
 #endif

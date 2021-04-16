@@ -82,6 +82,7 @@ public class PlayerSelection : MonoBehaviour
     string pPicUrl = string.Empty;
     string mId = string.Empty;
     string mMac = string.Empty;
+    string mName = string.Empty;
     string pTutDone = string.Empty;
 
     bool dataSetsAreFilled = false;
@@ -155,6 +156,10 @@ public class PlayerSelection : MonoBehaviour
 
                     case "mMac":
                         mMac = tempSplits[1];
+                        break;
+
+                    case "mName":
+                        mName = tempSplits[1];
                         break;
 
                     case "pTutDone":
@@ -544,7 +549,14 @@ public class PlayerSelection : MonoBehaviour
 
         if (mId != null && mMac != null)
         {
-            currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac);
+            if (mName != null || mName != string.Empty)
+            {
+                currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac, mName);
+            }
+            else
+            {
+                currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac);
+            }
         }
     }
 
@@ -591,13 +603,20 @@ public class PlayerSelection : MonoBehaviour
             }
 #elif UNITY_STANDALONE_WIN && UNITY_EDITOR
             ReadFromWindowsFile();
-            /*
 #elif UNITY_IOS
+            /*
             currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
             currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg"); // vismay user
             currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
             */
 
+#endif
+            //Fill dummy data in user/player, for testing from Editor
+#if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
+            currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
+            //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
+            //currentYipliConfig.playerInfo = new YipliPlayerInfo("-MQHc-Ija9odZdIXkFYB", "kauva biryani", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg"); // vismay user
+            currentYipliConfig.matInfo = new YipliMatInfo("-MRJhboehK2o7TVyjzTb", "A4:DA:32:4F:C2:54");
 #endif
         }
         catch (System.Exception exp)// handling of game directing opening, without yipli app
@@ -608,14 +627,6 @@ public class PlayerSelection : MonoBehaviour
             currentYipliConfig.userId = null;
             currentYipliConfig.playerInfo = null;
             currentYipliConfig.matInfo = null;
-
-            //Fill dummy data in user/player, for testing from Editor
-#if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
-            currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
-            //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
-            //currentYipliConfig.playerInfo = new YipliPlayerInfo("-MQHc-Ija9odZdIXkFYB", "kauva biryani", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg"); // vismay user
-            currentYipliConfig.matInfo = new YipliMatInfo("-M3HgyBMOl9OssN8T6sq", "54:6C:0E:20:A0:3B");
-#endif
         }
 
 #if UNITY_STANDALONE_WIN

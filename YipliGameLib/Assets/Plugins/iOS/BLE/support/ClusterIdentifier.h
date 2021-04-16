@@ -15,7 +15,16 @@ enum ClusterID {
     TILES = 5,
     TREE_WARRIOR = 6,
     TOUCH_BUTTON = 7,
-    TROUBLESHOOTING = 999
+    TROUBLESHOOTING = 999,
+
+    //************* LIVE CLASS **************
+    LCK_02 = 202,
+    LCK_03 = 203,
+    LCK_04 = 204,
+    LCK_05 = 205,
+    LCK_07 = 207,
+    LCK_11 = 211
+
 };
 
 #endif

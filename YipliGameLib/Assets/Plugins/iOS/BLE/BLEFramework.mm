@@ -25,11 +25,12 @@ NSString *const BLEUnityMessageName_OnBleDidReceiveData = @"OnBleDidReceiveDataM
 std::string FMResponse;
 
 DriverControl d1(1);
+
 std::unique_ptr<DriverControl> d2;
+
 - (id) init
 {
     self = [super init];
-    //d1.setClusterID(0);
     if (self)
     {
         self.ble = [[BLE alloc] init];
@@ -64,12 +65,7 @@ std::unique_ptr<DriverControl> d2;
     NSLog(@"->Connected");
     self.isConnected = true;
     
-    /*
-    // send reset
-    UInt8 buf[] = {0xfe, 0xfe, 0xfe};
-    NSData *data = [[NSData alloc] initWithBytes:buf length:3];
-    [ble write:data];
-    */
+  
     
     [BLEFrameworkDelegate SendUnityMessage:BLEUnityMessageName_OnBleDidConnect message:@"Success"];
     
@@ -95,37 +91,83 @@ std::unique_ptr<DriverControl> d2;
 - (void) bleDidReceiveData:(unsigned char *)data length:(int)length
 {
     if (length > 0 && data != NULL) {
-        //NSLog(@"bleDidReceiveData length: %d", length);
         
-       
         _dataRx = [NSData dataWithBytes:data length:length];
       
         NSString* hex = [_dataRx hexRepresentationWithSpaces_AS:NO];
-        //NSLog(@"Data %@", hex);
-        bool result =  d1.initDriverProcessing(std::string([hex UTF8String]));
-        if (result) {
+    
+        if (DriverControl::gameMode == SINGLE_PLAYER) {
+            
+            bool result =  d1.initDriverProcessing(std::string([hex UTF8String]));
+            if (result) {
 
-            std::vector<std::string> players;
-            players.push_back(d1.responsePackager.m_player);
+                std::vector<std::string> players;
+                players.push_back(d1.responsePackager.m_player);
 
-            //responseCount++;
-            FMResponse = ResponsePackager::packageFMresponse(players[0]);
-            FMLOG(VERBOSE, "packageFMResponse", FMResponse.c_str());
-            d1.responsePackager.resestVariables();
+                //responseCount++;
+                FMResponse = ResponsePackager::packageFMresponse(players[0]);
+                FMLOG(VERBOSE, "packageFMResponse", FMResponse.c_str());
+                d1.responsePackager.resestVariables();
+            }
+        }
+        else{
+            processForMP(std::string([hex UTF8String]));
         }
         
-//        NSData *dataData = [NSData dataWithBytes:data length:length];
-//        NSLog(@"data = %@", dataData);
-//
-//        for (int i = 0; i < (int)length; i++)
-//        {
-//            printf(" %c",data[i]);
-//        }
-//        printf("\n");
-//        [BLEFrameworkDelegate SendUnityMessage:BLEUnityMessageName_OnBleDidReceiveData message:[NSString stringWithFormat:@"%d",length]];
     } else {
         NSLog(@"bleDidReceiveData: empty data");
     }
+}
+
+
+void processForMP(std::string _data) {
+    //TODO : _Multiplayer
+    bool result = d1.initDriverProcessing(_data);
+    bool result1 = d2->initDriverProcessing(_data);
+
+    //FMLOG(VERBOSE, "packageFMResponse", (std::to_string(result) + " " + std::to_string(result1)).c_str());
+
+    if(!result){
+        if(d1.responsePackager.m_player == ""){
+            d1.responsePackager.m_actionId = ActionIdentifierTable::NULL_ID;
+            d1.responsePackager.setPlayerData(1);
+        }
+    }
+    if(!result1){
+        if(d2->responsePackager.m_player == ""){
+            d2->responsePackager.m_actionId = ActionIdentifierTable::NULL_ID;
+            d2->responsePackager.setPlayerData(2);
+        }
+
+    }
+    if(result || result1){
+
+        //FMLOG(VERBOSE, "packageFMResponse", (d1.responsePackager.m_player + " -- data -- " + d2->responsePackager.m_player).c_str());
+        std::vector<std::string> players;
+
+        d1.responsePackager.m_player = d1.responsePackager.m_player.substr(0,7) +
+                ", \"count\":" + std::to_string(d1.responseCount) +
+                d1.responsePackager.m_player.substr(7);
+
+        d2->responsePackager.m_player = d2->responsePackager.m_player.substr(0,7) +
+                ", \"count\":" + std::to_string(d2->responseCount) +
+                d2->responsePackager.m_player.substr(7);
+
+        players.push_back(d1.responsePackager.m_player);
+        d1.responsePackager.resestVariables();
+
+        players.push_back(d2->responsePackager.m_player);
+        d2->responsePackager.resestVariables();
+
+        //FMLOG(VERBOSE, "packageFMResponse", (players[0] + " " + players[1]).c_str());
+
+        std::string _playersData = players[0] + "," + players[1];
+        FMResponse = ResponsePackager::packageFMresponse(_playersData);
+        FMLOG(VERBOSE, "packageFMResponse", FMResponse.c_str());
+
+
+    }
+
 }
 
 
@@ -393,6 +435,7 @@ extern "C" {
 
     void _setGameID_Multiplayer(int _P1_gameID, int _P2_gameID){
         d1.setClusterID(_P1_gameID);
+        d2->setClusterID(_P2_gameID);
     }
 
     int _getGameID(){
@@ -400,7 +443,10 @@ extern "C" {
     }
 
     int _getGameID_Multiplayer(int _playerID){
-        return d1.getClusterID();
+        if(_playerID == 1)
+            return d1.getClusterID();
+        else
+            return d2->getClusterID();
     }
 
     const char*  _getDriverVersion(){

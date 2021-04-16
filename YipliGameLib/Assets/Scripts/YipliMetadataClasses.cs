@@ -117,6 +117,7 @@ public class YipliMatInfo
     public string matName;
     public string matId;
     public string macAddress;
+    public string matAdvertisingName;
 
     public YipliMatInfo() { }
 
@@ -124,6 +125,13 @@ public class YipliMatInfo
     {
         this.matId = matId;
         this.macAddress = macAddress;
+    }
+
+    public YipliMatInfo(string matId, string macAddress, string matAdvertisingName)
+    {
+        this.matId = matId;
+        this.macAddress = macAddress;
+        this.matAdvertisingName = matAdvertisingName;
     }
 
     public YipliMatInfo(DataSnapshot snapshot, string key)
@@ -210,10 +218,12 @@ public class YipliInventoryGameInfo
 
 public class YipliThisUserTicketInfo
 {
-    public string bleCoomunicationInfo;
-    public string wiredCommunicationInfo;
-    public string ticketId;
-    public string ticketStatus;
+    public string bleTest;
+    public string description;
+    public string fileStorageLocation;
+    public string timeCreated;
+    public string usbTest;
+    public int ticketStatus;
 
     public YipliThisUserTicketInfo(DataSnapshot snapshot)
     {
@@ -223,27 +233,33 @@ public class YipliThisUserTicketInfo
             {
                 Debug.Log("filling the Ticket info from Snapshot.");
 
-                bleCoomunicationInfo = snapshot.Child("ble-communication-info").Value?.ToString() ?? "";
-                wiredCommunicationInfo = snapshot.Child("wired-communication-info").Value?.ToString() ?? "";
-                ticketId = snapshot.Child("ticket-id").Value?.ToString() ?? "";
-                ticketStatus = snapshot.Child("ticket-status").Value.ToString();
+                bleTest = snapshot.Child("ble-test").Value?.ToString() ?? "";
+                description = snapshot.Child("description").Value?.ToString() ?? "";
+                fileStorageLocation = snapshot.Child("file-storage-location").Value?.ToString() ?? "";
+                timeCreated = snapshot.Child("time-created").Value.ToString();
+                usbTest = snapshot.Child("usb-test").Value.ToString();
+                ticketStatus = YipliHelper.StringToIntConvert(snapshot.Child("ticket-status").Value.ToString());
             }
             else
             {
-                Debug.Log("DataSnapshot is null. Can't create YipliGameInfo instance.");
-                bleCoomunicationInfo = string.Empty;
-                wiredCommunicationInfo = string.Empty;
-                ticketId = string.Empty;
-                ticketStatus = string.Empty;
+                Debug.Log("DataSnapshot is null. Can't create UserTicketInfo instance.");
+                bleTest = string.Empty;
+                description = string.Empty;
+                fileStorageLocation = string.Empty;
+                timeCreated = string.Empty;
+                usbTest = string.Empty;
+                ticketStatus = 0;
             }
         }
         catch (Exception exp)
         {
-            Debug.Log("Exception in creating YipliMatInfo object from DataSnapshot : " + exp.Message);
-            bleCoomunicationInfo = string.Empty;
-            wiredCommunicationInfo = string.Empty;
-            ticketId = string.Empty;
-            ticketStatus = string.Empty;
+            Debug.Log("Exception in creating UserTicketInfo object from DataSnapshot : " + exp.Message);
+            bleTest = string.Empty;
+            description = string.Empty;
+            fileStorageLocation = string.Empty;
+            timeCreated = string.Empty;
+            usbTest = string.Empty;
+            ticketStatus = 0;
         }
     }
 }

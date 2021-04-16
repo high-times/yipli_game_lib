@@ -99,7 +99,7 @@ public static class FmResponseFile
 
     #region management Stuff
 
-    public static async void GenerateFilesAndUpload(List<string> fmResponseList, string flowInfo, int troubleShootAlgoId, string userID, string playerEmail, string subject)
+    public static async void GenerateFilesAndUpload(List<string> fmResponseList, string flowInfo, int troubleShootAlgoId, YipliConfig currentYipliConfig, string decription, string questionsAnswers)
     {
         FlowDetails fd = new FlowDetails();
 
@@ -107,6 +107,7 @@ public static class FmResponseFile
         fd.date = DateTime.Now.ToString();
         fd.algorithmID = troubleShootAlgoId.ToString();
         fd.flowStructure = flowInfo;
+        fd.scriptableValues = questionsAnswers;
 
         if (fmResponseList != null)
         {
@@ -116,9 +117,40 @@ public static class FmResponseFile
         WriteFlowsToFile(fd.GetJson());
 
         // now upload files
-        await UploadLogsAsync(userID);
+        await UploadLogsAsync(currentYipliConfig.userId);
 
-        FreshDeskManager.SetTicketDataAndGenerate(StoragePath, playerEmail, "priority", subject);
+        Dictionary<string, object> currentTicket = new Dictionary<string, object>();
+
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            if (!currentYipliConfig.thisUserTicketInfo.bleTest.Equals("done", StringComparison.OrdinalIgnoreCase))
+            {
+                currentTicket.Add("ble-test", "done");
+            }
+            else
+            {
+                currentTicket.Add("ble-test", "notDone");
+            }
+        }
+
+        currentTicket.Add("description", decription);
+        currentTicket.Add("file-storage-location", StoragePath);
+        currentTicket.Add("time-created", DateTime.UtcNow.ToString());
+        currentTicket.Add("user-email", await FirebaseDBHandler.GetEmailFromUserID(currentYipliConfig.userId));
+
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            if (!currentYipliConfig.thisUserTicketInfo.usbTest.Equals("done", StringComparison.OrdinalIgnoreCase))
+            {
+                currentTicket.Add("usb-test", "done");
+            }
+            else
+            {
+                currentTicket.Add("usb-test", "notDone");
+            }
+        }
+
+        FreshDeskManager.SetTicketDataAndGenerate(currentTicket);
     }
 
     #endregion
@@ -131,6 +163,7 @@ public static class FmResponseFile
         public string date = string.Empty;
         public string algorithmID = string.Empty;
         public string flowStructure = string.Empty;
+        public string scriptableValues = string.Empty;
 
         public string GetJson()
         {
