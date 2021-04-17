@@ -93,12 +93,12 @@
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\FileManagement\FmResponseFile.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\AllQuestions.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\BlobData.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\PracticalTask.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\ProblemModel.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\Questions.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\TroubleShootManagerS.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\TroubleShootSystem.cs" />
     <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TicketSystem\FreshDeskManager.cs" />
+    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TroubleshootScripts\PracticalTask.cs" />
+    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TroubleshootScripts\TroubleShootManagerS.cs" />
+    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TroubleshootScripts\TroubleShootSystem.cs" />
     <Compile Include="Assets\Scripts\Vismay\TutorialManagerGL.cs" />
     <Compile Include="Assets\Scripts\Vismay\UiButtonSelection.cs" />
     <Compile Include="Assets\Scripts\YipliAudioManager.cs" />

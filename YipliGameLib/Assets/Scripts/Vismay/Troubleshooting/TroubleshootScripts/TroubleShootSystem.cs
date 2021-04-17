@@ -1127,13 +1127,21 @@ public class TroubleShootSystem : MonoBehaviour
     // specific practical task
     public void StartPracticalTask()
     {
-        TurnOffAllPanels();
-        SetTroubleShootClusterID();
+        if (YipliHelper.GetMatConnectionStatus().Equals("Connected", StringComparison.OrdinalIgnoreCase))
+        {
+            TurnOffAllPanels();
+            SetTroubleShootClusterID();
 
-        TurnOffEntryPanel();
-        TurnOnPracticalPanel();
+            TurnOffEntryPanel();
+            TurnOnPracticalPanel();
 
-        practicalTaskManager.ManagePracticalTaskStepOne();
+            practicalTaskManager.ManagePracticalTaskStepOne();
+        }
+        else
+        {
+            // handle case for no mat connection
+            // practical should not start
+        }
     }
 
 #endregion
