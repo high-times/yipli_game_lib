@@ -72,6 +72,8 @@ public class PlayerSelection : MonoBehaviour
     public delegate void OnTicketData();
     public static event OnTicketData TicketData;
 
+    public static event OnUserFound GetAllMats;
+
     // link informations
     string uId = string.Empty;
     string pId = string.Empty;
@@ -555,7 +557,7 @@ public class PlayerSelection : MonoBehaviour
         }
     }
 
-    private void SetLinkData()
+    private async void SetLinkData()
     {
         //Debug.Log("Found intents : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + pPicUrl);
 
@@ -566,27 +568,22 @@ public class PlayerSelection : MonoBehaviour
         }
         */
 
-        if (mId != null && mMac != null)
-        {
-            if (mName != null && mName != string.Empty)
-            {
-                currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac, mName);
-            }
-            else
-            {
-                currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac);
-            }
-        }
+        // get all mat list og this user
+        GetAllMats();
+
+        currentYipliConfig.currentMatDetails = await FirebaseDBHandler.GetMatDetailsOfUserId(currentYipliConfig.userId, currentYipliConfig.currentMatID);
+
+#if UNITY_ANDROID
+        //currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac);
+        currentYipliConfig.matInfo = new YipliMatInfo(currentYipliConfig.currentMatID, currentYipliConfig.currentMatDetails.Child("mac-address").Value.ToString());
+#elif UNITY_IOS
+        // mac-name
+        //currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac, mName);
+        currentYipliConfig.matInfo = new YipliMatInfo(currentYipliConfig.currentMatID, currentYipliConfig.currentMatDetails.Child("mac-address").Value.ToString(), currentYipliConfig.currentMatDetails.Child("mac-name").Value.ToString());
+#endif
 
         // logs only
-        if (mName != null && mName != string.Empty)
-        {
-            Debug.Log("Deep link : Found intents with mName : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + mName + "," + pPicUrl);
-        }
-        else
-        {
-            Debug.Log("Deep link : Found intents without mName : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + pPicUrl);
-        }
+        Debug.Log("Deep link : Found intents : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + mName + "," + pPicUrl);
     }
 
     private void TurnOffAllPanels()
@@ -647,10 +644,12 @@ public class PlayerSelection : MonoBehaviour
 #endif
             //Fill dummy data in user/player, for testing from Editor
 #if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
-            //currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
             //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
-            //currentYipliConfig.playerInfo = new YipliPlayerInfo("-MQHc-Ija9odZdIXkFYB", "kauva biryani", "03-01-1999", "120", "49", "-MH0mCgEUMVBHxqwSQXj.jpg"); // vismay user
-            //currentYipliConfig.matInfo = new YipliMatInfo("-MRJhboehK2o7TVyjzTb", "A4:DA:32:4F:C2:54");
+            currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
+            currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg"); // vismay user
+            currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
+
+            //GetAllMats();
 #endif
         }
         catch (System.Exception exp)// handling of game directing opening, without yipli app

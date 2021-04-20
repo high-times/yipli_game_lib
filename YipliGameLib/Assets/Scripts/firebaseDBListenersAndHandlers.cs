@@ -35,8 +35,12 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     //Track if the query exection is completed or not
     private static QueryStatus getGameBlockDataForCurrentPlayerQueryStatus = global::QueryStatus.NotStarted;
 
+    //Track if the query exection is completed or not
+    private static QueryStatus getAllMatsQureyStatus = global::QueryStatus.NotStarted;
+
     public static QueryStatus GetGameBlockDataForCurrentPlayerQueryStatus { get => getGameBlockDataForCurrentPlayerQueryStatus; set => getGameBlockDataForCurrentPlayerQueryStatus = value; }
     public static QueryStatus GetThisUserTicketInfoQueryStatus { get => getThisUserTicketInfoQueryStatus; set => getThisUserTicketInfoQueryStatus = value; }
+    public static QueryStatus GetAllMatsQureyStatus { get => getAllMatsQureyStatus; set => getAllMatsQureyStatus = value; }
 
     public static QueryStatus GetGameDataForCurrenPlayerQueryStatus()
     {
@@ -69,6 +73,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         //Add listeners to the Firebase backend for all the DB Calls
         Debug.Log("Add listeners to the Firebase backend for all the DB Calls");
         PlayerSelection.NewUserFound += addGetPlayersListener;
+        PlayerSelection.GetAllMats += addGetAllMatsListener;
 
 #if UNITY_ANDROID
         PlayerSelection.NewUserFound += addDefaultMatIdListener;
@@ -118,6 +123,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     {
         //Remove the events to avoid memory leaks
         PlayerSelection.NewUserFound -= addGetPlayersListener;
+        PlayerSelection.GetAllMats -= addGetAllMatsListener;
         PlayerSelection.DefaultPlayerChanged -= addGameDataListener;
         PlayerSelection.GetGameInfo -= addListnerForGameInfo;
 
@@ -269,5 +275,44 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         currentYipliConfig.thisUserTicketInfo = new YipliThisUserTicketInfo(e.Snapshot);
 
         GetThisUserTicketInfoQueryStatus = global::QueryStatus.Completed;
+    }
+
+    // get all the mats od the received user ID
+    private async void addGetAllMatsListener()
+    {
+        Debug.Log("addGetAllMatsListener invoked");
+        await anonAuthenticate();
+        FirebaseDatabase.DefaultInstance
+        .GetReference("profiles/users/" + currentYipliConfig.userId + "/mats")
+        .ValueChanged += HandleAllMatsDataValueChanged;
+    }
+
+    void HandleAllMatsDataValueChanged(object sender, ValueChangedEventArgs args)
+    {
+        GetAllMatsQureyStatus = global::QueryStatus.InProgress;
+        Debug.Log("HandleAllMatsDataValueChanged invoked");
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
+        }
+
+        currentYipliConfig.allMatsInfo = new List<YipliMatInfo>();
+
+        foreach (var childSnapshot in args.Snapshot.Children)
+        {
+            YipliMatInfo matInstance = new YipliMatInfo(childSnapshot, childSnapshot.Key);
+            if (matInstance.matId != null)
+            {
+                currentYipliConfig.allMatsInfo.Add(matInstance);                
+            }
+            else
+            {
+                Debug.Log("Skipping this instance of mat, backend seems corrupted.");
+            }
+        }
+
+        Debug.Log("All mats data got successfully.");
+        GetAllMatsQureyStatus = global::QueryStatus.Completed;
     }
 }

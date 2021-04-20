@@ -92,7 +92,7 @@ public class MatSelection : MonoBehaviour
         else //Current Mat not found in Db.
         {
             loadingPanel.SetActive(false);
-            Debug.Log("No Mat found in cache.");
+            Debug.Log("No Mat found in cache."); 
             noMatText.text = ProductMessages.Err_mat_connection_android_phone_register;
             NoMatPanel.SetActive(true);
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
@@ -407,6 +407,7 @@ public class MatSelection : MonoBehaviour
         troubleshootButton.transform.GetChild(1).gameObject.SetActive(false);
     }
 
+    #region driver troubleshoot
 #if UNITY_STANDALONE_WIN
     // troubole mat drivers and connection
     public void TroubleshootButton()
@@ -459,10 +460,18 @@ public class MatSelection : MonoBehaviour
     }
 #endif
 
+    #endregion
+
     // TroubleShoot System
     public void TroubleShootSystemFromMS()
     {
         SceneManager.LoadScene("Troubleshooting");
+    }
+
+    // get mat data from firebase
+    private void GetCurrentMatDetails()
+    {
+
     }
 }
 

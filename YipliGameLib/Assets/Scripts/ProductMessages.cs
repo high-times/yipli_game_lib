@@ -16,7 +16,8 @@
     public const string noPlayerAdded = "No Player Added";
 
     // firebase deep links urls
-    const string addMatAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DmatListScreen";
+    //const string addMatAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DmatListScreen";
+    const string addMatAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https://yipliapp.page.link.com?route=matListScreen";
     const string userFoundAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DplayerListScreen";
     const string addPlayerAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DplayerListScreen";
 

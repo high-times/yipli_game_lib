@@ -38,6 +38,9 @@ public class YipliConfig : ScriptableObject
     public List<YipliPlayerInfo> allPlayersInfo;
 
     [HideInInspector]
+    public List<YipliMatInfo> allMatsInfo;
+
+    [HideInInspector]
     public DataSnapshot gameDataForCurrentPlayer;
 
     [HideInInspector]
@@ -64,4 +67,9 @@ public class YipliConfig : ScriptableObject
     public GameType gameType = GameType.FITNESS_GAMING;
 
     public bool troubleshootingPOSTDone = false;
+
+    [HideInInspector]
+    public DataSnapshot currentMatDetails;
+
+    public string currentMatID = string.Empty;
 }

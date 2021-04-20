@@ -144,7 +144,8 @@ public class YipliMatInfo
                 matId = key.ToString();
                 matName = snapshot.Child("display-name").Value?.ToString() ?? "";
                 macAddress = snapshot.Child("mac-address").Value?.ToString() ?? "";
-                Debug.Log("Mat Found with details :" + matName + " " + macAddress + " " + matId);
+                matAdvertisingName = snapshot.Child("mac-name").Value?.ToString() ?? "YIPLI";
+                Debug.Log("Mat Found with details :" + matName + " " + macAddress + " " + matId + " " + matAdvertisingName);
             }
             else
             {
