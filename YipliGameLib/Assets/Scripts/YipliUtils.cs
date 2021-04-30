@@ -483,16 +483,16 @@ public class YipliUtils
                 calories = 0.1f;
                 break;
             case PlayerActions.LEFT_TAP:
-                calories = 0.04f;
+                calories = 0.02f;
                 break;
             case PlayerActions.RIGHT_TAP:
-                calories = 0.04f;
+                calories = 0.02f;
                 break;
             case PlayerActions.LEFT_TOUCH:
-                calories = 0.03f;
+                calories = 0.02f;
                 break;
             case PlayerActions.RIGHT_TOUCH:
-                calories = 0.03f;
+                calories = 0.02f;
                 break;
             default:
                 Debug.Log("Invalid action found while calculating the calories. Calories returned would be 0.");

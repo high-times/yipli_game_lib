@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using Firebase;
-using Firebase.Unity.Editor;
+//using Firebase.Unity.Editor;
 using Firebase.Storage;
 
 public static class FirebaseDBHandler
@@ -37,7 +37,7 @@ public static class FirebaseDBHandler
     //        Debug.LogFormat("Dummy User signed in successfully: {0} ({1})",
     //        newUser.DisplayName, newUser.UserId);
 
-    //        FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //        //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
     //        DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
     //        snapshot = await reference.Child("inventory/games").Child(gameId).GetValueAsync();
     //        gameInfo = new YipliInventoryGameInfo(snapshot);
@@ -62,7 +62,7 @@ public static class FirebaseDBHandler
             Debug.LogFormat("User signed in successfully: {0} ({1})",
             newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             snapshot = await reference.Child("remoteCodes").Child(code).GetValueAsync();
             userId = snapshot.Child("user-id").Value.ToString();
@@ -95,7 +95,7 @@ public static class FirebaseDBHandler
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
             Debug.Log("Pushing data to backend: " + JsonConvert.SerializeObject(session.GetPlayerSessionDataJsonDic()));
@@ -128,7 +128,7 @@ public static class FirebaseDBHandler
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
             Debug.Log("Pushing data to backend: " + JsonConvert.SerializeObject(session.GetMultiPlayerSessionDataJsonDic(playerDetails, mpSessionUUID)));
@@ -160,7 +160,7 @@ public static class FirebaseDBHandler
     //        Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
-    //        FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //        //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
     //        DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
     //        reference.Child("profiles/users").Child(strUserId).Child("current-player-id").SetValueAsync(strPlayerId);
@@ -183,7 +183,7 @@ public static class FirebaseDBHandler
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
-    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
     //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
     //            snapshot = await reference.Child("profiles/users/" + userId).Child("players").Child(playerId).Child("activity-statistics/games-statistics").Child(gameId).Child("game-data").GetValueAsync();
     //        }
@@ -212,7 +212,7 @@ public static class FirebaseDBHandler
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
-    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
     //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
     //            snapshot = await reference.Child("profiles/users/" + userId).Child("players").GetValueAsync();
 
@@ -258,7 +258,7 @@ public static class FirebaseDBHandler
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
-    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
     //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
     //            //First get the current player id from user Id
@@ -315,7 +315,7 @@ public static class FirebaseDBHandler
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
-    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
     //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
     //            //First get the current mat id from user Id
@@ -363,7 +363,7 @@ public static class FirebaseDBHandler
     //            Debug.LogFormat("User signed in successfully: {0} ({1})",
     //            newUser.DisplayName, newUser.UserId);
 
-    //            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+    //            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
     //            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
     //            snapshot = await reference.Child("profiles/users/" + userId + "/mats").GetValueAsync();
 
@@ -441,7 +441,7 @@ public static class FirebaseDBHandler
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             await reference.Child("fgd/" + strUserId).Child(strPlayerId).Child(strGameId).UpdateChildrenAsync(dStoreData);
         });
@@ -459,7 +459,7 @@ public static class FirebaseDBHandler
             Debug.LogFormat("User signed in successfully: {0} ({1})",
             newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             snapshot = await reference.Child("/profiles/users/").Child(strUserId).Child("players").Child(strPlayerId).Child("mat-tut-done").GetValueAsync();
             tutStatus = snapshot.Value == null ? 0 : (int)snapshot.Value;
@@ -491,7 +491,7 @@ public static class FirebaseDBHandler
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             await reference.Child("/profiles/users/").Child(strUserId).Child("players").Child(strPlayerId).Child("mat-tut-done").SetValueAsync(tutStatus);
         });
@@ -558,7 +558,7 @@ public static class FirebaseDBHandler
             Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
             Debug.LogFormat("User signed in successfully: {0} ({1})", newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             snapshot = await reference.Child("/inventory/mats/").Child(MatID).Child("mac-address").GetValueAsync();
             macAddress = snapshot.Value.ToString();
@@ -592,7 +592,7 @@ public static class FirebaseDBHandler
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             await reference.Child("/customer-tickets/").Child(strUserId).Child(ticketID).SetValueAsync(ticketData);
         });
@@ -618,7 +618,7 @@ public static class FirebaseDBHandler
             Firebase.Auth.FirebaseUser newUser = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             await reference.Child("customer-tickets/" + strUserId).Child("open/current_tkt/").UpdateChildrenAsync(ticketData);
         });
@@ -636,7 +636,7 @@ public static class FirebaseDBHandler
             Debug.LogFormat("User signed in successfully: {0} ({1})",
             newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             snapshot = await reference.Child("profiles/users").Child(receivedUserID).Child("email").GetValueAsync();
 
@@ -663,7 +663,7 @@ public static class FirebaseDBHandler
             Debug.LogFormat("User signed in successfully: {0} ({1})",
             newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
             snapshot = await reference.Child("profiles/users").Child(userID).Child("current-mat-id").GetValueAsync();
             currentMatID = snapshot.Value.ToString();
@@ -699,7 +699,7 @@ public static class FirebaseDBHandler
             Debug.LogFormat("User signed in successfully: {0} ({1})",
                 newUser.DisplayName, newUser.UserId);
 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
 
             Debug.Log("Pushing data to backend: " + JsonConvert.SerializeObject(tempData));

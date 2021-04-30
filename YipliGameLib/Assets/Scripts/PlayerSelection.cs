@@ -573,7 +573,7 @@ public class PlayerSelection : MonoBehaviour
 
         currentYipliConfig.currentMatDetails = await FirebaseDBHandler.GetMatDetailsOfUserId(currentYipliConfig.userId, currentYipliConfig.currentMatID);
 
-#if UNITY_ANDROID
+#if UNITY_ANDROID || UNITY_EDITOR
         //currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac);
         currentYipliConfig.matInfo = new YipliMatInfo(currentYipliConfig.currentMatID, currentYipliConfig.currentMatDetails.Child("mac-address").Value.ToString());
 #elif UNITY_IOS
@@ -647,7 +647,9 @@ public class PlayerSelection : MonoBehaviour
             //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
             currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
             currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg"); // vismay user
-            currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
+            //currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
+
+            SetLinkData();
 
             //GetAllMats();
 #endif
@@ -678,11 +680,19 @@ public class PlayerSelection : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.1f);
         }
 
+        while(currentYipliConfig.matInfo == null) {
+            Debug.Log("Waiting until currentYipliConfig.matInfo setup is finished");
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+
+        Debug.Log("Wait is over as currentYipliConfig.matInfo setup is finished");
+/*
 #if UNITY_ANDROID || UNITY_IOS
         //Setting Deafult mat
         InitDefaultMat();
 
 #endif
+*/
         //Setting default Player in the scriptable Object
         InitDefaultPlayer();
 
@@ -741,7 +751,6 @@ public class PlayerSelection : MonoBehaviour
                 Debug.Log("Waiting for players query to complete");
                 LoadingPanel.gameObject.GetComponentInChildren<Text>().text = "Getting all players...";
 
-
                 //Mat coection would be required for Mat tutorials and Gamelib Navigation
                 matSelectionScript.EstablishMatConnection();
 
@@ -783,6 +792,10 @@ public class PlayerSelection : MonoBehaviour
                 {
                     if (currentYipliConfig.playerInfo == null || currentYipliConfig.playerInfo.isMatTutDone == 0 || currentYipliConfig.bIsRetakeTutorialFlagActivated)
                     {
+                        while(!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase)) {
+                            yield return new WaitForSecondsRealtime(0.1f);
+                        }
+
                         playDeviceSpecificMatTutorial();
                     }
                     else

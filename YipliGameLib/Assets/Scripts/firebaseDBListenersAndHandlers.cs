@@ -1,5 +1,5 @@
 ﻿using Firebase.Database;
-using Firebase.Unity.Editor;
+//using Firebase.Unity.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -178,7 +178,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         Debug.LogFormat("Dummy user signed in successfully: {0} ({1})",
         newUser.DisplayName, newUser.UserId);
 
-        Firebase.FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+        //Firebase.FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
         DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
     }
 

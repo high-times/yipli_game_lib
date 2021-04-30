@@ -38,7 +38,7 @@ public class MatSelection : MonoBehaviour
     public GameObject installDriverButton;
 
     int retriesDone = 0;
-    const int totalMatConnectionRetriesOnRecheck = 5;
+    const int totalMatConnectionRetriesOnRecheck = 2;
 
     private bool autoSkipMatConnection;
 
