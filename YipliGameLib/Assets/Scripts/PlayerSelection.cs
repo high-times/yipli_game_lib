@@ -517,6 +517,10 @@ public class PlayerSelection : MonoBehaviour
             NewUserFound();
             TicketData();
         }
+        else {
+            // launch Yipli app as it is launched directly
+            YipliHelper.GoToYipli();
+        }
     }
 
     private void ReadAndroidIntents()

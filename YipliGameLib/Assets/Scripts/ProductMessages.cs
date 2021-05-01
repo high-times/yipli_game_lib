@@ -15,11 +15,15 @@
     public const string noUserFound = "No User Found";
     public const string noPlayerAdded = "No Player Added";
 
+    public const string relaunchGame = "relaunchGame";
+
     // firebase deep links urls
     //const string addMatAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DmatListScreen";
     const string addMatAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https://yipliapp.page.link.com?route=matListScreen";
     const string userFoundAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DplayerListScreen";
     const string addPlayerAppPageUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Fhello%3Dsaurabh%26another_param%3Dwow%26route%3DplayerListScreen";
+
+    const string relaunchGameUrl = "https://yipliapp.page.link/?apn=com.yipli.app&link=https%3A%2F%2Fyipliapp.page.link.com%3Froute%3DgamesListScreen%26gameName%3D";
 
     // troubleshooting notes
     const string startNote = "Please make sure that your Mat is on and charged.\nMat should show green light in the button side.";
@@ -45,6 +49,8 @@
     public static string UserFoundAppPageUrl => userFoundAppPageUrl;
 
     public static string AddPlayerAppPageUrl => addPlayerAppPageUrl;
+
+    public static string RelaunchGameUrl => relaunchGameUrl;
 
     public static string StartNote => startNote;
 }

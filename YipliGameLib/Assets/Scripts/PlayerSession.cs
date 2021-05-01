@@ -713,4 +713,9 @@ public class PlayerSession : MonoBehaviour
             () => { Debug.Log("Ticket Generated successfully"); }
         );
     }
+
+    // Test functions
+    public void PrintBundleIdentifier() {
+        Debug.LogError("bundle identifier : " + Application.identifier);
+    }
 }

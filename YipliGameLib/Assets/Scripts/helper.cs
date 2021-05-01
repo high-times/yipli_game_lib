@@ -97,6 +97,11 @@ public static class YipliHelper
                 Application.OpenURL(ProductMessages.AddPlayerAppPageUrl);
                 break;
 
+            case ProductMessages.relaunchGame:
+            Debug.LogError("case : " + ProductMessages.relaunchGame);
+                Application.OpenURL(ProductMessages.RelaunchGameUrl + Application.identifier);
+                break;
+
             default:
                 Debug.LogError("case : default");
                 try

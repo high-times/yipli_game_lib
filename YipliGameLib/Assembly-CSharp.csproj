@@ -289,11 +289,44 @@
     <Reference Include="UnityEditor">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.9f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
     </Reference>
+    <Reference Include="Firebase.Analytics">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.App">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.App.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Auth">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Database">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Database.dll</HintPath>
+    </Reference>
     <Reference Include="Firebase.DynamicLinks">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.DynamicLinks.dll</HintPath>
     </Reference>
+    <Reference Include="Firebase.Functions">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Functions.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Platform">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.Storage">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Firebase.TaskExtension">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.TaskExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="Google.MiniJson">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Google.MiniJson.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Compat">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Parse/Plugins/dotNet45/Unity.Compat.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Tasks">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Parse/Plugins/dotNet45/Unity.Tasks.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Plugins/Windows/PCFMDriver/ICSharpCode.SharpZipLib.dll</HintPath>
@@ -396,39 +429,6 @@
     </Reference>
     <Reference Include="Unity.Analytics.StandardEvents">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/PackageCache/com.unity.analytics@3.3.5/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.App">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.App.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Platform">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Platform.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Tasks">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Parse/Plugins/dotNet45/Unity.Tasks.dll</HintPath>
-    </Reference>
-    <Reference Include="Google.MiniJson">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Google.MiniJson.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Auth">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Auth.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.Compat">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Parse/Plugins/dotNet45/Unity.Compat.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.TaskExtension">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.TaskExtension.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Database">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Database.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Analytics">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Analytics.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Functions">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Functions.dll</HintPath>
-    </Reference>
-    <Reference Include="Firebase.Storage">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Assets/Firebase/Plugins/Firebase.Storage.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.9f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
@@ -793,6 +793,9 @@
     <Reference Include="Unity.RemoteConfig.Editor">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.RemoteConfig.Editor.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro.Editor">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -826,6 +829,9 @@
     <Reference Include="UnityEngine.SpatialTracking">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Analytics.DataPrivacy">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
     </Reference>
@@ -837,12 +843,6 @@
     </Reference>
     <Reference Include="com.unity.multiplayer-hlapi.Runtime">
         <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/com.unity.multiplayer-hlapi.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro.Editor">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-        <HintPath>D:/F/UP/yipli_game_lib/YipliGameLib/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
