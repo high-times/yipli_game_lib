@@ -1077,6 +1077,10 @@ public class TroubleShootSystem : MonoBehaviour
         NoClicked = false;
     }
 
+    public void QuitTroubleShooting() {
+        Application.Quit();
+    }
+
     // current algorithm manager
     public void ManageCurrentAlgorithm()
     {

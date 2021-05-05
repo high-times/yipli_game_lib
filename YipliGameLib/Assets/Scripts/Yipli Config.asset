@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Yipli Config
   m_EditorClassIdentifier: 
   callbackLevel: DemoGameScene
-  userId: lC4qqZCFEaMogYswKjd0ObE6nD43
+  userId: 
   gameId: trapped
   bIsChangePlayerCalled: 0
   onlyMatPlayMode: 0
@@ -22,4 +22,5 @@ MonoBehaviour:
   oldFMResponseCount: 0
   gameType: 0
   troubleshootingPOSTDone: 0
-  currentGameBlockData: 
+  currentMatID: 
+  pId: 

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using Firebase.DynamicLinks;
 
 public enum QueryStatus
 {
@@ -42,6 +43,8 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     public static QueryStatus GetThisUserTicketInfoQueryStatus { get => getThisUserTicketInfoQueryStatus; set => getThisUserTicketInfoQueryStatus = value; }
     public static QueryStatus GetAllMatsQureyStatus { get => getAllMatsQureyStatus; set => getAllMatsQureyStatus = value; }
 
+    public static bool dynamicLinkIsReceived = false;
+
     public static QueryStatus GetGameDataForCurrenPlayerQueryStatus()
     {
         return getGameDataForCurrentPlayerQueryStatus;
@@ -70,6 +73,11 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     // Start is called before the first frame update
     void OnEnable()
     {
+        // Add listener for Dynamic links
+        #if UNITY_ANDROID || UNITY_IOS
+        DynamicLinks.DynamicLinkReceived += ExtractUserDetailsFromLink;
+        #endif
+
         //Add listeners to the Firebase backend for all the DB Calls
         Debug.Log("Add listeners to the Firebase backend for all the DB Calls");
         PlayerSelection.NewUserFound += addGetPlayersListener;
@@ -315,4 +323,131 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         Debug.Log("All mats data got successfully.");
         GetAllMatsQureyStatus = global::QueryStatus.Completed;
     }
+
+    // dyanamic link function on received
+    private void ExtractUserDetailsFromLink(object sender, EventArgs args)
+    {
+        dynamicLinkIsReceived = true;
+
+        var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
+        string dynamicLinkOrig = dynamicLinkEventArgs.ReceivedDynamicLink.Url.OriginalString;
+        Debug.Log("Deep link : Received dynamic link : " + dynamicLinkOrig);
+
+        dynamicLinkOrig.Remove(0, dynamicLinkOrig.IndexOf("?"));
+
+        int questionMarkIndex = dynamicLinkOrig.IndexOf("?");
+
+        string stringToParse = dynamicLinkOrig.Substring(questionMarkIndex + 1, dynamicLinkOrig.Length - 1 - questionMarkIndex);
+
+        string[] dataSets = stringToParse.Split('&');
+
+        for (int i = 0; i < dataSets.Length; i++)
+        {
+            string[] tempSplits = dataSets[i].Split('=');
+
+            switch (tempSplits[0])
+            {
+                case "uId":
+                    currentYipliConfig.userId = tempSplits[1];
+                    break;
+
+                case "pId":
+                    currentYipliConfig.pId = tempSplits[1];
+                    break;
+
+                default:
+                    Debug.LogError("Wrong data set field : " + tempSplits[0]);
+                    break;
+            }
+        }
+
+        FindObjectOfType<PlayerSelection>().SetLinkData();
+    }
+
+    /*
+    // user details link managemenhet
+    private void ExtractUserDetailsFromLink(object sender, EventArgs args)
+    {
+        Debug.Log("Deep link is received : " + dataSetsAreFilled);
+
+        if (!dataSetsAreFilled)
+        {
+            var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
+            string dynamicLinkOrig = dynamicLinkEventArgs.ReceivedDynamicLink.Url.OriginalString;
+            Debug.Log("Deep link : Received dynamic link : " + dynamicLinkOrig);
+
+            dynamicLinkOrig.Remove(0, dynamicLinkOrig.IndexOf("?"));
+
+            int questionMarkIndex = dynamicLinkOrig.IndexOf("?");
+
+            string stringToParse = dynamicLinkOrig.Substring(questionMarkIndex + 1, dynamicLinkOrig.Length - 1 - questionMarkIndex);
+
+            string[] dataSets = stringToParse.Split('&');
+
+            for (int i = 0; i < dataSets.Length; i++)
+            {
+                string[] tempSplits = dataSets[i].Split('=');
+
+                switch (tempSplits[0])
+                {
+                    case "uId":
+                        uId = tempSplits[1];
+                        currentYipliConfig.userId = uId;
+                        break;
+
+                    case "pId":
+                        currentYipliConfig.pId = tempSplits[1];
+                        break;
+
+                    case "pName":
+                        pName = tempSplits[1];
+                        break;
+
+                    case "pDOB":
+                        pDOB = tempSplits[1];
+                        break;
+
+                    case "pWt":
+                        pWt = tempSplits[1];
+                        break;
+
+                    case "pHt":
+                        pHt = tempSplits[1];
+                        break;
+
+                    case "pPicUrl":
+                        pPicUrl = tempSplits[1];
+                        break;
+
+                    case "mId":
+                        mId = tempSplits[1];
+                        break;
+
+                    case "mMac":
+                        mMac = tempSplits[1];
+                        break;
+
+                    case "mName":
+                        mName = tempSplits[1];
+                        break;
+
+                    case "pTutDone":
+                        pTutDone = tempSplits[1];
+                        break;
+
+                    default:
+                        Debug.LogError("Wrong data set field : " + tempSplits[0]);
+                        break;
+                }
+            }
+
+            dataSetsAreFilled = true;
+            Debug.Log("Deep link : Data sets are filled : " + dataSetsAreFilled);
+
+            //SetLinkData();
+        }
+
+        //Debug.Log("Received dynamic link Argumanets : " + stringToParse);
+    }
+    */
 }

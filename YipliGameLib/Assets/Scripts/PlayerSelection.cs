@@ -76,7 +76,7 @@ public class PlayerSelection : MonoBehaviour
 
     // link informations
     string uId = string.Empty;
-    string pId = string.Empty;
+    //string pId = string.Empty;
     string pName = string.Empty;
     string pDOB = string.Empty;
     string pHt = string.Empty;
@@ -89,107 +89,17 @@ public class PlayerSelection : MonoBehaviour
 
     bool dataSetsAreFilled = false;
 
-#if UNITY_ANDROID || UNITY_IOS
-    private void Awake()
-    {
-        DynamicLinks.DynamicLinkReceived += ExtractUserDetailsFromLink;
-    }
-#endif
-
     public void OnEnable()
     {
         defaultProfilePicSprite = profilePicImage.sprite;
     }
 
-    // user details link managemenhet
-    private void ExtractUserDetailsFromLink(object sender, EventArgs args)
-    {
-        if (!dataSetsAreFilled)
-        {
-            var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
-            string dynamicLinkOrig = dynamicLinkEventArgs.ReceivedDynamicLink.Url.OriginalString;
-            Debug.Log("Deep link : Received dynamic link : " + dynamicLinkOrig);
-
-            dynamicLinkOrig.Remove(0, dynamicLinkOrig.IndexOf("?"));
-
-            int questionMarkIndex = dynamicLinkOrig.IndexOf("?");
-
-            string stringToParse = dynamicLinkOrig.Substring(questionMarkIndex + 1, dynamicLinkOrig.Length - 1 - questionMarkIndex);
-
-            string[] dataSets = stringToParse.Split('&');
-
-            for (int i = 0; i < dataSets.Length; i++)
-            {
-                string[] tempSplits = dataSets[i].Split('=');
-
-                switch (tempSplits[0])
-                {
-                    case "uId":
-                        uId = tempSplits[1];
-                        currentYipliConfig.userId = uId;
-                        break;
-
-                    case "pId":
-                        pId = tempSplits[1];
-                        break;
-
-                    case "pName":
-                        pName = tempSplits[1];
-                        break;
-
-                    case "pDOB":
-                        pDOB = tempSplits[1];
-                        break;
-
-                    case "pWt":
-                        pWt = tempSplits[1];
-                        break;
-
-                    case "pHt":
-                        pHt = tempSplits[1];
-                        break;
-
-                    case "pPicUrl":
-                        pPicUrl = tempSplits[1];
-                        break;
-
-                    case "mId":
-                        mId = tempSplits[1];
-                        break;
-
-                    case "mMac":
-                        mMac = tempSplits[1];
-                        break;
-
-                    case "mName":
-                        mName = tempSplits[1];
-                        break;
-
-                    case "pTutDone":
-                        pTutDone = tempSplits[1];
-                        break;
-
-                    default:
-                        Debug.LogError("Wrong data set field : " + tempSplits[0]);
-                        break;
-                }
-            }
-
-            dataSetsAreFilled = true;
-            Debug.Log("Deep link : Data sets are filled : " + dataSetsAreFilled);
-
-            SetLinkData();
-        }
-
-        //Debug.Log("Received dynamic link Argumanets : " + stringToParse);
-    }
-
     // When the game starts
-#if UNITY_STANDALONE_WIN
-    public async void Start()
-#else
-    void Start()
-#endif
+    #if UNITY_STANDALONE_WIN
+        private async void Start()
+    #else
+        private void Start()
+    #endif
     {
         TurnOffAllDeviceSpecificTextObject();
 
@@ -202,8 +112,22 @@ public class PlayerSelection : MonoBehaviour
 #if UNITY_STANDALONE_WIN
         //keep yipli app Download Url ready
         FileReadWrite.YipliAppDownloadUrl = await FirebaseDBHandler.GetYipliWinAppUpdateUrl();
-#endif
+
+#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
+
+        FetchUserDetailsForWindowsAndEditor();
+
         FetchUserAndInitializePlayerEnvironment();
+#endif
+
+#if UNITY_ANDROID || UNITY_IOS
+        StartCoroutine(RelaunchgameFromYipliApp());
+#endif
+
+        // set link data first
+        //await SetLinkData();
+
+        //FetchUserAndInitializePlayerEnvironment();
 
         // turn of all devicespecific tutorial objects invisible
     }
@@ -262,7 +186,7 @@ public class PlayerSelection : MonoBehaviour
             Debug.Log("Calling CheckIntentsAndInitializePlayerEnvironment()");
 
             // Read intents and Initialize defaults
-            FetchUserDetails();
+            FetchUserDetailsForAndroidAndIOS();
 
             yield return new WaitForSeconds(0.2f);
         }
@@ -272,10 +196,10 @@ public class PlayerSelection : MonoBehaviour
 
     private void FetchUserAndInitializePlayerEnvironment()
     {
-        Debug.Log("In CheckIntentsAndInitializePlayerEnvironment()");
+        Debug.Log("Deep link : In CheckIntentsAndInitializePlayerEnvironment()");
 
         // Read intents and Initialize defaults
-        FetchUserDetails();
+        //FetchUserDetailsForAndroidAndIOS();
 
         StartCoroutine(InitializeAndStartPlayerSelection());
     }
@@ -404,10 +328,11 @@ public class PlayerSelection : MonoBehaviour
 
         Debug.Log("Calling KeepFindingUserId()");
         //Currently User isnt found. Start a coroutine which keeps on checking for the user details.
-        StartCoroutine(KeepFindingUserId());
+        //StartCoroutine(KeepFindingUserId());
 
         Debug.Log("Redirecting to Yipli App");
-        YipliHelper.GoToYipli(ProductMessages.noUserFound);
+        //YipliHelper.GoToYipli(ProductMessages.noUserFound);
+        YipliHelper.GoToYipli(ProductMessages.relaunchGame);
     }
 
     public async void OnEnterPressedAfterCodeInput()
@@ -455,7 +380,7 @@ public class PlayerSelection : MonoBehaviour
             // seting player form all player list based on received pId
             foreach (YipliPlayerInfo thisListCurrentPlayerInfo in currentYipliConfig.allPlayersInfo)
             {
-                if (thisListCurrentPlayerInfo.playerId == pId)
+                if (thisListCurrentPlayerInfo.playerId == currentYipliConfig.pId)
                 {
                     //currentYipliConfig.playerInfo = new YipliPlayerInfo(pId, pName, pDOB, pHt, pWt, pPicUrl, YipliHelper.StringToIntConvert(pTutDone));
                     currentYipliConfig.playerInfo = thisListCurrentPlayerInfo;
@@ -517,10 +442,6 @@ public class PlayerSelection : MonoBehaviour
             NewUserFound();
             TicketData();
         }
-        else {
-            // launch Yipli app as it is launched directly
-            YipliHelper.GoToYipli();
-        }
     }
 
     private void ReadAndroidIntents()
@@ -561,7 +482,7 @@ public class PlayerSelection : MonoBehaviour
         }
     }
 
-    private async void SetLinkData()
+    public async void SetLinkData()
     {
         //Debug.Log("Found intents : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + pPicUrl);
 
@@ -571,6 +492,13 @@ public class PlayerSelection : MonoBehaviour
             currentYipliConfig.playerInfo = new YipliPlayerInfo(pId, pName, pDOB, pHt, pWt, pPicUrl, YipliHelper.StringToIntConvert(pTutDone));
         }
         */
+
+        Debug.Log("Deep link : from set link data");
+
+        if (currentYipliConfig.userId == null || currentYipliConfig.userId == string.Empty || currentYipliConfig.userId == "") {
+            Debug.Log("Deep link : from set link data : currentYipliConfig.userId is empty, returning");
+            return;
+        }        
 
         // get all mat list og this user
         GetAllMats();
@@ -587,7 +515,9 @@ public class PlayerSelection : MonoBehaviour
 #endif
 
         // logs only
-        Debug.Log("Deep link : Found intents : " + currentYipliConfig.userId + ", " + pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + mName + "," + pPicUrl);
+        Debug.Log("Deep link : Found intents : " + currentYipliConfig.userId + ", " + currentYipliConfig.pId + ", " + pDOB + ", " + pHt + ", " + pWt + ", " + pName + ", " + mId + ", " + mMac + "," + mName + "," + pPicUrl);
+
+        FetchUserAndInitializePlayerEnvironment();
     }
 
     private void TurnOffAllPanels()
@@ -621,23 +551,26 @@ public class PlayerSelection : MonoBehaviour
         TutorialPanel.SetActive(false);
     }
 
-    private void FetchUserDetails()
+
+    private void FetchUserDetailsForAndroidAndIOS()
     {
         try
         {
-            Debug.Log("Deep link : In player Selection Start()");
+            Debug.Log("Deep link : FetchUserDetails : " + currentYipliConfig.playerInfo + " : " + currentYipliConfig.matInfo);
 #if UNITY_ANDROID
             if (currentYipliConfig.userId == null || currentYipliConfig.userId == "")
             {
                 Debug.Log("Deep link : Reading intents as currentyipliConfig is empty");
-                ReadAndroidIntents();
+                //ReadAndroidIntents();
+
+                Debug.Log("Calling NoUserFoundInGameFlow()");
+                //This code block will be called when the game App is not launched from the Yipli app even once.
+                NoUserFoundInGameFlow();
             }
             else
             {
-                Debug.Log("Deep link : no need to read intents as currentYipliConfig has data");
+                Debug.Log("Deep link : no need to read intents as currentYipliConfig has data : " + currentYipliConfig.userId);
             }
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
-            ReadFromWindowsFile();
 #elif UNITY_IOS
             /*
             currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
@@ -646,30 +579,34 @@ public class PlayerSelection : MonoBehaviour
             */
 
 #endif
-            //Fill dummy data in user/player, for testing from Editor
-#if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
-            //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
-            currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
-            currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg"); // vismay user
-            //currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
-
-            SetLinkData();
-
-            //GetAllMats();
-#endif
         }
         catch (System.Exception exp)// handling of game directing opening, without yipli app
         {
-            Debug.Log("Exception occured in GetIntent!!!");
+            Debug.Log("Deep link : Exception occured in GetIntent!!!");
             Debug.Log(exp.Message);
 
             currentYipliConfig.userId = null;
             currentYipliConfig.playerInfo = null;
             currentYipliConfig.matInfo = null;
         }
+    }
 
+    private void FetchUserDetailsForWindowsAndEditor() {
 #if UNITY_STANDALONE_WIN
+        ReadFromWindowsFile();
+
         currentYipliConfig.matInfo = null;
+#endif
+
+#if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
+        //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
+        currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
+        currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg"); // vismay user
+        //currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
+
+        SetLinkData();
+
+        //GetAllMats();
 #endif
     }
 
@@ -684,6 +621,9 @@ public class PlayerSelection : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.1f);
         }
 
+        //Setting default Player in the scriptable Object
+        InitDefaultPlayer();
+
         while(currentYipliConfig.matInfo == null) {
             Debug.Log("Waiting until currentYipliConfig.matInfo setup is finished");
             yield return new WaitForSecondsRealtime(0.1f);
@@ -697,9 +637,7 @@ public class PlayerSelection : MonoBehaviour
 
 #endif
 */
-        //Setting default Player in the scriptable Object
-        InitDefaultPlayer();
-
+        /*
         if (currentYipliConfig.userId == null || currentYipliConfig.userId == "")
         {
             Debug.Log("Calling NoUserFoundInGameFlow()");
@@ -708,104 +646,107 @@ public class PlayerSelection : MonoBehaviour
         }
         else
         {
-            // game info status check
-            while (firebaseDBListenersAndHandlers.GetGameInfoQueryStatus() != QueryStatus.Completed)
-            {
-                yield return new WaitForSecondsRealtime(0.1f);
-            }
+            // below code was here before
+        }
+        */
 
-            // if change player is called, do not check for game update as user has already skipped it.
-            // isSkipUpdateCalled is here to make sure update panel only come once on game start.
-            if (!currentYipliConfig.bIsChangePlayerCalled && !isSkipUpdateCalled && Application.platform == RuntimePlatform.Android) // add || or case for ios in future
+        // game info status check
+        while (firebaseDBListenersAndHandlers.GetGameInfoQueryStatus() != QueryStatus.Completed)
+        {
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+
+        // if change player is called, do not check for game update as user has already skipped it.
+        // isSkipUpdateCalled is here to make sure update panel only come once on game start.
+        if (!currentYipliConfig.bIsChangePlayerCalled && !isSkipUpdateCalled && Application.platform == RuntimePlatform.Android) // add || or case for ios in future
+        {
+            //If GameVersion latest then proceed
+            if (currentYipliConfig.gameInventoryInfo == null)
             {
-                //If GameVersion latest then proceed
-                if (currentYipliConfig.gameInventoryInfo == null)
+                Debug.Log("Game not found in the iventory");
+            }
+            else
+            {
+                Debug.Log("Game found in the iventory");
+                Debug.Log("Currrent Game version : " + Application.version);
+                Debug.Log("Latest Game version : " + currentYipliConfig.gameInventoryInfo.gameVersion);
+
+                int gameVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(Application.version);
+                int inventoryVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(currentYipliConfig.gameInventoryInfo.gameVersion);
+
+
+                if (inventoryVersionCode > gameVersionCode)
                 {
-                    Debug.Log("Game not found in the iventory");
+                    //Ask user to Update Game version option
+                    LoadingPanel.SetActive(false);
+
+                    GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";
+                    GameVersionUpdatePanel.SetActive(true);
                 }
                 else
                 {
-                    Debug.Log("Game found in the iventory");
-                    Debug.Log("Currrent Game version : " + Application.version);
-                    Debug.Log("Latest Game version : " + currentYipliConfig.gameInventoryInfo.gameVersion);
+                    // if version is not higher start player selection process
+                    isSkipUpdateCalled = true;
+                    FetchUserAndInitializePlayerEnvironment();
+                }
+            }
+        }
+        else
+        {
+            //Wait till the listeners are synced and the data has been populated
+            Debug.Log("Waiting for players query to complete");
+            LoadingPanel.gameObject.GetComponentInChildren<Text>().text = "Getting all players...";
 
-                    int gameVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(Application.version);
-                    int inventoryVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(currentYipliConfig.gameInventoryInfo.gameVersion);
+            //Mat coection would be required for Mat tutorials and Gamelib Navigation
+            matSelectionScript.EstablishMatConnection();
 
+            //Check if current player has completed the Mat tutorial or not.
+            //GetPlayersMatTutorialCompletionStatus();
 
-                    if (inventoryVersionCode > gameVersionCode)
-                    {
-                        //Ask user to Update Game version option
-                        LoadingPanel.SetActive(false);
+            //Special handling in case of Multiplayer games
+            if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)
+            {
+                // Check if atleast 2 players are available for playing the multiplayer game
+                if (currentYipliConfig.allPlayersInfo.Count < 2)
+                {
+                    //Set active a panel to handle atleast 2 players should be there to play
+                    TurnOffAllPanels();
+                    Minimum2PlayersPanel.SetActive(true);
+                }
+                else
+                {
+                    LoadingPanel.SetActive(false);
+                    //Skip player selection as it will be handled by game side, directly go to the mat selection flow
+                    matSelectionScript.MatConnectionFlow();
+                }
+            }
+            else if (currentYipliConfig.bIsChangePlayerCalled == true)
+            {
+                currentYipliConfig.bIsChangePlayerCalled = false;
 
-                        GameVersionUpdateText.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";
-                        GameVersionUpdatePanel.SetActive(true);
-                    }
-                    else
-                    {
-                        // if version is not higher start player selection process
-                        isSkipUpdateCalled = true;
-                        FetchUserAndInitializePlayerEnvironment();
-                    }
+                if (currentYipliConfig.allPlayersInfo.Count > 1)
+                {
+                    PlayerSelectionFlow();
+                }
+                else // If No then throw a new panel to tell the Gamer that there is only 1 player currently
+                {
+                    TurnOffAllPanels();
+                    onlyOnePlayerPanel.SetActive(true);
                 }
             }
             else
             {
-                //Wait till the listeners are synced and the data has been populated
-                Debug.Log("Waiting for players query to complete");
-                LoadingPanel.gameObject.GetComponentInChildren<Text>().text = "Getting all players...";
-
-                //Mat coection would be required for Mat tutorials and Gamelib Navigation
-                matSelectionScript.EstablishMatConnection();
-
-                //Check if current player has completed the Mat tutorial or not.
-                //GetPlayersMatTutorialCompletionStatus();
-
-                //Special handling in case of Multiplayer games
-                if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)
+                if (currentYipliConfig.playerInfo == null || currentYipliConfig.playerInfo.isMatTutDone == 0 || currentYipliConfig.bIsRetakeTutorialFlagActivated)
                 {
-                    // Check if atleast 2 players are available for playing the multiplayer game
-                    if (currentYipliConfig.allPlayersInfo.Count < 2)
-                    {
-                        //Set active a panel to handle atleast 2 players should be there to play
-                        TurnOffAllPanels();
-                        Minimum2PlayersPanel.SetActive(true);
+                    while(!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase)) {
+                        yield return new WaitForSecondsRealtime(0.1f);
                     }
-                    else
-                    {
-                        LoadingPanel.SetActive(false);
-                        //Skip player selection as it will be handled by game side, directly go to the mat selection flow
-                        matSelectionScript.MatConnectionFlow();
-                    }
-                }
-                else if (currentYipliConfig.bIsChangePlayerCalled == true)
-                {
-                    currentYipliConfig.bIsChangePlayerCalled = false;
 
-                    if (currentYipliConfig.allPlayersInfo.Count > 1)
-                    {
-                        PlayerSelectionFlow();
-                    }
-                    else // If No then throw a new panel to tell the Gamer that there is only 1 player currently
-                    {
-                        TurnOffAllPanels();
-                        onlyOnePlayerPanel.SetActive(true);
-                    }
+                    playDeviceSpecificMatTutorial();
                 }
                 else
                 {
-                    if (currentYipliConfig.playerInfo == null || currentYipliConfig.playerInfo.isMatTutDone == 0 || currentYipliConfig.bIsRetakeTutorialFlagActivated)
-                    {
-                        while(!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase)) {
-                            yield return new WaitForSecondsRealtime(0.1f);
-                        }
-
-                        playDeviceSpecificMatTutorial();
-                    }
-                    else
-                    {
-                        SwitchPlayerFlow();
-                    }
+                    SwitchPlayerFlow();
                 }
             }
         }
@@ -1220,5 +1161,13 @@ public class PlayerSelection : MonoBehaviour
     private void UpdateGameAndDriverVersionText()
     {
         gameAndDriverVersionText.text = YipliHelper.GetFMDriverVersion() + " : " + Application.version;
+    }
+
+    // redirect to yipli id userid is notfound after 10 seconds
+    private IEnumerator RelaunchgameFromYipliApp() {
+        yield return new WaitForSecondsRealtime(10f);
+        if (!firebaseDBListenersAndHandlers.dynamicLinkIsReceived) {
+            NoUserFoundInGameFlow();
+        }
     }
 }

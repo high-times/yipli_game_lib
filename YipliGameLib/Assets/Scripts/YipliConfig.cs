@@ -24,7 +24,7 @@ public class YipliConfig : ScriptableObject
     public YipliMatInfo matInfo;
 
     //[HideInInspector]
-    public string userId;
+    public string userId = "";
     
     public string gameId;
 
@@ -72,4 +72,5 @@ public class YipliConfig : ScriptableObject
     public DataSnapshot currentMatDetails;
 
     public string currentMatID = string.Empty;
+    public string pId = string.Empty;
 }
