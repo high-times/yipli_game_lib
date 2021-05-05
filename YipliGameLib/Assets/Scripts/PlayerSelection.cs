@@ -1165,7 +1165,19 @@ public class PlayerSelection : MonoBehaviour
 
     // redirect to yipli id userid is notfound after 10 seconds
     private IEnumerator RelaunchgameFromYipliApp() {
-        yield return new WaitForSecondsRealtime(10f);
+
+        int totalTime = 0;
+
+        while (totalTime < 5) {
+
+            if (firebaseDBListenersAndHandlers.dynamicLinkIsReceived) {
+                yield break;
+            }
+
+            yield return new WaitForSecondsRealtime(1f);
+            totalTime++;
+        }
+
         if (!firebaseDBListenersAndHandlers.dynamicLinkIsReceived) {
             NoUserFoundInGameFlow();
         }

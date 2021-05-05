@@ -16,6 +16,8 @@ public class YipliPlayerInfo
     public int isMatTutDone;
     //public string difficultyLevel; // to be decided by the game.
 
+    const string matAdvertisingName = "YIPLI";
+
     public YipliPlayerInfo() { }
 
     public YipliPlayerInfo(string playerId, string playerName, string playerDob, string playerHeight, string playerWeight, string profilePicUrl = null, int pTutDone = 0)
@@ -144,7 +146,7 @@ public class YipliMatInfo
                 matId = key.ToString();
                 matName = snapshot.Child("display-name").Value?.ToString() ?? "";
                 macAddress = snapshot.Child("mac-address").Value?.ToString() ?? "";
-                matAdvertisingName = snapshot.Child("mac-name").Value?.ToString() ?? "YIPLI";
+                matAdvertisingName = snapshot.Child("mac-name").Value?.ToString() ?? matAdvertisingName;
                 Debug.Log("Mat Found with details :" + matName + " " + macAddress + " " + matId + " " + matAdvertisingName);
             }
             else
