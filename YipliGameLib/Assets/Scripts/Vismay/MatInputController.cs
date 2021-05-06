@@ -109,10 +109,6 @@ public class MatInputController : MonoBehaviour
 
     public void UpdateButtonList(List<Button> newButtons, int newCurrentButtonIndex, bool isPlayerSelectionPanel)
     {
-        /*if (currentMenuButtons != null)
-        {
-            currentMenuButtons.Clear();
-        }*/
         currentButtonIndex = newCurrentButtonIndex;
         currentMenuButtons = newButtons;
 

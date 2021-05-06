@@ -142,6 +142,8 @@ public class PlayerSession : MonoBehaviour
         firebaseDBListenersAndHandlers.SetGameDataForCurrenPlayerQueryStatus(QueryStatus.NotStarted);
 
         currentYipliConfig.bIsChangePlayerCalled = true;
+        currentYipliConfig.pId = string.Empty;
+        currentYipliConfig.playerInfo = new YipliPlayerInfo();
         SceneManager.LoadScene("yipli_lib_scene");
     }
     

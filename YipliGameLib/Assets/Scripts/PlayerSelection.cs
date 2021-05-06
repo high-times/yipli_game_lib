@@ -122,6 +122,10 @@ public class PlayerSelection : MonoBehaviour
 
 #if UNITY_ANDROID || UNITY_IOS
         StartCoroutine(RelaunchgameFromYipliApp());
+
+        if (currentYipliConfig.bIsChangePlayerCalled) {
+            FetchUserAndInitializePlayerEnvironment();
+        }
 #endif
 
         // set link data first
@@ -139,6 +143,10 @@ public class PlayerSelection : MonoBehaviour
         if (allowPhoneHolderAudioPlay)
         {
             PlayComeAndJumpAudio();
+        }
+
+        if (!playerSelectionPanel.activeSelf) {
+            DestroyPlayerSelectionButtons();
         }
     }
 
@@ -365,11 +373,13 @@ public class PlayerSelection : MonoBehaviour
     //If no intents found, it is filled with the device persisted default player object.
     private void InitDefaultPlayer()
     {
-        if (currentYipliConfig.playerInfo != null)
+        if (currentYipliConfig.playerInfo != null && (currentYipliConfig.pId != null || currentYipliConfig.pId != "" || currentYipliConfig.pId != string.Empty))
         {
             //If PlayerInfo is found in the Intents as an argument.
             //This code block will be called when the game App is launched from the Yipli app.
             //UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
+
+            PlayerSelectionFlow();
         }
         else
         {
@@ -377,14 +387,18 @@ public class PlayerSelection : MonoBehaviour
             //This code block will be called when the game App is not launched from the Yipli app.
             //currentYipliConfig.playerInfo = UserDataPersistence.GetSavedPlayer();
 
-            // seting player form all player list based on received pId
-            foreach (YipliPlayerInfo thisListCurrentPlayerInfo in currentYipliConfig.allPlayersInfo)
-            {
-                if (thisListCurrentPlayerInfo.playerId == currentYipliConfig.pId)
+            if (currentYipliConfig.pId != null || currentYipliConfig.pId != "" || currentYipliConfig.pId != string.Empty) {
+                // seting player form all player list based on received pId
+                foreach (YipliPlayerInfo thisListCurrentPlayerInfo in currentYipliConfig.allPlayersInfo)
                 {
-                    //currentYipliConfig.playerInfo = new YipliPlayerInfo(pId, pName, pDOB, pHt, pWt, pPicUrl, YipliHelper.StringToIntConvert(pTutDone));
-                    currentYipliConfig.playerInfo = thisListCurrentPlayerInfo;
+                    if (thisListCurrentPlayerInfo.playerId == currentYipliConfig.pId)
+                    {
+                        //currentYipliConfig.playerInfo = new YipliPlayerInfo(pId, pName, pDOB, pHt, pWt, pPicUrl, YipliHelper.StringToIntConvert(pTutDone));
+                        currentYipliConfig.playerInfo = thisListCurrentPlayerInfo;
+                    }
                 }
+            } else {
+                PlayerSelectionFlow();
             }
         }
 
@@ -601,7 +615,8 @@ public class PlayerSelection : MonoBehaviour
 #if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
         //currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
         currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
-        currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg"); // vismay user
+        //currentYipliConfig.pId = "-MSX--0uyqI7KgKmNOIY"; // vismay player
+        //currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg", 1); // vismay user
         //currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54");
 
         SetLinkData();
@@ -621,8 +636,10 @@ public class PlayerSelection : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.1f);
         }
 
-        //Setting default Player in the scriptable Object
-        InitDefaultPlayer();
+        if (!currentYipliConfig.bIsChangePlayerCalled) {
+            //Setting default Player in the scriptable Object
+            InitDefaultPlayer();
+        }
 
         while(currentYipliConfig.matInfo == null) {
             Debug.Log("Waiting until currentYipliConfig.matInfo setup is finished");
@@ -698,7 +715,9 @@ public class PlayerSelection : MonoBehaviour
             LoadingPanel.gameObject.GetComponentInChildren<Text>().text = "Getting all players...";
 
             //Mat coection would be required for Mat tutorials and Gamelib Navigation
-            matSelectionScript.EstablishMatConnection();
+            if (!YipliHelper.GetMatConnectionStatus().Equals("Connected", StringComparison.OrdinalIgnoreCase)) {
+                matSelectionScript.EstablishMatConnection();
+            }
 
             //Check if current player has completed the Mat tutorial or not.
             //GetPlayersMatTutorialCompletionStatus();
@@ -936,6 +955,7 @@ public class PlayerSelection : MonoBehaviour
         allowPhoneHolderAudioPlay = false;
 
         TurnOffAllPanels();
+
         TutorialPanel.SetActive(true);
         TutorialPanel.GetComponent<TutorialManagerGL>().ActivateTutorial();
 
@@ -1166,6 +1186,12 @@ public class PlayerSelection : MonoBehaviour
     // redirect to yipli id userid is notfound after 10 seconds
     private IEnumerator RelaunchgameFromYipliApp() {
 
+        #if UNITY_EDITOR
+            if (currentYipliConfig.userId != null) {
+                yield break;
+            }
+        #endif
+
         int totalTime = 0;
 
         while (totalTime < 5) {
@@ -1180,6 +1206,14 @@ public class PlayerSelection : MonoBehaviour
 
         if (!firebaseDBListenersAndHandlers.dynamicLinkIsReceived) {
             NoUserFoundInGameFlow();
+        }
+    }
+
+    // destroy all generated objects
+    public void DestroyPlayerSelectionButtons() {
+        foreach (var obj1 in generatedObjects)
+        {
+            Destroy(obj1);
         }
     }
 }

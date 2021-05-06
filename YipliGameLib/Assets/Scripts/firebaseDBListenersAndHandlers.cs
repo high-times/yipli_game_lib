@@ -327,41 +327,43 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     // dyanamic link function on received
     private void ExtractUserDetailsFromLink(object sender, EventArgs args)
     {
-        dynamicLinkIsReceived = true;
+        if (!dynamicLinkIsReceived) {
+            dynamicLinkIsReceived = true;
 
-        var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
-        string dynamicLinkOrig = dynamicLinkEventArgs.ReceivedDynamicLink.Url.OriginalString;
-        Debug.Log("Deep link : Received dynamic link : " + dynamicLinkOrig);
+            var dynamicLinkEventArgs = args as ReceivedDynamicLinkEventArgs;
+            string dynamicLinkOrig = dynamicLinkEventArgs.ReceivedDynamicLink.Url.OriginalString;
+            Debug.Log("Deep link : Received dynamic link : " + dynamicLinkOrig);
 
-        dynamicLinkOrig.Remove(0, dynamicLinkOrig.IndexOf("?"));
+            dynamicLinkOrig.Remove(0, dynamicLinkOrig.IndexOf("?"));
 
-        int questionMarkIndex = dynamicLinkOrig.IndexOf("?");
+            int questionMarkIndex = dynamicLinkOrig.IndexOf("?");
 
-        string stringToParse = dynamicLinkOrig.Substring(questionMarkIndex + 1, dynamicLinkOrig.Length - 1 - questionMarkIndex);
+            string stringToParse = dynamicLinkOrig.Substring(questionMarkIndex + 1, dynamicLinkOrig.Length - 1 - questionMarkIndex);
 
-        string[] dataSets = stringToParse.Split('&');
+            string[] dataSets = stringToParse.Split('&');
 
-        for (int i = 0; i < dataSets.Length; i++)
-        {
-            string[] tempSplits = dataSets[i].Split('=');
-
-            switch (tempSplits[0])
+            for (int i = 0; i < dataSets.Length; i++)
             {
-                case "uId":
-                    currentYipliConfig.userId = tempSplits[1];
-                    break;
+                string[] tempSplits = dataSets[i].Split('=');
 
-                case "pId":
-                    currentYipliConfig.pId = tempSplits[1];
-                    break;
+                switch (tempSplits[0])
+                {
+                    case "uId":
+                        currentYipliConfig.userId = tempSplits[1];
+                        break;
 
-                default:
-                    Debug.LogError("Wrong data set field : " + tempSplits[0]);
-                    break;
+                    case "pId":
+                        currentYipliConfig.pId = tempSplits[1];
+                        break;
+
+                    default:
+                        Debug.LogError("Wrong data set field : " + tempSplits[0]);
+                        break;
+                }
             }
-        }
 
-        FindObjectOfType<PlayerSelection>().SetLinkData();
+            FindObjectOfType<PlayerSelection>().SetLinkData();
+        }
     }
 
     /*
