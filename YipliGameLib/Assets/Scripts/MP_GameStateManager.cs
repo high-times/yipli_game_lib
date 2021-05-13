@@ -66,6 +66,7 @@ public class MP_GameStateManager
         //playerOneDetails.matId = PlayerSession.Instance.currentYipliConfig.matInfo.matId;
         //playerOneDetails.matMacAddress = PlayerSession.Instance.currentYipliConfig.matInfo.macAddress;
         playerOneDetails.playerId = tempPlayer.playerId;
+        playerOneDetails.gameId = PlayerSession.Instance.currentYipliConfig.gameId;
         playerOneDetails.playerAge = tempPlayer.playerAge;
         playerOneDetails.playerHeight = tempPlayer.playerHeight;
         playerOneDetails.playerWeight = tempPlayer.playerWeight;
@@ -93,6 +94,7 @@ public class MP_GameStateManager
         playerTwoDetails.userId = PlayerSession.Instance.currentYipliConfig.userId;
         //playerTwoDetails.matId = PlayerSession.Instance.currentYipliConfig.matInfo.matId;
         //playerTwoDetails.matMacAddress = PlayerSession.Instance.currentYipliConfig.matInfo.macAddress;
+        playerTwoDetails.gameId = PlayerSession.Instance.currentYipliConfig.gameId;
         playerTwoDetails.playerId = tempPlayer.playerId;
         playerTwoDetails.playerAge = tempPlayer.playerAge;
         playerTwoDetails.playerHeight = tempPlayer.playerHeight;

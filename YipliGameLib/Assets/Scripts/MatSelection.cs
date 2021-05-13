@@ -391,7 +391,7 @@ public class MatSelection : MonoBehaviour
 
     public void OnGoToYipliPress()
     {
-        YipliHelper.GoToYipli();
+        YipliHelper.GoToYipli(ProductMessages.noMatCase);
     }
 
     private void DisableTroubleshootButton()

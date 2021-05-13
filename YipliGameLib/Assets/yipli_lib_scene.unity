@@ -336,7 +336,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &67226149
 RectTransform:
   m_ObjectHideFlags: 0
@@ -671,7 +671,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 12800000, guid: ef51ff4b9fb61b643a8dbfdcce782dcc, type: 3}
     m_FontSize: 14
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1
     m_MaxSize: 40
@@ -4423,7 +4423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &423248753
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5860,7 +5860,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 40, y: 0}
-  m_SizeDelta: {x: 65, y: 50}
+  m_SizeDelta: {x: 80, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &548860394
 MonoBehaviour:
@@ -5881,7 +5881,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Home
+  m_text: Players
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 59f1396c263b82d4e911a145400b3feb, type: 2}
   m_sharedMaterial: {fileID: 6914922238919749425, guid: 59f1396c263b82d4e911a145400b3feb,
@@ -10180,7 +10180,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Home
+  m_text: Mats
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 59f1396c263b82d4e911a145400b3feb, type: 2}
   m_sharedMaterial: {fileID: 6914922238919749425, guid: 59f1396c263b82d4e911a145400b3feb,
@@ -11253,7 +11253,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1984456606}
+      - m_Target: {fileID: 1984456608}
         m_MethodName: OnGoToYipliPress
         m_Mode: 1
         m_Arguments:
@@ -13834,8 +13834,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 40, y: 0}
-  m_SizeDelta: {x: 65, y: 50}
+  m_AnchoredPosition: {x: 32.4, y: 0}
+  m_SizeDelta: {x: 80, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1336846231
 MonoBehaviour:
@@ -13856,7 +13856,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Home
+  m_text: Players
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 59f1396c263b82d4e911a145400b3feb, type: 2}
   m_sharedMaterial: {fileID: 6914922238919749425, guid: 59f1396c263b82d4e911a145400b3feb,
@@ -20416,6 +20416,8 @@ MonoBehaviour:
   GameVersionUpdateText: {fileID: 491034941}
   RemotePlayCodeErrorText: {fileID: 107441396}
   gameAndDriverVersionText: {fileID: 2023342100}
+  learnMatControlText: {fileID: 106899286}
+  onlyOnePlayerPanelRetryButton: {fileID: 1606228994}
 --- !u!4 &1984456607
 Transform:
   m_ObjectHideFlags: 0

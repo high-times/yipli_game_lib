@@ -45,6 +45,10 @@ public class PlayerSelection : MonoBehaviour
     public TextMeshProUGUI RemotePlayCodeErrorText;
 
     public TextMeshProUGUI gameAndDriverVersionText;
+    public TextMeshProUGUI learnMatControlText;
+
+    [Header("Retries Button")]
+    [SerializeField] private Button onlyOnePlayerPanelRetryButton;
 
     private string PlayerName;
 
@@ -55,6 +59,8 @@ public class PlayerSelection : MonoBehaviour
 
     private bool isSkipUpdateCalled = false;
     private bool isTutorialDoneWithoutPlayerInfo = false;
+
+    private bool learnMatControlIsClicked = false;
 
     private float currentTimePassed = 0;
     private bool allowPhoneHolderAudioPlay = false;
@@ -148,6 +154,8 @@ public class PlayerSelection : MonoBehaviour
         if (!playerSelectionPanel.activeSelf) {
             DestroyPlayerSelectionButtons();
         }
+
+        ManageRetriesButtonOnDifferentPanel();
     }
 
     // turn of all devicespecific tutorial objects invisible
@@ -675,7 +683,7 @@ public class PlayerSelection : MonoBehaviour
 
         // if change player is called, do not check for game update as user has already skipped it.
         // isSkipUpdateCalled is here to make sure update panel only come once on game start.
-        if (!currentYipliConfig.bIsChangePlayerCalled && !isSkipUpdateCalled && Application.platform == RuntimePlatform.Android) // add || or case for ios in future
+        if (!currentYipliConfig.bIsChangePlayerCalled && !isSkipUpdateCalled && (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.IPhonePlayer)) // add || or case for ios in future
         {
             //If GameVersion latest then proceed
             if (currentYipliConfig.gameInventoryInfo == null)
@@ -899,8 +907,18 @@ public class PlayerSelection : MonoBehaviour
 
         TurnOffAllPanels();
 
-        if (currentYipliConfig.playerInfo.isMatTutDone == 0)
+        if (learnMatControlIsClicked || currentYipliConfig.playerInfo.isMatTutDone == 0)
         {
+            if (learnMatControlIsClicked) {
+
+                learnMatControlIsClicked = false;
+
+                learnMatControlText.text = "Learn MAT Controls";
+                learnMatControlText.fontSize = 14;
+
+                playDeviceSpecificMatTutorial();
+            }
+
             // write tut flag to backend here or start the tutorial
             if (isTutorialDoneWithoutPlayerInfo)
             {
@@ -1061,7 +1079,7 @@ public class PlayerSelection : MonoBehaviour
 
     public void OnGoToYipliPress()
     {
-        YipliHelper.GoToYipli(ProductMessages.noMatCase);
+        YipliHelper.GoToYipli(ProductMessages.noPlayerAdded);
     }
 
     public void OnBackButtonPress()
@@ -1137,7 +1155,15 @@ public class PlayerSelection : MonoBehaviour
     // retake tutorial button function
     public void RetakeMatTutorialButton()
     {
-        if (currentYipliConfig.playerInfo == null) return;
+        if (currentYipliConfig.playerInfo == null) {
+
+            learnMatControlIsClicked = true;
+
+            learnMatControlText.text = "Select Player to Continue";
+            learnMatControlText.fontSize = 12;
+            
+            return;
+        }
 
         playDeviceSpecificMatTutorial();
     }
@@ -1176,6 +1202,9 @@ public class PlayerSelection : MonoBehaviour
         {
             noNetworkPanel.SetActive(false);
         }
+        else {
+            noNetworkPanel.SetActive(true);
+        }
     }
 
     private void UpdateGameAndDriverVersionText()
@@ -1205,7 +1234,12 @@ public class PlayerSelection : MonoBehaviour
         }
 
         if (!firebaseDBListenersAndHandlers.dynamicLinkIsReceived) {
-            NoUserFoundInGameFlow();
+            if (YipliHelper.checkInternetConnection()) {
+                NoUserFoundInGameFlow();
+            }
+            else {
+                noNetworkPanel.SetActive(true);
+            }
         }
     }
 
@@ -1214,6 +1248,16 @@ public class PlayerSelection : MonoBehaviour
         foreach (var obj1 in generatedObjects)
         {
             Destroy(obj1);
+        }
+    }
+
+    // Manage Retries Button On Different Panels
+    private void ManageRetriesButtonOnDifferentPanel() {
+        if (onlyOnePlayerPanel.activeSelf && currentYipliConfig.allPlayersInfo.Count > 1) {
+            onlyOnePlayerPanelRetryButton.gameObject.SetActive(true);
+        }
+        else {
+            onlyOnePlayerPanelRetryButton.gameObject.SetActive(false);
         }
     }
 }

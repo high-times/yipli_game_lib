@@ -302,7 +302,7 @@ public class PlayerSession : MonoBehaviour
 
     public void GotoYipli()
     {
-        YipliHelper.GoToYipli();
+        YipliHelper.GoToYipli(ProductMessages.openYipliApp);
     }
 
 #region Single Player Session Functions

@@ -98,8 +98,13 @@ public static class YipliHelper
                 break;
 
             case ProductMessages.relaunchGame:
-            Debug.LogError("case : " + ProductMessages.relaunchGame);
+                Debug.LogError("case : " + ProductMessages.relaunchGame);
                 Application.OpenURL(ProductMessages.RelaunchGameUrl + Application.identifier);
+                break;
+
+            case ProductMessages.openYipliApp:
+                Debug.LogError("case : " + ProductMessages.openYipliApp);
+                Application.OpenURL(ProductMessages.OpenYipliAppUrl);
                 break;
 
             default:

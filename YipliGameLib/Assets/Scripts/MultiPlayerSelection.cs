@@ -48,7 +48,7 @@ public class MultiPlayerSelection : MonoBehaviour
     public GameObject PlayerButtonPrefab, playerTwoNameObject;
     private List<GameObject> generatedObjects = new List<GameObject>();
     private List<Button> playerButtons = new List<Button>();
-
+    
     private GameObject playerOneButton, playerTwoButton, computerPlayerButton;
     private int playerOneIndex, playerTwoIndex;
 
@@ -179,7 +179,7 @@ public class MultiPlayerSelection : MonoBehaviour
         {
             for (int i = 0; i < currentYipliConfig.allPlayersInfo.Count; i++)
             {
-                if (currentYipliConfig.allPlayersInfo[i].playerName != PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
+                if(currentYipliConfig.allPlayersInfo[i].playerName != PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
                 {
                     PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerTwo(currentYipliConfig.allPlayersInfo[i].playerName);
                     UserDataPersistence.SaveMultiplayerToDevice();
