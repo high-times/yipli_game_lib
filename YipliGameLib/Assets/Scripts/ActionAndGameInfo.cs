@@ -338,6 +338,11 @@ namespace YipliFMDriverCommunication
                     PlayerSession.Instance.intensityLevel = "medium";
                     break;
 
+                case "matbeats":
+                    YipliHelper.SetGameClusterId(5);
+                    PlayerSession.Instance.intensityLevel = "low";
+                    break;
+
                 default:
                     YipliHelper.SetGameClusterId(0);
                     PlayerSession.Instance.intensityLevel = "";
