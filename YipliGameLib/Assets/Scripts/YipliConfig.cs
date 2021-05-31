@@ -73,4 +73,6 @@ public class YipliConfig : ScriptableObject
 
     public string currentMatID = string.Empty;
     public string pId = string.Empty;
+
+    public bool isDeviceAndroidTV = false;
 }

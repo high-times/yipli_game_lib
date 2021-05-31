@@ -41,7 +41,11 @@ public class MaintenancePanel : MonoBehaviour
         }
 
 #if UNITY_ANDROID
-        BlockVersionCheck(currentYipliConfig.gameInventoryInfo.androidMinVersion);
+        if (currentYipliConfig.isDeviceAndroidTV) {
+            BlockVersionCheck(currentYipliConfig.gameInventoryInfo.androidTVMinVersion);
+        } else {
+            BlockVersionCheck(currentYipliConfig.gameInventoryInfo.androidMinVersion);
+        }
 #elif UNITY_IOS
         BlockVersionCheck(currentYipliConfig.gameInventoryInfo.iosMinVersion);
 #elif UNITY_STANDALONE_WIN
@@ -55,7 +59,6 @@ public class MaintenancePanel : MonoBehaviour
 
         int gameVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(Application.version);
         int notAllowedVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(versionString);
-
 
         if (notAllowedVersionCode > gameVersionCode)
         {

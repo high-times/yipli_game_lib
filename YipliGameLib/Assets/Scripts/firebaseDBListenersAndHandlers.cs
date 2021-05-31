@@ -356,6 +356,14 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
                         currentYipliConfig.pId = tempSplits[1];
                         break;
 
+                    case "tv":
+                        if (YipliHelper.StringToIntConvert(tempSplits[1]) == 1) {
+                            currentYipliConfig.isDeviceAndroidTV = true;
+                        } else {
+                            currentYipliConfig.isDeviceAndroidTV = false;
+                        }
+                        break;
+
                     default:
                         Debug.LogError("Wrong data set field : " + tempSplits[0]);
                         break;

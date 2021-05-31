@@ -245,19 +245,19 @@ public class YipliUtils
                 break;
 
             case PlayerActions.LEFT_TAP:
-                fp = 4.0f;
+                fp = 2.0f;
                 break;
 
             case PlayerActions.RIGHT_TAP:
-                fp = 4.0f;
+                fp = 2.0f;
                 break;
 
             case PlayerActions.LEFT_TOUCH:
-                fp = 3.0f;
+                fp = 2.0f;
                 break;
 
             case PlayerActions.RIGHT_TOUCH:
-                fp = 3.0f;
+                fp = 2.0f;
                 break;
 
             default:

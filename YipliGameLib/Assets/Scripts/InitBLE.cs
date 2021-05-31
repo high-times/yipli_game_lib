@@ -204,9 +204,21 @@ public class InitBLE
             Debug.Log("Exception in reconnectMat() : " + e.Message);
         }
     }
+
+    //Android TV Part
+    public static void setConnectionType(string type)
+    {
+        /*
+            - Strickly should be used for Android TV
+            - Optional for Android
+            - Not required for PC
+            @Params type : USB or BLE
+        */
+        PluginInstance.Call("_setConnectionType", type);
+    }
     
     //STEP 5 - Init Android Class & Objects
-    public static void InitBLEFramework(string macaddress, int gameID, string matAdvertisingName = "YIPLI")
+    public static void InitBLEFramework(string macaddress, int gameID, string matAdvertisingName = "YIPLI", bool isThisAndroidTV = false)
     {
         Debug.Log("init_ble: setting macaddress & gameID - " + macaddress + " " + gameID);
         isInitActive = true;
@@ -225,8 +237,20 @@ public class InitBLE
             {
                 BLEFramework.Unity.BLEControllerEventHandler.OnBleDidInitialize(message);
             });
+
+            if (isThisAndroidTV)
+            {
+                Debug.Log("Setting up Connection Type : USB");
+                setConnectionType("USB");
+                Debug.Log("Connection Type set to : USB");
+            }
+            else
+            {
+                PluginInstance.Call("_setMACAddress", macaddress);
+            }
             
-            PluginInstance.Call("_setMACAddress", macaddress);
+            //PluginInstance.Call("_setMACAddress", macaddress);
+
             setGameClusterID(gameID);
             PluginInstance.Call("_InitBLEFramework", new object[] { new UnityCallback(callback) });
             /*

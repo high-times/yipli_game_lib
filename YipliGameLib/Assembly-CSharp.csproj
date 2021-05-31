@@ -38,12 +38,15 @@
   <ItemGroup>
      <Compile Include="Assets\GameInitializer.cs" />
      <Compile Include="Assets\Scripts\ActionAndGameInfo.cs" />
+     <Compile Include="Assets\Scripts\AndroidTV\DetectAndroidTV.cs" />
+     <Compile Include="Assets\Scripts\AndroidTV\awu.cs" />
      <Compile Include="Assets\Scripts\BLEControllerEventHandler.cs" />
      <Compile Include="Assets\Scripts\CentralControlSystem\MatController.cs" />
      <Compile Include="Assets\Scripts\FileReadWrite.cs" />
      <Compile Include="Assets\Scripts\FirebaseDBHandler.cs" />
      <Compile Include="Assets\Scripts\GamelibSounds.cs" />
      <Compile Include="Assets\Scripts\InitBLE.cs" />
+     <Compile Include="Assets\Scripts\LibConsts.cs" />
      <Compile Include="Assets\Scripts\MP_GameStateManager.cs" />
      <Compile Include="Assets\Scripts\MatSelection.cs" />
      <Compile Include="Assets\Scripts\MiniJSON.cs" />

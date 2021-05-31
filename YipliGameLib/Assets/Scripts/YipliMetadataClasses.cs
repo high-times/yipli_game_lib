@@ -172,6 +172,7 @@ public class YipliInventoryGameInfo
     public string gameVersion;
     public int isGameUnderMaintenance = 0;
     public string androidMinVersion;
+    public string androidTVMinVersion;
     public string iosMinVersion;
     public string winMinVersion;
     public string versionUpdateMessage;
@@ -196,6 +197,7 @@ public class YipliInventoryGameInfo
 
                 isGameUnderMaintenance = YipliHelper.StringToIntConvert(snapshot.Child("is-game-under-maintenance").Value.ToString());
                 androidMinVersion = snapshot.Child("android-min-version").Value.ToString();
+                androidTVMinVersion = snapshot.Child("android-tv-min-version").Value.ToString();
                 iosMinVersion = snapshot.Child("ios-min-version").Value.ToString();
                 winMinVersion = snapshot.Child("win-min-version").Value.ToString();
                 maintenanceMessage = snapshot.Child("maintenance-message").Value.ToString();

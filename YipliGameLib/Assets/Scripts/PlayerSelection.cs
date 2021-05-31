@@ -134,6 +134,9 @@ public class PlayerSelection : MonoBehaviour
         }
 #endif
 
+        // Internect connection check coroutine only for yipli-lib-scene
+        StartCoroutine(CheckInternectConnection());
+
         // set link data first
         //await SetLinkData();
 
@@ -144,8 +147,6 @@ public class PlayerSelection : MonoBehaviour
 
     private void Update()
     {
-        CheckInternectConnection();
-
         if (allowPhoneHolderAudioPlay)
         {
             PlayComeAndJumpAudio();
@@ -242,7 +243,11 @@ public class PlayerSelection : MonoBehaviour
 
 #if UNITY_ANDROID || UNITY_IOS
         //StartCoroutine(ChangeTextMessageAndoridPhone());
-        ChangeTextMessageAndoridPhone();
+        if (currentYipliConfig.isDeviceAndroidTV) {
+            ChangeTextMessageAndoridTV();
+        } else {
+            ChangeTextMessageAndoridPhone();
+        }
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR
         //StartCoroutine(ChangeTextMessageWindowsPC());
         ChangeTextMessageWindowsPC();
@@ -279,8 +284,11 @@ public class PlayerSelection : MonoBehaviour
         */
     }
 
-    IEnumerator ChangeTextMessageAndoridTV()
+    void ChangeTextMessageAndoridTV()
     {
+        TextsToBeChangedAndroidPhone[1].gameObject.SetActive(true);
+
+        /*
         while (true)//Infinite loop
         {
             foreach (var str in TextsToBeChangedAndroidTv)
@@ -290,6 +298,7 @@ public class PlayerSelection : MonoBehaviour
                 str.gameObject.SetActive(false);
             }
         }
+        */
     }
 
     void ChangeTextMessageWindowsPC()
@@ -529,7 +538,17 @@ public class PlayerSelection : MonoBehaviour
 
 #if UNITY_ANDROID || UNITY_EDITOR
         //currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac);
-        currentYipliConfig.matInfo = new YipliMatInfo(currentYipliConfig.currentMatID, currentYipliConfig.currentMatDetails.Child("mac-address").Value.ToString());
+
+        if (currentYipliConfig.isDeviceAndroidTV) {
+            Debug.Log("Android TV  =  " + currentYipliConfig.isDeviceAndroidTV);
+
+            // Do specific Android TV stuff if required as this is just user info setting initialisation from here.
+
+        } else {
+            Debug.Log("Android TV is not detected, this is from Android OS part from set link Data  =  " + currentYipliConfig.isDeviceAndroidTV);
+
+            currentYipliConfig.matInfo = new YipliMatInfo(currentYipliConfig.currentMatID, currentYipliConfig.currentMatDetails.Child("mac-address").Value.ToString());
+        }
 #elif UNITY_IOS
         // mac-name
         //currentYipliConfig.matInfo = new YipliMatInfo(mId, mMac, mName);
@@ -649,12 +668,14 @@ public class PlayerSelection : MonoBehaviour
             InitDefaultPlayer();
         }
 
-        while(currentYipliConfig.matInfo == null) {
-            Debug.Log("Waiting until currentYipliConfig.matInfo setup is finished");
-            yield return new WaitForSecondsRealtime(0.1f);
-        }
+        if (!currentYipliConfig.isDeviceAndroidTV) {
+            while(currentYipliConfig.matInfo == null) {
+                Debug.Log("Waiting until currentYipliConfig.matInfo setup is finished");
+                yield return new WaitForSecondsRealtime(0.1f);
+            }
 
-        Debug.Log("Wait is over as currentYipliConfig.matInfo setup is finished");
+            Debug.Log("Wait is over as currentYipliConfig.matInfo setup is finished");
+        }
 /*
 #if UNITY_ANDROID || UNITY_IOS
         //Setting Deafult mat
@@ -1014,7 +1035,11 @@ public class PlayerSelection : MonoBehaviour
 
 #if UNITY_ANDROID || UNITY_IOS
         //StopCoroutine(ChangeTextMessageAndoridPhone());
-        ChangeTextMessageAndoridPhone();
+        if (currentYipliConfig.isDeviceAndroidTV) {
+            ChangeTextMessageAndoridTV();
+        } else {
+            ChangeTextMessageAndoridPhone();
+        }
 #elif UNITY_STANDALONE_WIN || UNITY_EDITOR
         //StopCoroutine(ChangeTextMessageWindowsPC());
         ChangeTextMessageWindowsPC();
@@ -1196,14 +1221,18 @@ public class PlayerSelection : MonoBehaviour
     }
 
     // true internet connection check
-    private void CheckInternectConnection()
+    private IEnumerator CheckInternectConnection()
     {
-        if (YipliHelper.checkInternetConnection())
-        {
-            noNetworkPanel.SetActive(false);
-        }
-        else {
-            noNetworkPanel.SetActive(true);
+        yield return new WaitForSecondsRealtime(5f);
+
+        while(true) {
+            yield return new WaitForSecondsRealtime(1f);
+
+            if (YipliHelper.checkInternetConnection()) {
+                noNetworkPanel.SetActive(false);
+            } else {
+                noNetworkPanel.SetActive(true);
+            }
         }
     }
 

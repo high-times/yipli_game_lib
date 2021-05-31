@@ -74,15 +74,17 @@ public class MatSelection : MonoBehaviour
         NoMatPanel.SetActive(false);
 
 #if UNITY_ANDROID
-        if (currentYipliConfig.matInfo == null)
+        /*
+        if (currentYipliConfig.matInfo == null && !currentYipliConfig.isDeviceAndroidTV)
         {
             Debug.Log("Filling te current mat Info from Device saved MAT");
             currentYipliConfig.matInfo = UserDataPersistence.GetSavedMat();
         }
+        */
 
-        if (currentYipliConfig.matInfo != null)
+        if (currentYipliConfig.matInfo != null || currentYipliConfig.isDeviceAndroidTV)
         {
-            Debug.Log("Mac Address : " + currentYipliConfig.matInfo.macAddress);
+            //Debug.Log("Mac Address : " + currentYipliConfig.matInfo.macAddress);
             //Load Game scene if the mat is already connected.
             if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
             {
@@ -139,15 +141,19 @@ public class MatSelection : MonoBehaviour
         if (!bIsGameMainSceneLoading)
             StartCoroutine(LoadMainGameScene());
 #elif UNITY_ANDROID
-        if (currentYipliConfig.matInfo == null)
+        /*
+        if (currentYipliConfig.matInfo == null && !currentYipliConfig.isDeviceAndroidTV)
         {
             Debug.Log("Filling te current mat Info from Device saved MAT");
             currentYipliConfig.matInfo = UserDataPersistence.GetSavedMat();
         }
+        */
 
-        if (currentYipliConfig.matInfo != null)
+        if (currentYipliConfig.matInfo != null || currentYipliConfig.isDeviceAndroidTV)
         {
-            Debug.Log("Mac Address : " + currentYipliConfig.matInfo.macAddress);
+            if (currentYipliConfig.matInfo != null) {
+                Debug.Log("Mac Address : " + currentYipliConfig.matInfo.macAddress);
+            }
             //Load Game scene if the mat is already connected.
             if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
             {
@@ -371,7 +377,9 @@ public class MatSelection : MonoBehaviour
         //Initiate the connection with the mat.
 #if UNITY_IOS
         // connection part for ios
-        InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0, currentYipliConfig.matInfo?.matAdvertisingName ?? "YIPLI");
+        InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0, currentYipliConfig.matInfo?.matAdvertisingName ?? LibConsts.MatTempAdvertisingNameOnlyForNonIOS);
+#elif UNITY_ANDROID
+        InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0, currentYipliConfig.matInfo?.matAdvertisingName ?? LibConsts.MatTempAdvertisingNameOnlyForNonIOS, currentYipliConfig.isDeviceAndroidTV);
 #else
         InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0);
 #endif
@@ -382,7 +390,9 @@ public class MatSelection : MonoBehaviour
         //Initiate the connection with the mat.
 #if UNITY_IOS
         // connection part for ios
-        InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0, currentYipliConfig.matInfo?.matAdvertisingName ?? "YIPLI");
+        InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0, currentYipliConfig.matInfo?.matAdvertisingName ?? LibConsts.MatTempAdvertisingNameOnlyForNonIOS);
+#elif UNITY_ANDROID
+        InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0, currentYipliConfig.matInfo?.matAdvertisingName ?? LibConsts.MatTempAdvertisingNameOnlyForNonIOS, currentYipliConfig.isDeviceAndroidTV);
 #else
         InitBLE.InitBLEFramework(currentYipliConfig.matInfo?.macAddress ?? "", 0);
 #endif

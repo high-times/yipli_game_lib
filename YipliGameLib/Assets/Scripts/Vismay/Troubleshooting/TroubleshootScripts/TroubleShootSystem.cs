@@ -426,7 +426,7 @@ public class TroubleShootSystem : MonoBehaviour
         {
             string[] tempSplits = allBleDevices[i].Split('|');
 
-            if (tempSplits[1].Equals("YIPLI", StringComparison.OrdinalIgnoreCase))
+            if (tempSplits[1].Equals(LibConsts.MatTempAdvertisingNameOnlyForNonIOS, StringComparison.OrdinalIgnoreCase))
             {
                 TroubleshootManager.BleScannedMacAddress = tempSplits[0];
                 break;
