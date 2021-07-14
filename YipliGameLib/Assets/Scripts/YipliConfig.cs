@@ -51,7 +51,7 @@ public class YipliConfig : ScriptableObject
     [HideInInspector]
     public bool bIsRetakeTutorialFlagActivated = false;
 
-    [HideInInspector]
+    //[HideInInspector]
     public bool bIsInternetConnected;
 
     [HideInInspector]
@@ -75,4 +75,6 @@ public class YipliConfig : ScriptableObject
     public string pId = string.Empty;
 
     public bool isDeviceAndroidTV = false;
+
+    public bool skipNormalUpdateClicked = false;
 }

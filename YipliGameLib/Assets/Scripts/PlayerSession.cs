@@ -1,4 +1,9 @@
 ﻿using Firebase.Database;
+
+#if UNITY_STANDALONE_WIN
+//using FMInterface_Windows;
+#endif
+
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -83,6 +88,8 @@ public class PlayerSession : MonoBehaviour
             _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
             Debug.Log("Updating the callBackLevel Value to :" + _instance.currentYipliConfig.callbackLevel);
             Debug.Log("Loading Yipli scene for player Selection...");
+
+            currentYipliConfig.bIsRetakeTutorialFlagActivated = false;
             if (!_instance.currentYipliConfig.callbackLevel.Equals("Yipli_Testing_harness"))
                 SceneManager.LoadScene("yipli_lib_scene");
         }
@@ -357,8 +364,9 @@ public class PlayerSession : MonoBehaviour
             Debug.Log("Game-data is null");
         }
 
-        x.Add("os", Application.platform);
-        x.Add("game-version", GetDriverAndGameVersion());
+        // firebase function ignores and deletes folowing 2 lines. Uncomment lines once FB function is updated
+        //x.Add("os", Application.platform);
+        //x.Add("game-version", GetDriverAndGameVersion());
 
         //Removed following, since mat-id and mac-address couldnt be got on windows
         //x.Add("mat-id", currentYipliConfig.matInfo.matId);
@@ -729,6 +737,20 @@ public class PlayerSession : MonoBehaviour
 
     // Test functions
     public void PrintBundleIdentifier() {
-        Debug.LogError("bundle identifier : " + Application.identifier);
+        //Debug.LogError("bundle identifier : " + Application.identifier);
+
+        Debug.LogError("current country : " + System.Globalization.RegionInfo.CurrentRegion);
     }
+
+/* only for new Driver
+#if UNITY_STANDALONE_WIN
+    // application quit systems
+    void OnApplicationQuit()
+    {
+        Debug.LogError("Inside OnApplicationQuit");
+        DeviceControlActivity._disconnect();
+        DeviceControlActivity.readThread.Abort();
+    }
+#endif
+*/
 }

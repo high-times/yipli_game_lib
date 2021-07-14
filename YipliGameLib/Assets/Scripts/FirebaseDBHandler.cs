@@ -665,17 +665,39 @@ public static class FirebaseDBHandler
 
             //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
             DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
-            snapshot = await reference.Child("profiles/users").Child(userID).Child("current-mat-id").GetValueAsync();
-            currentMatID = snapshot.Value.ToString();
 
             snapshot = await reference.Child("profiles/users").Child(userID).Child("mats").Child(currentMatID).GetValueAsync();
         }
         catch (Exception exp)
         {
-            Debug.Log("Failed to GetAllPlayerdetails : " + exp.Message);
+            Debug.Log("Failed to GetMatDetailsOfUserId : " + exp.Message);
         }
 
         return snapshot;
+    }
+
+    public static async Task<string> GetCurrentMatIdOfUserId(string userID)
+    {
+        string currentMatID = null;
+        DataSnapshot snapshot = null;
+        try
+        {
+            //Firebase.Auth.FirebaseUser newUser = await auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password);
+            Firebase.Auth.FirebaseUser newUser = await auth.SignInAnonymouslyAsync();
+            Debug.LogFormat("User signed in successfully: {0} ({1})",
+            newUser.DisplayName, newUser.UserId);
+
+            //FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://yipli-project.firebaseio.com/");
+            DatabaseReference reference = FirebaseDatabase.DefaultInstance.RootReference;
+            snapshot = await reference.Child("profiles/users").Child(userID).Child("current-mat-id").GetValueAsync();
+            currentMatID = snapshot.Value.ToString();
+        }
+        catch (Exception exp)
+        {
+            Debug.Log("Failed to GetCurrentMatIdOfUserId : " + exp.Message);
+        }
+
+        return currentMatID;
     }
 
     //************************ Test Harness code. Do Not modify (- Saurabh) ***************************

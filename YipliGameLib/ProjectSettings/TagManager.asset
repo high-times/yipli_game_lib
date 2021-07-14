@@ -11,6 +11,15 @@ TagManager:
   - tempFoot
   - ExtraObjects
   - matPixel
+  - NoInternetPanel
+  - NoMatPanel
+  - LaunchFromYipliAppPanel
+  - MaintanencePanel
+  - NoMatConnectionPanel
+  - PhoneHolderTutorialPanel
+  - mainCommonButton
+  - mainMat
+  - Minimum2Player
   layers:
   - Default
   - TransparentFX

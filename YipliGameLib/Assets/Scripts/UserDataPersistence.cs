@@ -57,37 +57,22 @@ public static class UserDataPersistence
         {
             if (multiPlayerData.PlayerOneDetails != null)
             {
-                Debug.Log("Save data test- Saving player one to device with properties : " + multiPlayerData.PlayerOneDetails.playerId + " " + multiPlayerData.PlayerOneName + " " + multiPlayerData.PlayerOneDetails.playerAge + " " + multiPlayerData.PlayerOneDetails.playerHeight + " " + multiPlayerData.PlayerOneDetails.playerWeight);
+                //Debug.Log("Save data test- Saving player one to device with properties : " + multiPlayerData.PlayerOneDetails.playerId + " " + multiPlayerData.PlayerOneName + " " + multiPlayerData.PlayerOneDetails.playerAge + " " + multiPlayerData.PlayerOneDetails.playerHeight + " " + multiPlayerData.PlayerOneDetails.playerWeight);
                 SavePropertyValue("player-one-id", multiPlayerData.PlayerOneDetails.playerId);
-                SavePropertyValue("player-one-name", multiPlayerData.PlayerOneName);
-                SavePropertyValue("player-one-age", multiPlayerData.PlayerOneDetails.playerAge);
-                SavePropertyValue("player-one-height", multiPlayerData.PlayerOneDetails.playerHeight);
-                SavePropertyValue("player-one-weight", multiPlayerData.PlayerOneDetails.playerWeight);
+                SaveMultiplayerUserIdToDevice();
             }
             else
             {
                 DeletePropertyValue("player-one-id");
-                DeletePropertyValue("player-one-name");
-                DeletePropertyValue("player-one-age");
-                DeletePropertyValue("player-one-height");
-                DeletePropertyValue("player-one-weight");
             }
             if (multiPlayerData.PlayerTwoDetails != null)
             {
-                Debug.Log("Save data test- Saving player two to device with properties : " + multiPlayerData.PlayerTwoDetails.playerId + " " + multiPlayerData.PlayerTwoName + " " + multiPlayerData.PlayerTwoDetails.playerAge + " " + multiPlayerData.PlayerTwoDetails.playerHeight + " " + multiPlayerData.PlayerTwoDetails.playerWeight);
+                //Debug.Log("Save data test- Saving player two to device with properties : " + multiPlayerData.PlayerTwoDetails.playerId + " " + multiPlayerData.PlayerTwoName + " " + multiPlayerData.PlayerTwoDetails.playerAge + " " + multiPlayerData.PlayerTwoDetails.playerHeight + " " + multiPlayerData.PlayerTwoDetails.playerWeight);
                 SavePropertyValue("player-two-id", multiPlayerData.PlayerTwoDetails.playerId);
-                SavePropertyValue("player-two-name", multiPlayerData.PlayerTwoName);
-                SavePropertyValue("player-two-age", multiPlayerData.PlayerTwoDetails.playerAge);
-                SavePropertyValue("player-two-height", multiPlayerData.PlayerTwoDetails.playerHeight);
-                SavePropertyValue("player-two-weight", multiPlayerData.PlayerTwoDetails.playerWeight);
             }
             else
             {
                 DeletePropertyValue("player-two-id");
-                DeletePropertyValue("player-two-name");
-                DeletePropertyValue("player-two-age");
-                DeletePropertyValue("player-two-height");
-                DeletePropertyValue("player-two-weight");
             }
         }
         catch (System.Exception e)
@@ -96,18 +81,25 @@ public static class UserDataPersistence
         }
     }
 
+    public static void SaveMultiplayerUserIdToDevice()
+    {
+        SavePropertyValue("MM-user-id", PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.userId);
+    }
+
+    public static void DeleteMultiplayerUserIdFromDevice()
+    {
+        DeletePropertyValue("MM-user-id");
+    }
+
+    public static string GetMultiplayerUserIdFromDevice()
+    {
+        return GetPropertyValue("MM-user-id");
+    }
+
     public static void DeleteMultiplayerDataFromDevice()
     {
         DeletePropertyValue("player-one-id");
-        DeletePropertyValue("player-one-name");
-        DeletePropertyValue("player-one-age");
-        DeletePropertyValue("player-one-height");
-        DeletePropertyValue("player-one-weight");
         DeletePropertyValue("player-two-id");
-        DeletePropertyValue("player-two-name");
-        DeletePropertyValue("player-two-age");
-        DeletePropertyValue("player-two-height");
-        DeletePropertyValue("player-two-weight");
     }
 
     public static YipliPlayerInfo GetSavedPlayer()
@@ -132,21 +124,33 @@ public static class UserDataPersistence
         if (GetPropertyValue("player-one-id") != null && GetPropertyValue("player-two-id") != null)
         {
             Debug.Log("Save data test- Saved data found");
+
+            YipliPlayerInfo tempPlayer;
+
             MultiPlayerData multiPlayerData = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData;
             Debug.Log("Save data test- Found scriptable");
 
             multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-id");
-            multiPlayerData.PlayerOneName = GetPropertyValue("player-one-name");
-            multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-age");
-            multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-height");
-            multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-weight");
+
+            tempPlayer = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.GetPlayerInfoFromPlayerId(multiPlayerData.PlayerOneDetails.playerId);
+
+            multiPlayerData.PlayerOneName = tempPlayer.playerName;
+            multiPlayerData.PlayerOneDetails.playerAge = tempPlayer.playerAge;
+            multiPlayerData.PlayerOneDetails.playerHeight = tempPlayer.playerHeight;
+            multiPlayerData.PlayerOneDetails.playerWeight = tempPlayer.playerWeight;
+
+
             Debug.Log("Save data test- Got player one data");
 
             multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-id");
-            multiPlayerData.PlayerTwoName = GetPropertyValue("player-two-name");
-            multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-age");
-            multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-height");
-            multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-weight");
+
+            tempPlayer = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.GetPlayerInfoFromPlayerId(multiPlayerData.PlayerTwoDetails.playerId);
+
+            multiPlayerData.PlayerTwoName = tempPlayer.playerName;
+            multiPlayerData.PlayerTwoDetails.playerAge = tempPlayer.playerAge;
+            multiPlayerData.PlayerTwoDetails.playerHeight = tempPlayer.playerHeight;
+            multiPlayerData.PlayerTwoDetails.playerWeight = tempPlayer.playerWeight;
+
             Debug.Log("Save data test- Got player two data");
 
             return true;

@@ -55,6 +55,29 @@ public class MP_GameStateManager
         return null;
     }
 
+
+    public YipliPlayerInfo GetPlayerInfoFromPlayerId(string playerId)
+    {
+        Debug.Log("Checking for player : " + playerId);
+        if (MultiPlayerSelection.instance.currentYipliConfig.allPlayersInfo.Count > 0)
+        {
+            foreach (YipliPlayerInfo player in MultiPlayerSelection.instance.currentYipliConfig.allPlayersInfo)
+            {
+                Debug.Log("Checking player : " + player.playerId);
+                if (player.playerId == playerId)
+                {
+                    Debug.Log("Found player : " + player.playerId);
+                    return player;
+                }
+            }
+        }
+        else
+        {
+            Debug.Log("No Players found.");
+        }
+        return null;
+    }
+
     public void SetPlayerOne(string name)
     {
         playerOne = name;

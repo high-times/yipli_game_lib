@@ -54,11 +54,15 @@ namespace yipli.Windows
                                 case 0:
                                     UserIdInFile = allLines[i].Substring(startIndex: 17);
                                     break;
-
+                                /*
                                 case 1:
-                                    if (allLines[i].Substring(18) != null || allLines[i].Substring(startIndex: 18) != "")
+                                    if (allLines[i].Substring(18) != null || allLines[i].Substring(18) != "")
                                     {
-                                        LogOutFlag = Boolean.Parse(allLines[i].Substring(startIndex: 18));
+                                        if (int.Parse(allLines[i].Substring(18)) == 0) {
+                                            LogOutFlag = false;
+                                        } else {
+                                            LogOutFlag = true;
+                                        }
                                     }
                                     else
                                     {
@@ -90,6 +94,7 @@ namespace yipli.Windows
                                     SkippedVersion = null;
                                     DriverInstalledFinished = false;
                                     break;
+                                */
                             }
                         }
                     }

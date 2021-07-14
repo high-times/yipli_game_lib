@@ -13,6 +13,7 @@ public class YipliPlayerInfo
     //public string playerExpertyLevel;//The Experty level of the player at time of playing the game.
     //public string gender;
     public string profilePicUrl;
+    public Sprite playerProfilePicIMG;
     public int isMatTutDone;
     //public string difficultyLevel; // to be decided by the game.
 
@@ -76,6 +77,8 @@ public class YipliPlayerInfo
                     playerId = null;
                 }
 
+                SetProfilePicForPlayer(profilePicUrl);
+
                 Debug.Log("Player Found with details :" + playerAge + " " + playerHeight + " " + playerId + " " + playerWeight + " " + playerName + " ProfilePicUrl:" + profilePicUrl);
             }
             else
@@ -89,6 +92,11 @@ public class YipliPlayerInfo
             Debug.Log("Exception in creating YipliPlayerInfo object from DataSnapshot : " + exp.Message);
             playerId = null;
         }
+    }
+
+    private async void SetProfilePicForPlayer(string profilePicUrlNew) {
+        string onDeviceProfilePicPath = Application.persistentDataPath + "/" + profilePicUrlNew;
+        playerProfilePicIMG = await FirebaseDBHandler.GetImageAsync(profilePicUrlNew, onDeviceProfilePicPath);
     }
 
     private string CalculateAge(string strDob /* 'mm-dd-yyyy' format */)
@@ -170,13 +178,16 @@ public class YipliInventoryGameInfo
     public string displayName;
     public string gamePackageId;
     public string gameVersion;
-    public int isGameUnderMaintenance = 0;
+    //public int isGameUnderMaintenance = 0;
     public string androidMinVersion;
     public string androidTVMinVersion;
     public string iosMinVersion;
     public string winMinVersion;
+    public string winCurrentVersion;
+    public string iosCurrentVersion;
     public string versionUpdateMessage;
     public string maintenanceMessage;
+    public string osListForMaintanence;
 
     YipliInventoryGameInfo(string gameId)
     {
@@ -195,11 +206,17 @@ public class YipliInventoryGameInfo
                 gamePackageId = snapshot.Child("android-url").Value?.ToString() ?? "";
                 gameVersion = snapshot.Child("current-version").Value?.ToString() ?? "";
 
-                isGameUnderMaintenance = YipliHelper.StringToIntConvert(snapshot.Child("is-game-under-maintenance").Value.ToString());
+                //isGameUnderMaintenance = YipliHelper.StringToIntConvert(snapshot.Child("is-game-under-maintenance").Value.ToString());
+                osListForMaintanence = snapshot.Child("os-list-for-maintanence").Value.ToString();
+
                 androidMinVersion = snapshot.Child("android-min-version").Value.ToString();
                 androidTVMinVersion = snapshot.Child("android-tv-min-version").Value.ToString();
                 iosMinVersion = snapshot.Child("ios-min-version").Value.ToString();
                 winMinVersion = snapshot.Child("win-min-version").Value.ToString();
+
+                winCurrentVersion = snapshot.Child("win-version").Value.ToString();
+                iosCurrentVersion = snapshot.Child("ios-current-version").Value.ToString();
+
                 maintenanceMessage = snapshot.Child("maintenance-message").Value.ToString();
                 versionUpdateMessage = snapshot.Child("version-update-message").Value.ToString();
             }

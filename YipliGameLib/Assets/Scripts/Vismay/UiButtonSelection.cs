@@ -15,6 +15,9 @@ public class UiButtonSelection : MonoBehaviour
 
     private void OnEnable()
     {
+        mic.UpdateButtonList(thisPanelButtons, currentIndex, true);
+
+        /*
         thisPanelButtons = new List<Button>();
         foreach (var item in GetComponentsInChildren<Button>())
         {
@@ -27,6 +30,7 @@ public class UiButtonSelection : MonoBehaviour
         if (gameObject.CompareTag("PlayerSelectionPanel"))
         {
             isPlayerSelectionPanel = true;
+            currentIndex = 1;
         }
         else
         {
@@ -34,6 +38,7 @@ public class UiButtonSelection : MonoBehaviour
         }
 
         mic.UpdateButtonList(thisPanelButtons, currentIndex, isPlayerSelectionPanel);
+        */
     }
 }
 // PlayerSelectionPanel

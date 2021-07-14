@@ -1,5 +1,6 @@
 ﻿#if UNITY_STANDALONE_WIN
 using com.fitmat.fitmatdriver.Producer.Connection;
+//using FMInterface_Windows;
 #endif
 
 using BLEFramework.Unity;
@@ -11,8 +12,8 @@ public class InitBLE
 {
     static AndroidJavaClass _pluginClass;
     static AndroidJavaObject _pluginInstance;
-    // const string driverPathName = "com.fitmat.fitmatdriver.Producer.Connection.DeviceControlActivity"; // old reference
-    const string driverPathName = "com.fitmat.fmjavainterface.DeviceControlActivity";// This is used only  for android. No dependency on other platforms
+    const string driverPathName = "com.fitmat.fitmatdriver.Producer.Connection.DeviceControlActivity"; // old reference
+    //const string driverPathName = "com.fitmat.fmjavainterface.DeviceControlActivity";// This is used only  for android. No dependency on other platforms
     public static string BLEStatus = "";
     public static bool isInitActive = false;
     public static string MAC_ADDRESS = "";
@@ -144,8 +145,17 @@ public class InitBLE
             return ver;
 #elif UNITY_ANDROID
             return PluginInstance.Call<string>("_getFMResponse");
-#elif UNITY_STANDALONE_WIN || UNITY_EDITOR
-                return DeviceControlActivity._getFMResponse();
+#elif UNITY_STANDALONE_WIN
+            string defaultResponse = DeviceControlActivity._getFMResponse();
+            // this is to check if "null" response is coming from driver as this will come until 1st action is made
+            if (defaultResponse.Equals("null", StringComparison.OrdinalIgnoreCase)) {
+                
+                //defaultResponse = "{\"count\":1,\"timestamp\":1597237057689,\"playerdata\":[{\"id\":1,\"fmresponse\":{\"action_id\":\"NOID\",\"action_name\":\"Jump\",\"properties\":\"null\"}}]}";
+                defaultResponse = "Make action";
+                return defaultResponse;
+            }
+            //return DeviceControlActivity._getFMResponse(); // old code
+            return defaultResponse;
 #endif
         }
         catch (Exception e)
@@ -160,14 +170,12 @@ public class InitBLE
     {
         try
         {
-#if UNITY_ANDROID && UNITY_EDITOR
-            return "CONNECTED";
-#elif UNITY_ANDROID
-                return BLEStatus;
+#if UNITY_ANDROID
+            return BLEStatus;
 #elif UNITY_IOS
             return BLEStatus;
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
-                return DeviceControlActivity._IsDeviceConnected() == 1 ? "CONNECTED" : "DISCONNECTED";
+#elif UNITY_STANDALONE_WIN
+            return DeviceControlActivity._IsDeviceConnected() == 1 ? "CONNECTED" : "DISCONNECTED";
 #endif
         }
         catch (Exception e)
@@ -183,6 +191,7 @@ public class InitBLE
         BLEStatus = status;
     }
     
+    /*
     public static void reconnectMat()
     {
         try
@@ -194,7 +203,7 @@ public class InitBLE
             });
             PluginInstance.Call("_InitBLEFramework", new object[] { new UnityCallback(callback) });
 #elif UNITY_STANDALONE_WIN
-            DeviceControlActivity._reconnectDevice();
+            //DeviceControlActivity._reconnectDevice();
 #elif UNITY_IOS
             // IOS part
 #endif
@@ -204,6 +213,7 @@ public class InitBLE
             Debug.Log("Exception in reconnectMat() : " + e.Message);
         }
     }
+    */
 
     //Android TV Part
     public static void setConnectionType(string type)
@@ -259,7 +269,7 @@ public class InitBLE
             }
             */
         }
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN
             Debug.Log("Calling DeviceControlActivity.InitPCFramework()");
             DeviceControlActivity.InitPCFramework(gameID);
 #endif
@@ -273,7 +283,7 @@ public class InitBLE
             _setGameMode(gameMode);
 #elif UNITY_ANDROID
             PluginInstance.Call("_setGameMode", gameMode);
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN
                 DeviceControlActivity._setGameMode(gameMode);
 #endif
         }
@@ -291,7 +301,7 @@ public class InitBLE
             return _getGameMode();
 #elif UNITY_ANDROID
             return PluginInstance.Call<int>("_getGameMode");
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN
                 return DeviceControlActivity._getGameMode();
 #endif
         }
@@ -311,7 +321,7 @@ public class InitBLE
             _setGameID(gameID);
 #elif UNITY_ANDROID
             PluginInstance.Call("_setGameID", gameID);
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN
                 //Debug.Log("Setting cluter ID : " + gameID);
                 DeviceControlActivity._setGameID(gameID);
 #endif
@@ -330,7 +340,7 @@ public class InitBLE
             return _getGameID();
 #elif UNITY_ANDROID
             return PluginInstance.Call<int>("_getGameID");
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN
                 return DeviceControlActivity._getGameID();
 #endif
         }
@@ -347,13 +357,13 @@ public class InitBLE
         try
         {
 #if UNITY_IOS
-                string ver = _getDriverVersion();
+            string ver = _getDriverVersion();
             Debug.Log("Driver Version Received: " + ver);
             return ver;
 #elif UNITY_ANDROID
             return PluginInstance.Call<string>("_getDriverVersion");
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
-                return DeviceControlActivity._getDriverVersion();
+#elif UNITY_STANDALONE_WIN
+            return DeviceControlActivity._getDriverVersion();
 #endif
         }
         catch (Exception exp)
@@ -372,7 +382,7 @@ public class InitBLE
             _setGameID_Multiplayer(P1_gameID, P2_gameID);
 #elif UNITY_ANDROID
             PluginInstance.Call("_setGameID", P1_gameID, P2_gameID);
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN
             
                 DeviceControlActivity._setGameID(P1_gameID, P2_gameID);
 #endif
@@ -391,7 +401,7 @@ public class InitBLE
                 return _getGameID_Multiplayer(playerID);
 #elif UNITY_ANDROID
             return PluginInstance.Call<int>("_getGameID", playerID);
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN
                 return DeviceControlActivity._getGameID(playerID);
 #endif
         }

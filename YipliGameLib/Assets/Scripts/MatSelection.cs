@@ -37,6 +37,10 @@ public class MatSelection : MonoBehaviour
     public GameObject retryButton;
     public GameObject installDriverButton;
 
+    [Header("Required script objects")]
+    [SerializeField] private NewUIManager newUIManager = null;
+    [SerializeField] private NewMatInputController newMatInputController = null;
+
     int retriesDone = 0;
     const int totalMatConnectionRetriesOnRecheck = 2;
 
@@ -72,6 +76,8 @@ public class MatSelection : MonoBehaviour
     {
         Debug.Log("Starting Mat connection flow");
         NoMatPanel.SetActive(false);
+        newMatInputController.MakeSortLayerTen();
+        //newUIManager.TurnOffMainCommonButton();
 
 #if UNITY_ANDROID
         /*
@@ -96,7 +102,9 @@ public class MatSelection : MonoBehaviour
             loadingPanel.SetActive(false);
             Debug.Log("No Mat found in cache."); 
             noMatText.text = ProductMessages.Err_mat_connection_android_phone_register;
+            newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
             NoMatPanel.SetActive(true);
+            newMatInputController.MakeSortLayerZero();
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
         }
 #elif UNITY_STANDALONE_WIN
@@ -125,7 +133,9 @@ public class MatSelection : MonoBehaviour
 
             if (!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
             {
+                newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
                 NoMatPanel.SetActive(true);
+                newMatInputController.MakeSortLayerZero();
             }
         }
     }
@@ -136,6 +146,8 @@ public class MatSelection : MonoBehaviour
         bIsMatFlowInitialized = true;
         bIsGameMainSceneLoading = false;
         NoMatPanel.SetActive(false);
+        newMatInputController.MakeSortLayerTen();
+        //newUIManager.TurnOffMainCommonButton();
 
 #if UNITY_EDITOR
         if (!bIsGameMainSceneLoading)
@@ -165,7 +177,10 @@ public class MatSelection : MonoBehaviour
             loadingPanel.SetActive(false);
             Debug.Log("No Mat found in cache.");
             noMatText.text = ProductMessages.Err_mat_connection_android_phone_register;
+            newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
             NoMatPanel.SetActive(true);
+            newMatInputController.MakeSortLayerZero();
+            newUIManager.TurnOffMainCommonButton();
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
         }
 #elif UNITY_STANDALONE_WIN
@@ -183,6 +198,7 @@ public class MatSelection : MonoBehaviour
 
     public void ReCheckMatConnection()
     {
+        newUIManager.TurnOffMainCommonButton();
 
         Debug.Log("ReCheckMatConnection() called");
         if (bIsMatFlowInitialized)
@@ -245,14 +261,16 @@ public class MatSelection : MonoBehaviour
             Debug.LogError("mat connection failed : " + e.Message);
 
             loadingPanel.SetActive(false);
+            newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
             NoMatPanel.SetActive(true);
+            newMatInputController.MakeSortLayerZero();
             yield break;
         }
 
         yield return new WaitForSecondsRealtime(0.1f);
 
         //Turn on the Mat Find Panel, and animate
-        loadingPanel.gameObject.GetComponentInChildren<Text>().text = "Finding your mat..";
+        loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Finding your mat..";
         loadingPanel.SetActive(true);//Show msg till mat connection is confirmed.
 
         while (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase)
@@ -268,7 +286,7 @@ public class MatSelection : MonoBehaviour
 
         //Turn off the Mat Find Panel
         loadingPanel.SetActive(false);
-        loadingPanel.gameObject.GetComponentInChildren<Text>().text = "Fetching player details...";
+        loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Fetching player details...";
 
         if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
         {
@@ -288,14 +306,18 @@ public class MatSelection : MonoBehaviour
             }
 
 #endif
-
+            newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
             NoMatPanel.SetActive(true);
+            newMatInputController.MakeSortLayerZero();
         }
     }
 
     public void SkipMat()
     {
         NoMatPanel.SetActive(false);
+        newMatInputController.MakeSortLayerTen();
+        //newUIManager.TurnOffMainCommonButton();
+
         passwordErrorText.text = "";
         inputPassword.text = "";
         secretEntryPanel.SetActive(true);
@@ -321,9 +343,11 @@ public class MatSelection : MonoBehaviour
     {
         /*
         bIsGameMainSceneLoading = true;
-        loadingPanel.gameObject.GetComponentInChildren<Text>().text = "launching game..";
+        loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "launching game..";
         loadingPanel.SetActive(false);
         NoMatPanel.SetActive(false);
+        newMatInputController.MakeSortLayerTen();
+        newUIManager.TurnOffMainCommonButton();
         bleSuccessMsg.text = "Your YIPLI MAT is connected.";
 
         BluetoothSuccessPanel.SetActive(true);
@@ -334,7 +358,7 @@ public class MatSelection : MonoBehaviour
         yield return new WaitForSecondsRealtime(2f);
         */
         bIsGameMainSceneLoading = true;
-        loadingPanel.gameObject.GetComponentInChildren<Text>().text = "launching game..";
+        loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "launching game..";
         loadingPanel.SetActive(true);
 
         if (currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
@@ -369,7 +393,9 @@ public class MatSelection : MonoBehaviour
     public void OnBackPress()
     {
         secretEntryPanel.SetActive(false);
+        newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
         NoMatPanel.SetActive(true);
+        newMatInputController.MakeSortLayerZero();
     }
 
     private void InitiateMatConnection()

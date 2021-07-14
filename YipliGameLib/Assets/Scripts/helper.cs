@@ -60,7 +60,7 @@ public static class YipliHelper
     public static string GetMatConnectionStatus()
     {
         if(!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
-            return "connected";
+            return "Connected";
         Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getMatConnectionStatus());
         return InitBLE.getMatConnectionStatus();
     }
@@ -69,7 +69,7 @@ public static class YipliHelper
     public static void GoToPlaystoreUpdate(string gamePackageId)
     {
 #if UNITY_ANDROID
-            Application.OpenURL("market://details?id=" + gamePackageId);
+        Application.OpenURL("market://details?id=" + gamePackageId);
 #else
         Debug.Log("Unsupported os");
 #endif
@@ -109,6 +109,8 @@ public static class YipliHelper
 
             default:
                 Debug.LogError("case : default");
+                Application.OpenURL(ProductMessages.OpenYipliAppUrl);
+                /*
                 try
                 {
                     AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
@@ -124,6 +126,7 @@ public static class YipliHelper
                     Debug.Log(e);
                     Application.OpenURL("market://details?id=" + yipliAppBundleId);
                 }
+                */
                 break;
         }
 #elif UNITY_STANDALONE_WIN && UNITY_EDITOR
