@@ -12,17 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f40c8c606cc173f4eb200ee27aa3e131, type: 3}
   m_Name: Yipli Config
   m_EditorClassIdentifier: 
-  callbackLevel: DemoGameScene
+  callbackLevel: 
   userId: 
   gameId: 
   bIsChangePlayerCalled: 0
   onlyMatPlayMode: 0
   bIsRetakeTutorialFlagActivated: 0
-  bIsInternetConnected: 1
+  bIsInternetConnected: 0
   oldFMResponseCount: 0
   gameType: 0
-  troubleshootingPOSTDone: 1
+  troubleshootingPOSTDone: 0
   currentMatID: 
   pId: 
   isDeviceAndroidTV: 0
   skipNormalUpdateClicked: 0
+  getMatUrlIn: 
+  getMatUrlUS: 
+  allowMainGameSceneToLoad: 1

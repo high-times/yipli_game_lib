@@ -75,7 +75,7 @@ public static class YipliHelper
 #endif
     }
 
-    public static void GoToYipli(string direction = "NoDir")
+    public static void GoToYipli(string direction = "NoDir", string gameID = "NoID")
     {
         // add ios part also
 #if UNITY_ANDROID || UNITY_IOS
@@ -99,7 +99,8 @@ public static class YipliHelper
 
             case ProductMessages.relaunchGame:
                 Debug.LogError("case : " + ProductMessages.relaunchGame);
-                Application.OpenURL(ProductMessages.RelaunchGameUrl + Application.identifier);
+                // Application.OpenURL(ProductMessages.RelaunchGameUrl + Application.identifier); // provide full package id
+                Application.OpenURL(ProductMessages.RelaunchGameUrl + gameID);
                 break;
 
             case ProductMessages.openYipliApp:
@@ -129,7 +130,7 @@ public static class YipliHelper
                 */
                 break;
         }
-#elif UNITY_STANDALONE_WIN && UNITY_EDITOR
+#elif UNITY_STANDALONE_WIN
         FileReadWrite.OpenYipliApp();
 #else
         Debug.Log("Unsupported os");

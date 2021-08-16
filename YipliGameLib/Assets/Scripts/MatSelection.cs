@@ -68,6 +68,10 @@ public class MatSelection : MonoBehaviour
 
         // make troubleshoot button disable by default
         DisableTroubleshootButton();
+
+        if (currentYipliConfig.bIsChangePlayerCalled) {
+            StartCoroutine(MatConnectionCheck());
+        }
     }
 
     // This function is to be called before Mat tutorial.
@@ -103,8 +107,8 @@ public class MatSelection : MonoBehaviour
             Debug.Log("No Mat found in cache."); 
             noMatText.text = ProductMessages.Err_mat_connection_android_phone_register;
             newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
-            NoMatPanel.SetActive(true);
             newMatInputController.MakeSortLayerZero();
+            NoMatPanel.SetActive(true);
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
         }
 #elif UNITY_STANDALONE_WIN
@@ -125,17 +129,29 @@ public class MatSelection : MonoBehaviour
     // during gamelib scene processes keep checking for mat ble connection in android devices.
     private IEnumerator MatConnectionCheck()
     {
-        yield return new WaitForSecondsRealtime(1f);
+        #if UNITY_IOS
+            yield return new WaitForSecondsRealtime(15f);
+        #else
+            yield return new WaitForSecondsRealtime(5f);
+        #endif
 
         while (true)
         {
-            yield return new WaitForSecondsRealtime(0.5f);
+            #if UNITY_IOS
+                yield return new WaitForSecondsRealtime(1f);
+            #else
+                yield return new WaitForSecondsRealtime(0.5f);
+            #endif
 
             if (!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
             {
                 newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
-                NoMatPanel.SetActive(true);
                 newMatInputController.MakeSortLayerZero();
+                NoMatPanel.SetActive(true);
+
+                //Time.timeScale = 0f; // pause everything
+            } else {
+                //Time.timeScale = 1f; // resume everything
             }
         }
     }
@@ -178,9 +194,9 @@ public class MatSelection : MonoBehaviour
             Debug.Log("No Mat found in cache.");
             noMatText.text = ProductMessages.Err_mat_connection_android_phone_register;
             newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
-            NoMatPanel.SetActive(true);
             newMatInputController.MakeSortLayerZero();
-            newUIManager.TurnOffMainCommonButton();
+            NoMatPanel.SetActive(true);
+            //newUIManager.TurnOffMainCommonButton();
             FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
         }
 #elif UNITY_STANDALONE_WIN
@@ -198,7 +214,7 @@ public class MatSelection : MonoBehaviour
 
     public void ReCheckMatConnection()
     {
-        newUIManager.TurnOffMainCommonButton();
+        //newUIManager.TurnOffMainCommonButton();
 
         Debug.Log("ReCheckMatConnection() called");
         if (bIsMatFlowInitialized)
@@ -237,6 +253,14 @@ public class MatSelection : MonoBehaviour
                     StartCoroutine(LoadMainGameScene());
             }
         }
+
+        // panels with buttons
+        // noInternetPanel, noMatPanel(Guest User panel), maintanencePanel, noMatConnectionPanel, phoneHolderTutorialPanel, minimum2Player
+        // if (NoMatPanel.activeSelf) {
+        //     newUIManager.TurnOnMainCommonButton();
+        // } else {
+        //     newUIManager.TurnOffMainCommonButton();
+        // }
     }
 
     
@@ -247,14 +271,16 @@ public class MatSelection : MonoBehaviour
         //Initiate the connection with the mat.  
         try
         {
-            if (bIsReconnectMatNeeded)
-            {
-                RetryMatConnectionOnPC();
-            }
-            else
-            {
-                InitiateMatConnection();
-            }
+            // if (bIsReconnectMatNeeded)
+            // {
+            //     RetryMatConnectionOnPC();
+            // }
+            // else
+            // {
+            //     InitiateMatConnection();
+            // }
+
+            InitiateMatConnection();
         }
         catch (Exception e)
         {
@@ -262,15 +288,15 @@ public class MatSelection : MonoBehaviour
 
             loadingPanel.SetActive(false);
             newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
-            NoMatPanel.SetActive(true);
             newMatInputController.MakeSortLayerZero();
+            NoMatPanel.SetActive(true);
             yield break;
         }
 
         yield return new WaitForSecondsRealtime(0.1f);
 
         //Turn on the Mat Find Panel, and animate
-        loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Finding your mat..";
+        //loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Finding your mat..";
         loadingPanel.SetActive(true);//Show msg till mat connection is confirmed.
 
         while (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase)
@@ -286,7 +312,7 @@ public class MatSelection : MonoBehaviour
 
         //Turn off the Mat Find Panel
         loadingPanel.SetActive(false);
-        loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Fetching player details...";
+        //loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Fetching player details...";
 
         if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
         {
@@ -307,8 +333,8 @@ public class MatSelection : MonoBehaviour
 
 #endif
             newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
-            NoMatPanel.SetActive(true);
             newMatInputController.MakeSortLayerZero();
+            NoMatPanel.SetActive(true);
         }
     }
 
@@ -358,7 +384,7 @@ public class MatSelection : MonoBehaviour
         yield return new WaitForSecondsRealtime(2f);
         */
         bIsGameMainSceneLoading = true;
-        loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "launching game..";
+        //loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "launching game..";
         loadingPanel.SetActive(true);
 
         if (currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
@@ -387,15 +413,17 @@ public class MatSelection : MonoBehaviour
         currentYipliConfig.bIsChangePlayerCalled = false;
 
         //load last Scene
-        SceneManager.LoadScene(currentYipliConfig.callbackLevel);
+        if (currentYipliConfig.allowMainGameSceneToLoad) {
+            SceneManager.LoadScene(currentYipliConfig.callbackLevel);
+        }
     }
 
     public void OnBackPress()
     {
         secretEntryPanel.SetActive(false);
         newUIManager.UpdateButtonDisplay(NoMatPanel.tag);
-        NoMatPanel.SetActive(true);
         newMatInputController.MakeSortLayerZero();
+        NoMatPanel.SetActive(true);
     }
 
     private void InitiateMatConnection()
@@ -502,12 +530,6 @@ public class MatSelection : MonoBehaviour
     public void TroubleShootSystemFromMS()
     {
         SceneManager.LoadScene("Troubleshooting");
-    }
-
-    // get mat data from firebase
-    private void GetCurrentMatDetails()
-    {
-
     }
 }
 

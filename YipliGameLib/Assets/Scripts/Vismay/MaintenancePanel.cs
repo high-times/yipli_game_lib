@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System;
 
 public class MaintenancePanel : MonoBehaviour
 {
@@ -13,15 +14,34 @@ public class MaintenancePanel : MonoBehaviour
 
     [SerializeField] NewUIManager newUIManager = null;
 
+    [SerializeField] NewMatInputController newMatInputController = null;
+
+    [SerializeField] PlayerSelection playerSelection = null;
+
+    [SerializeField] MatSelection matSelection = null;
+
     private void Start()
     {
         maintenancePanel.SetActive(false);
-        newUIManager.TurnOffMainCommonButton();
+        //newUIManager.TurnOffMainCommonButton();
         skipButton.SetActive(false);
     }
 
     private void Update()
     {
+        // panels with buttons
+        // noInternetPanel, noMatPanel(Guest User panel), maintanencePanel, noMatConnectionPanel, phoneHolderTutorialPanel, minimum2Player
+
+        // Debug.LogError("versions : maintenancePanel.activeSelf : " + maintenancePanel.activeSelf);
+
+        if (maintenancePanel.activeSelf || playerSelection.noNetworkPanel.activeSelf || playerSelection.GuestUserPanel.activeSelf || playerSelection.phoneHolderInfo.activeSelf || playerSelection.Minimum2PlayersPanel.activeSelf || matSelection.NoMatPanel.activeSelf) {
+            newUIManager.TurnOnMainCommonButton();
+            newMatInputController.MakeSortLayerZero();
+        } else {
+            newUIManager.TurnOffMainCommonButton();
+            newMatInputController.MakeSortLayerTen();
+        }
+
         ManageManitanenceOrBlocking();
         //BlockIfTroubleShootingIsOn();
     }
@@ -33,6 +53,8 @@ public class MaintenancePanel : MonoBehaviour
 
     private void ManageManitanenceOrBlocking()
     {
+        // Debug.LogError("versions : from manage maintanence or blocking : ");
+
         if (currentYipliConfig.gameInventoryInfo == null) return;
 
         /*
@@ -69,11 +91,13 @@ public class MaintenancePanel : MonoBehaviour
         }
         */
 
+        // Debug.LogError("versions : next is os processing for maintanence : ");
+
         string[] allOS = currentYipliConfig.gameInventoryInfo.osListForMaintanence.Split(',');
 
-        //Debug.LogError("Executing allOS length : " + allOS.Length);
+        // Debug.LogError("versions : Executing allOS string : " + currentYipliConfig.gameInventoryInfo.osListForMaintanence);
 
-        if (allOS.Length > 0) {
+        if (currentYipliConfig.gameInventoryInfo.osListForMaintanence != ",") {
             for (int i = 0; i < allOS.Length; i++) {
                 if (allOS[i] == "a" && Application.platform == RuntimePlatform.Android) {
                     //Debug.LogError("Executing a");
@@ -98,6 +122,8 @@ public class MaintenancePanel : MonoBehaviour
             return;
         }
 
+        // Debug.LogError("versions : next is to check which block version to call : ");
+
 #if UNITY_ANDROID
         if (currentYipliConfig.isDeviceAndroidTV) {
             BlockVersionCheck(currentYipliConfig.gameInventoryInfo.androidTVMinVersion, currentYipliConfig.gameInventoryInfo.gameVersion);
@@ -117,40 +143,52 @@ public class MaintenancePanel : MonoBehaviour
         //title.text = "Maintenance Notice";
 
         newUIManager.UpdateButtonDisplay(maintenancePanel.tag, true);
-        FindObjectOfType<NewMatInputController>().MakeSortLayerZero();
+        newMatInputController.MakeSortLayerZero();
         maintenancePanel.SetActive(true);
+
+        currentYipliConfig.allowMainGameSceneToLoad = false;
     }
 
     private void BlockVersionCheck(string notAllowedVersionString, string currentStoreVersion)
     {
+        // Debug.LogError("versions : from block version check : ");
+
         if (notAllowedVersionString.Equals(",", System.StringComparison.OrdinalIgnoreCase)) return;
 
         int gameVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(Application.version);
         int notAllowedVersionCode = YipliHelper.convertGameVersionToBundleVersionCode(notAllowedVersionString);
-        //int currentStoreCode = YipliHelper.convertGameVersionToBundleVersionCode(currentStoreVersion);
+        int currentStoreCode = YipliHelper.convertGameVersionToBundleVersionCode(currentStoreVersion);
+
+        // Debug.LogError("versions : gameVersionCode : " + gameVersionCode);
+        // Debug.LogError("versions : notAllowedVersionCode : " + notAllowedVersionCode);
+        // Debug.LogError("versions : currentStoreCode : " + currentStoreCode);
 
         if (notAllowedVersionCode > gameVersionCode)
         {
             message.text = currentYipliConfig.gameInventoryInfo.versionUpdateMessage;
 
             maintenancePanel.SetActive(true);
-            FindObjectOfType<NewMatInputController>().MakeSortLayerZero();
+            newMatInputController.MakeSortLayerZero();
 
             newUIManager.UpdateButtonDisplay(maintenancePanel.tag);
-        }
-        /*
-        else if (notAllowedVersionCode < gameVersionCode && currentStoreCode > gameVersionCode) {
-            if (currentYipliConfig.skipNormalUpdateClicked) return;
 
+            currentYipliConfig.allowMainGameSceneToLoad = false;
+        }
+        else if (notAllowedVersionCode < gameVersionCode && currentStoreCode > gameVersionCode) {
+            // Debug.LogError("versions : TimeDifferenceManager() : " + TimeDifferenceManager());
+
+            if (currentYipliConfig.skipNormalUpdateClicked || TimeDifferenceManager() < 6) return;
+            
             message.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";
 
             maintenancePanel.SetActive(true);
-            FindObjectOfType<NewMatInputController>().MakeSortLayerZero();
+            newMatInputController.MakeSortLayerZero();
             skipButton.SetActive(true);
 
             newUIManager.UpdateButtonDisplay(maintenancePanel.tag);
+
+            currentYipliConfig.allowMainGameSceneToLoad = false;
         }
-        */
         else
         {
             skipButton.SetActive(false);
@@ -177,6 +215,8 @@ public class MaintenancePanel : MonoBehaviour
             //title.text = "Troubleshoot Notice";
 
             maintenancePanel.SetActive(true);
+
+            currentYipliConfig.allowMainGameSceneToLoad = false;
         }
         else
         {
@@ -189,9 +229,25 @@ public class MaintenancePanel : MonoBehaviour
     // button functions
     public void SkipButtonFunction() {
         currentYipliConfig.skipNormalUpdateClicked = true;
+
+        PlayerPrefs.SetString("skippedDate", DateTime.Today.ToString());
+
         skipButton.SetActive(false);
         maintenancePanel.SetActive(false);
 
-        FindObjectOfType<NewMatInputController>().MakeSortLayerTen();
+        newMatInputController.MakeSortLayerTen();
+        currentYipliConfig.allowMainGameSceneToLoad = true;
+    }
+
+    // skip version management
+    private int TimeDifferenceManager() {
+        if (PlayerPrefs.GetString("skippedDate") == null || PlayerPrefs.GetString("skippedDate") == "" || PlayerPrefs.GetString("skippedDate") == string.Empty) return 100;
+
+        DateTime todaysDate = DateTime.Today;
+        DateTime skippedDate = DateTime.Parse(PlayerPrefs.GetString("skippedDate"));
+
+        Debug.LogError("difference : " + (int)(todaysDate - skippedDate).TotalDays);
+
+        return (int)(todaysDate - skippedDate).TotalDays;
     }
 }

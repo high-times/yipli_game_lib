@@ -45,6 +45,10 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 
     public static bool dynamicLinkIsReceived = false;
 
+    // delegates and events
+    public delegate void OnUrlsFound();
+    public static event OnUrlsFound allUrlsFound;
+
     public static QueryStatus GetGameDataForCurrenPlayerQueryStatus()
     {
         return getGameDataForCurrentPlayerQueryStatus;
@@ -70,9 +74,15 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         return getGameInfoQueryStatus;
     }
 
+    private void Start() {
+        allUrlsFound();
+    }
+
     // Start is called before the first frame update
     void OnEnable()
     {
+        allUrlsFound += addGetAllURLListener;
+
         // Add listener for Dynamic links
         #if UNITY_ANDROID || UNITY_IOS
         DynamicLinks.DynamicLinkReceived += ExtractUserDetailsFromLink;
@@ -156,6 +166,8 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 
     void OnDisable()
     {
+        allUrlsFound -= addGetAllURLListener;
+
         //Remove the events to avoid memory leaks
         PlayerSelection.NewUserFound -= addGetPlayersListener;
         PlayerSelection.GetAllMats -= addGetAllMatsListener;
@@ -236,8 +248,8 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
             return;
         }
 
-        bool isDefaultPlayerPresent = false;
-        bool isSavedPlayerInfoAvailabe = currentYipliConfig.playerInfo == null ? false : true;
+        //bool isDefaultPlayerPresent = false;
+        //bool isSavedPlayerInfoAvailabe = currentYipliConfig.playerInfo == null ? false : true;
 
         currentYipliConfig.allPlayersInfo = new List<YipliPlayerInfo>();
 
@@ -248,10 +260,10 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
             {
                 currentYipliConfig.allPlayersInfo.Add(playerInstance);
 
-                if (isSavedPlayerInfoAvailabe && playerInstance.playerId.Equals(currentYipliConfig.playerInfo.playerId))
-                {
-                    isDefaultPlayerPresent = true;
-                }
+                // if (isSavedPlayerInfoAvailabe && playerInstance.playerId.Equals(currentYipliConfig.playerInfo.playerId))
+                // {
+                //     isDefaultPlayerPresent = true;
+                // }
             }
             else
             {
@@ -259,6 +271,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
             }
         }
 
+        /*
         if (currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING && (!isDefaultPlayerPresent || !isSavedPlayerInfoAvailabe))
         {
             Debug.Log("Removing saved player as it don't exist.");
@@ -269,6 +282,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
                 PlayerSession.Instance.ChangePlayer();
             }
         }
+        */
 
         Debug.Log("All players data got successfully.");
         getAllPlayersQureyStatus = global::QueryStatus.Completed;
@@ -278,6 +292,8 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     {
         Debug.Log("addGameDataListener invoked");
         await anonAuthenticate();
+
+        Debug.LogError("player id : " + currentYipliConfig.playerInfo.playerId);
 
         if (!currentYipliConfig.gameId.Equals("default") || currentYipliConfig.gameId.Length > 1)
             FirebaseDatabase.DefaultInstance
@@ -490,4 +506,29 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         // new project api key : AIzaSyAKKmLL2iDQRSNMRfToAxDJio7yPjx2NPE
     }
     */
+
+    // achieve all required urls
+    private async void addGetAllURLListener()
+    {
+        Debug.Log("addGetAllMatsListener invoked");
+        await anonAuthenticate();
+        FirebaseDatabase.DefaultInstance
+        .GetReference("inventory/yipli-app/urls")
+        .ValueChanged += HandleAllURLDataValueChanged;
+    }
+
+    void HandleAllURLDataValueChanged(object sender, ValueChangedEventArgs args)
+    {
+        Debug.Log("HandleAllURLDataValueChanged invoked");
+        if (args.DatabaseError != null)
+        {
+            Debug.LogError(args.DatabaseError.Message);
+            return;
+        }
+
+        currentYipliConfig.getMatUrlIn = args.Snapshot.Child("get-mat-in").Value.ToString();
+        currentYipliConfig.getMatUrlUS = args.Snapshot.Child("get-mat-us").Value.ToString();
+
+        Debug.Log("All url data got successfully.");
+    }
 }

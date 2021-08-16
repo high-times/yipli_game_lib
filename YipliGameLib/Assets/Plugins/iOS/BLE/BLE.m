@@ -25,6 +25,7 @@
 
 static bool isConnected = false;
 static int rssi = 0;
+static int FMDATA_LENGTH = 127;
 
 -(void) readRSSI
 {
@@ -545,7 +546,7 @@ static bool done = false;
 
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error
 {
-    unsigned char data[127];
+    unsigned char data[FMDATA_LENGTH];
     
     static unsigned char buf[512];
     static int len = 0;
@@ -556,7 +557,12 @@ static bool done = false;
         if ([characteristic.UUID isEqual:[CBUUID UUIDWithString:@RBL_CHAR_TX_UUID]])
         {
             data_len = characteristic.value.length;
-            [characteristic.value getBytes:data length:data_len];
+            
+            if ( data_len == FMDATA_LENGTH )
+                [characteristic.value getBytes:data length:data_len];
+            else
+                NSLog(@"Invalid_FMDATA_Length :  %d",len);
+            
             
             
             
@@ -569,7 +575,10 @@ static bool done = false;
                 if (len >= 64)
                 {
                     NSLog(@"data_len : %d",len);
-                    [[self delegate] bleDidReceiveData:buf length:len];
+                    if ( len == FMDATA_LENGTH )
+                        [[self delegate] bleDidReceiveData:buf length:len];
+                    else
+                        NSLog(@"Invalid_FMDATA_Length :  %d",len);
                     len = 0;
                 }
             }

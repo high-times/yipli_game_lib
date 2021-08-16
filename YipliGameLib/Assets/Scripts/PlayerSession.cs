@@ -1,7 +1,7 @@
 ﻿using Firebase.Database;
 
 #if UNITY_STANDALONE_WIN
-//using FMInterface_Windows;
+using FMInterface_Windows;
 #endif
 
 using Newtonsoft.Json;
@@ -372,6 +372,20 @@ public class PlayerSession : MonoBehaviour
         //x.Add("mat-id", currentYipliConfig.matInfo.matId);
         //x.Add("mac-address", currentYipliConfig.matInfo.macAddress);
 
+        #if UNITY_ANDROID
+        if (currentYipliConfig.isDeviceAndroidTV) {
+            x.Add("os", "atv");
+        } else {
+            x.Add("os", "a");
+        }
+#elif UNITY_IOS
+        x.Add("os", "i");
+#elif UNITY_STANDALONE_WIN
+        x.Add("os", "w");
+#endif
+
+        x.Add("game-version", Application.version);
+
         return x;
     }
 
@@ -735,22 +749,33 @@ public class PlayerSession : MonoBehaviour
         );
     }
 
+   // #if UNITY_STANDALONE_WIN
+        // application quit systems
+        void OnApplicationQuit()
+        {
+            #if UNITY_STANDALONE_WIN
+                Debug.LogError("Inside OnApplicationQuit");
+                DeviceControlActivity._disconnect();
+                DeviceControlActivity.readThread.Abort();
+            #elif UNITY_IOS
+                InitBLE.DisconnectMat();
+            #endif
+        }
+    //#endif
+
     // Test functions
     public void PrintBundleIdentifier() {
-        //Debug.LogError("bundle identifier : " + Application.identifier);
-
-        Debug.LogError("current country : " + System.Globalization.RegionInfo.CurrentRegion);
+        PlayerPrefs.SetString("skippedDate", new DateTime(2021, 07, 21).ToString());
     }
 
-/* only for new Driver
-#if UNITY_STANDALONE_WIN
-    // application quit systems
-    void OnApplicationQuit()
-    {
-        Debug.LogError("Inside OnApplicationQuit");
-        DeviceControlActivity._disconnect();
-        DeviceControlActivity.readThread.Abort();
+    private void TimeDifferenceManager() {
+        PlayerPrefs.SetString("skippedDate", DateTime.Today.ToString());
+
+        DateTime todaysDate = new DateTime(2021, 07, 21);
+        DateTime skippedDate = DateTime.Parse(PlayerPrefs.GetString("skippedDate"));
+
+        int totalDaysSinceLastSkipped = (int)(todaysDate - skippedDate).TotalDays;
+
+        Debug.LogError("todaysDate : " + totalDaysSinceLastSkipped);
     }
-#endif
-*/
 }

@@ -261,7 +261,16 @@ public class MatInputController : MonoBehaviour
 
         if (isPlayerSelectionPanel)
         {
-            ScrollButtonList(currentButtonIndex); 
+            playerLeft.transform.GetChild(0).GetComponent<Animator>().SetTrigger("fadePlayerName"); // player name
+            playerLeft.transform.GetChild(1).transform.GetChild(0).GetComponent<Animator>().SetTrigger("fadeProfilePic"); // player profile pic
+
+            playerMiddle.transform.GetChild(0).GetComponent<Animator>().SetTrigger("fadePlayerName"); // player name
+            playerMiddle.transform.GetChild(1).transform.GetChild(0).GetComponent<Animator>().SetTrigger("fadeProfilePic"); // player profile pic
+
+            playerRight.transform.GetChild(0).GetComponent<Animator>().SetTrigger("fadePlayerName"); // player name
+            playerRight.transform.GetChild(1).transform.GetChild(0).GetComponent<Animator>().SetTrigger("fadeProfilePic"); // player profile pic
+
+            //ScrollButtonList(currentButtonIndex); 
             //FindObjectOfType<swipe>().WhichBtnClicked(currentMenuButtons[currentButtonIndex]);
         }
         /*
@@ -284,6 +293,10 @@ public class MatInputController : MonoBehaviour
             }
         }
         */
+    }
+
+    public void StartScrolling() {
+        ScrollButtonList(currentButtonIndex);
     }
 
     private void GetMatUIKeyboardInputs()
@@ -333,6 +346,17 @@ public class MatInputController : MonoBehaviour
         if (currentYipliConfig.allPlayersInfo.Count == 1) {
             UpdateButtonObject(currentYipliConfig.allPlayersInfo[0], playerMiddle, 0);
 
+            // playerMiddle.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = currentYipliConfig.allPlayersInfo[0].playerName;
+            
+            // if (currentYipliConfig.allPlayersInfo[0].playerProfilePicIMG != null) {
+            //     playerMiddle.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite = currentYipliConfig.allPlayersInfo[0].playerProfilePicIMG;   
+            // } else {
+            //     playerMiddle.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite = defaultProfilePic;
+            // }
+
+            // playerMiddle.transform.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(FindObjectOfType<PlayerSelection>().SelectPlayer);
+            // middleButton.onClick.AddListener(FindObjectOfType<PlayerSelection>().SelectPlayer);
+
             playerLeft.SetActive(false);
             playerRight.SetActive(false);
         } else {
@@ -380,6 +404,10 @@ public class MatInputController : MonoBehaviour
                 Debug.LogError("Wrong inspector index detected : " + playerInspectorIndex);
                 break;
         }
+        
+        // fade management
+        // playerObject.transform.GetChild(0).GetComponent<Animator>().SetTrigger("fadePlayerName"); // player name
+        // playerObject.transform.GetChild(1).transform.GetChild(0).GetComponent<Animator>().SetTrigger("fadeProfilePic"); // player profile pic
     }
 
     public void UpdateSwitchPlayerPanelPlayerObject() {
@@ -388,17 +416,17 @@ public class MatInputController : MonoBehaviour
 
         switch(currentPlayerIndex) {
             case -1:
-                switchPlayerPanelPlayerObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerLeft.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+                switchPlayerPanelPlayerObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Continue with " + playerLeft.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
                 switchPlayerPanelPlayerObject.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite = playerLeft.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite;
                 break;
 
             case 0:
-                switchPlayerPanelPlayerObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerMiddle.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+                switchPlayerPanelPlayerObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Continue with " + playerMiddle.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
                 switchPlayerPanelPlayerObject.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite = playerMiddle.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite;
                 break;
 
             case 1:
-                switchPlayerPanelPlayerObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = playerRight.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
+                switchPlayerPanelPlayerObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Continue with " + playerRight.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
                 switchPlayerPanelPlayerObject.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite = playerRight.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite;
                 break;
 
@@ -436,3 +464,5 @@ public class MatInputController : MonoBehaviour
         ProcessMatInputs(RIGHT);
     }
 }
+
+// fadeProfilePic, fadePlayerName

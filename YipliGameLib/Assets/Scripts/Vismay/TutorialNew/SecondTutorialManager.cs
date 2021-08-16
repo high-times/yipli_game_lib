@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using YipliFMDriverCommunication;
 using DG.Tweening;
+using TMPro;
 
 public class SecondTutorialManager : MonoBehaviour
 {
@@ -9,7 +10,7 @@ public class SecondTutorialManager : MonoBehaviour
 
     [Header("UI Elements")]
     [SerializeField] private GameObject tutorialPanel = null;
-    [SerializeField] private GameObject tutMOdelParent = null;
+    [SerializeField] private GameObject confetiParent = null;
     [SerializeField] private Image runningManMat = null;
     [SerializeField] private GameObject threeBoxesParent = null;
     [SerializeField] private GameObject tryItBoxParent = null;
@@ -40,10 +41,18 @@ public class SecondTutorialManager : MonoBehaviour
     [SerializeField] private GameObject trainingDoneTitle = null;
     [SerializeField] private GameObject goodHeadStart = null;
     [SerializeField] private GameObject letsStartPlaying = null;
+    [SerializeField] private TextMeshProUGUI ftStatement = null;
+
+    [Header("All Required Colors")]
+    [SerializeField] private Sprite switchPlayerS = null;
+    [SerializeField] private Sprite playFromMM_S = null;
+    [SerializeField] private Sprite yipliHubS = null;
 
     [Header("All Required Colors")]
     [SerializeField] private Color yipliRed;
+    [SerializeField] private Color yipliRedNoS;
     [SerializeField] private Color yipliGreen;
+    [SerializeField] private Color yipliMarine;
     [SerializeField] private Color originalButtonColor;
 
     [Header("All Required Music")]
@@ -51,36 +60,55 @@ public class SecondTutorialManager : MonoBehaviour
     [SerializeField] private AudioClip checkMarkSound;
     [SerializeField] private AudioClip errorSound;
 
+    [Header("Skip Button")]
+    [SerializeField] private GameObject skipButton = null;
+
+    [Header("All instruction audios")]
+    [SerializeField] private AudioSource tutorialPanelAudioSource = null;
+    [SerializeField] private AudioClip congratsChamp = null;
+    [SerializeField] private AudioClip doJumps = null;
+    [SerializeField] private AudioClip doLefttaps = null;
+    [SerializeField] private AudioClip doRightTaps = null;
+    [SerializeField] private AudioClip letsPractise = null;
+    [SerializeField] private AudioClip pauseGame = null;
+    [SerializeField] private AudioClip thisIsAGoodHeadStart = null;
+    [SerializeField] private AudioClip toResumeStepOnTheMatAndJump = null;
+    [SerializeField] private AudioClip tryTheExtensive = null;
+    [SerializeField] private AudioClip finalClaps = null;
+
     // private variables
     YipliUtils.PlayerActions detectedAction;
 
     [Header("Test Area")]
     // bool values
-    public bool leftTapsDone = false;
-    public bool rightTapsDone = false;
-    public bool jumpsDone = false;
-    public bool runningIntroDone = false;
-    public bool startIntroDone = false;
-    public bool calculateTime = false;
-    public bool tutorialStarted = false;
-    public bool userInteractionStarted = false;
-    public bool pauseFlowStarted = false;
-    public bool resumeFlowStarted = false;
-    public bool tapsAndJumpInfoFlowStarted = false;
-    public bool simpleTutorialDone = false;
-    public bool finalTutStarted = false;
-    public bool finalMessageDisplayStarted = false;
-    public bool waitForNextPart = false;
+    private bool leftTapsDone = false;
+    private bool rightTapsDone = false;
+    private bool jumpsDone = false;
+    private bool runningIntroDone = false;
+    private bool startIntroDone = false;
+    private bool calculateTime = false;
+    private bool tutorialStarted = false;
+    private bool userInteractionStarted = false;
+    private bool pauseFlowStarted = false;
+    private bool resumeFlowStarted = false;
+    private bool tapsAndJumpInfoFlowStarted = false;
+    private bool simpleTutorialDone = false;
+    private bool finalTutStarted = false;
+    private bool finalMessageDisplayStarted = false;
+    private bool waitForNextPart = false;
+    private bool listenToMatActions = false;
+    private bool turn180triggered = false;
+    private bool headStartAudioPlayed = false;
 
     // int values
-    public int totalLeftTaps = 0;
-    public int totalRightTaps = 0;
-    public int totalJumps = 0;
-    public int currentCircleChildActive = 0;
+    private int totalLeftTaps = 0;
+    private int totalRightTaps = 0;
+    private int totalJumps = 0;
+    private int currentCircleChildActive = 0;
     public int requiredCHildElement = -1;
 
     // float time variables
-    public float currentCalculatedTime = 0;
+    private float currentCalculatedTime = 0;
 
     // getters and setters
     public YipliUtils.PlayerActions DetectedAction { get => detectedAction; set => detectedAction = value; }
@@ -88,6 +116,9 @@ public class SecondTutorialManager : MonoBehaviour
     void Start() {
         runningManMat.gameObject.SetActive(false);
         tutorialPanel.SetActive(false);
+        skipButton.SetActive(false);
+
+        newMatInputController.HideLegs();
     }
 
     public void TurnOffEverything() {
@@ -121,7 +152,7 @@ public class SecondTutorialManager : MonoBehaviour
 
         CalculateTime();
 
-        if (matInputController.IsTutorialRunning) {
+        if (matInputController.IsTutorialRunning && listenToMatActions) {
             GetMatTutorialKeyboardInputs();
             ManageMatActionsForTutorial();
         }
@@ -155,23 +186,37 @@ public class SecondTutorialManager : MonoBehaviour
 
         tutorialPanel.SetActive(true);
 
-        newMatInputController.DisplayMainMat();
-        newMatInputController.HideChevrons();
-        newMatInputController.UpdateCenterButtonColor();
-        newMatInputController.EnableMatParentButtonAnimator();
+        // newMatInputController.DisplayMainMat();
+        // newMatInputController.HideChevrons();
+        // newMatInputController.UpdateCenterButtonColor();
+        // newMatInputController.EnableMatParentButtonAnimator();
+
+        // new running mat intro
+        threeDModelManager.Display3DModel();
+        threeDModelManager.Display3DMat();
+        threeDModelManager.EnableModelManagerAnimator();
+        threeDModelManager.ApplyWalkingOverride();
+
+        skipButton.SetActive(true);
+        // new animation code over
 
         letsLearnHowToUseMatMSG.gameObject.SetActive(true);
         messageStepOnMatAndCenter.gameObject.SetActive(true);
         newMatInputController.DisplayTextButtons();
         newMatInputController.KeepLeftNadRightButtonColorToOriginal();
+
+        EnableMatActionListener();
     }
 
     public void EndMatTutorial() {
         calculateTime = false;
         currentCalculatedTime = 0f;
 
+        confetiParent.SetActive(false);
+
         threeDModelManager.ApplyMainIdleOverride();
         threeDModelManager.Hide3DModel();
+        threeDModelManager.Hide3DMat();
 
         newMatInputController.HideTextButtons();
 
@@ -195,11 +240,36 @@ public class SecondTutorialManager : MonoBehaviour
             StartMatTutorial();
             return;
         }
+        
+        // old code
+        // if (!runningIntroDone) {
+        //     StartRunningIntro();
+
+        //     if (currentCalculatedTime > 10f) {
+        //         runningIntroDone = true;
+        //         calculateTime = false;
+        //     }
+        // }
+
+        // if (!runningIntroDone) return;
+        // old code over
 
         if (!runningIntroDone) {
-            StartRunningIntro();
+            
+            if (!turn180triggered) {
+                turn180triggered = true;
 
-            if (currentCalculatedTime > 6f) {
+                threeDModelManager.ApplyMainIdleOverride();
+
+                threeDModelManager.TurnModelManager180();
+                TurnOffEverything();
+            }
+            
+            letsLearnToUseYourMatMSG.gameObject.SetActive(true);
+
+            calculateTime =true;
+
+            if (currentCalculatedTime > 1.5f) {
                 runningIntroDone = true;
                 calculateTime = false;
             }
@@ -224,7 +294,7 @@ public class SecondTutorialManager : MonoBehaviour
         }
 
         if (leftTapsDone && rightTapsDone && jumpsDone && !simpleTutorialDone) {
-            if (currentCalculatedTime > 1f) {
+            if (currentCalculatedTime > 0f) { // 2.5 wait is original
                 calculateTime = false;
                 simpleTutorialDone = true;
                 StartPauseFlow();
@@ -256,6 +326,9 @@ public class SecondTutorialManager : MonoBehaviour
                 resumeTitle.gameObject.SetActive(false);
                 resumeStatement.gameObject.SetActive(false);
 
+                FindObjectOfType<ModelEventActivator>().SetZTransformToZero();
+
+                DisableMatActionListener();
                 TurnOnAwesomePart();
             }
 
@@ -285,7 +358,13 @@ public class SecondTutorialManager : MonoBehaviour
                 trainingDoneTitle.gameObject.SetActive(true);
                 goodHeadStart.gameObject.SetActive(true);
                 letsStartPlaying.gameObject.SetActive(true);
-            } else if (currentCalculatedTime > 10f) {
+
+                if (!headStartAudioPlayed) {
+                    headStartAudioPlayed = true;
+                    threeDModelManager.StartRMFinalPart();
+                    PlayInstructionAudio(thisIsAGoodHeadStart);
+                }
+            } else if (currentCalculatedTime > 15f) {
                 EndMatTutorial();
             }
         }
@@ -314,6 +393,7 @@ public class SecondTutorialManager : MonoBehaviour
 
         // apply main animation here
         threeDModelManager.Display3DModel();
+        threeDModelManager.Display3DMat();
         threeDModelManager.EnableModelManagerAnimator();
         threeDModelManager.ApplyWalkingOverride();
 
@@ -323,6 +403,7 @@ public class SecondTutorialManager : MonoBehaviour
     // step 3
     private void StartLeftTapsPart() {
         if (userInteractionStarted) return;
+        skipButton.SetActive(false);
 
         userInteractionStarted = true;
 
@@ -337,7 +418,10 @@ public class SecondTutorialManager : MonoBehaviour
         tapLeft3Times.gameObject.SetActive(true);
         threeDModelManager.ApplyLeftTapOverride();
 
+        PlayInstructionAudio(doLefttaps);
+
         DisplayThreeBoxes();
+        EnableMatActionListener();
     }
 
     // step 4
@@ -345,7 +429,10 @@ public class SecondTutorialManager : MonoBehaviour
         tapRight3Times.gameObject.SetActive(true);
         threeDModelManager.ApplyRightTapOverride();
 
+        PlayInstructionAudio(doRightTaps);
+
         ResetBoxes();
+        EnableMatActionListener();
     }
 
     // step 4
@@ -356,11 +443,16 @@ public class SecondTutorialManager : MonoBehaviour
         jump3Times.gameObject.SetActive(true);
         threeDModelManager.ApplyJumpOverride();
 
+        PlayInstructionAudio(doJumps);
+
         ResetBoxes();
+        EnableMatActionListener();
     }
 
     // Step 5
     private void EndTapsPart() {
+        DisableMatActionListener();
+
         tapLeft3Times.gameObject.SetActive(false);
         tapRight3Times.gameObject.SetActive(false);
         jump3Times.gameObject.SetActive(false);
@@ -391,6 +483,8 @@ public class SecondTutorialManager : MonoBehaviour
     // step 6 - pause part
     private void StartPauseFlow() {
         pauseFlowStarted = true;
+        calculateTime = false;
+        currentCalculatedTime = 0f;
 
         TurnOffAwesomePart();
 
@@ -398,6 +492,8 @@ public class SecondTutorialManager : MonoBehaviour
 
         pauseStatement.gameObject.SetActive(true);
         pauseTitle.gameObject.SetActive(true);
+
+        PlayInstructionAudio(pauseGame);
 
         calculateTime = true;
     }
@@ -417,6 +513,8 @@ public class SecondTutorialManager : MonoBehaviour
 
         resumeTitle.gameObject.SetActive(true);
         resumeStatement.gameObject.SetActive(true);
+
+        PlayInstructionAudio(toResumeStepOnTheMatAndJump);
     }
 
     // step 8 - info panel
@@ -426,7 +524,7 @@ public class SecondTutorialManager : MonoBehaviour
 
         TurnOffAwesomePart();
 
-        navigatingWithYourMatMSG.gameObject.SetActive(true);
+        //navigatingWithYourMatMSG.gameObject.SetActive(true);
 
         tapsAndJumpInfoFlowStarted = true;
         calculateTime = true;
@@ -441,10 +539,13 @@ public class SecondTutorialManager : MonoBehaviour
         finalTutStarted = true;
 
         DisplayFinalTutElements();
+        EnableMatActionListener();
     }
 
     // step 10 - training complete
     private void ShowFinalMessages() {
+        DisableMatActionListener();
+
         finalTutStarted = false;
         finalMessageDisplayStarted = true;
         tapsAndJumpInfoFlowStarted = false;
@@ -452,6 +553,8 @@ public class SecondTutorialManager : MonoBehaviour
         threeDModelManager.ApplyFistPumpOverride();
 
         HideFinalTutElements();
+
+        PlayInstructionAudio(congratsChamp);
 
         awesomeJob.gameObject.SetActive(true);
         youGotThatRight.gameObject.SetActive(true);
@@ -493,6 +596,8 @@ public class SecondTutorialManager : MonoBehaviour
     }
 
     private void StartWaitPart() {
+        DisableMatActionListener();
+
         waitForNextPart = true;
         calculateTime = true;
     }
@@ -575,6 +680,7 @@ public class SecondTutorialManager : MonoBehaviour
 
     // try it box
     private void DisplayTryItBox() {
+        EnableMatActionListener();
         tryItBoxParent.gameObject.SetActive(true);
     }
 
@@ -600,9 +706,17 @@ public class SecondTutorialManager : MonoBehaviour
     private void DisplayFinalTutElements() {
         finalTutParent.gameObject.SetActive(true);
 
+        finalTutParent.transform.GetChild(2).transform.GetChild(0).transform.GetChild(2).gameObject.SetActive(false);
+        finalTutParent.transform.GetChild(2).transform.GetChild(1).transform.GetChild(2).gameObject.SetActive(false);
+        finalTutParent.transform.GetChild(2).transform.GetChild(2).transform.GetChild(2).gameObject.SetActive(false);
+
+        PlayInstructionAudio(letsPractise);
+
         MakeAllCircleChildrenNormal();
 
         MarkCircleAsRequiredToSelect(finalTutParent.transform.GetChild(2).transform.GetChild(2).gameObject);
+        ftStatement.text = "Select";
+        ftStatement.transform.GetChild(0).GetComponent<Image>().sprite = yipliHubS;
         requiredCHildElement = 2;
 
         currentCircleChildActive = 0;
@@ -621,33 +735,44 @@ public class SecondTutorialManager : MonoBehaviour
     }
 
     private void MarkCircleAsRequiredToSelect(GameObject childCirle) {
-        childCirle.transform.GetChild(0).gameObject.SetActive(true);
+        //childCirle.transform.GetChild(0).gameObject.SetActive(true);
     }
 
     private void TraverseThroughAllCirclesLikeButtons() {
         for (int i = 0; i < finalTutParent.transform.GetChild(2).transform.childCount; i++) {
             if (i == currentCircleChildActive) {
                 finalTutParent.transform.GetChild(2).transform.GetChild(i).transform.localScale = new Vector3(1.3f, 1.3f, 1f);
-                finalTutParent.transform.GetChild(2).transform.GetChild(i).transform.GetChild(1).GetComponent<Image>().color = yipliRed;
-                finalTutParent.transform.GetChild(2).transform.GetChild(i).transform.GetChild(2).gameObject.SetActive(false);
+                finalTutParent.transform.GetChild(2).transform.GetChild(i).transform.GetChild(0).gameObject.SetActive(true);
+                
+                // check mark management
+                // if (finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(2).gameObject.activeSelf) {
+                //     finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(2).gameObject.SetActive(true);
+                // }
+
             } else {
                 finalTutParent.transform.GetChild(2).transform.GetChild(i).transform.localScale = new Vector3(1f, 1f, 1f);
+                finalTutParent.transform.GetChild(2).transform.GetChild(i).transform.GetChild(0).gameObject.SetActive(false);
                 finalTutParent.transform.GetChild(2).transform.GetChild(i).transform.GetChild(1).GetComponent<Image>().color = Color.white;
-                finalTutParent.transform.GetChild(2).transform.GetChild(i).transform.GetChild(2).gameObject.SetActive(true);
             }
         }
     }
 
-    private void SelectCircleChild() {
+    public void ProcessFinalTutJumpAction() {
         if (currentCircleChildActive == requiredCHildElement) {
-            finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(1).GetComponent<Image>().color = Color.white;
-            finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(2).GetComponent<Image>().color = yipliGreen;
-            finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(2).gameObject.SetActive(true);
-            
-            threeDModelManager.ApplyFistPumpOverride();
-            PlaySound(checkMarkSound);
+            // switchPlayer, playButton, yipliHub
+            switch(requiredCHildElement) {
+                case 0:
+                    ftStatement.transform.GetChild(0).GetComponent<Animator>().SetTrigger("switchPlayer");
+                    break;
 
-            ProgressFinalTutorial();
+                case 1:
+                    ftStatement.transform.GetChild(0).GetComponent<Animator>().SetTrigger("playButton");
+                    break;
+
+                case 2:
+                    ftStatement.transform.GetChild(0).GetComponent<Animator>().SetTrigger("yipliHub");
+                    break;
+            }
         } else {
             threeDModelManager.ApplyHeadNodOverride();
             PlaySound(errorSound);
@@ -655,10 +780,48 @@ public class SecondTutorialManager : MonoBehaviour
         }
     }
 
+    private void SelectCircleChild() {
+        /*if (currentCircleChildActive == requiredCHildElement) {
+            finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(1).GetComponent<Image>().color = Color.white;
+            //finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(2).GetComponent<Image>().color = yipliRedNoS;
+            finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(2).gameObject.SetActive(true);
+            
+            threeDModelManager.ApplyFistPumpOverride();
+            PlaySound(checkMarkSound);
+
+            // switchPlayer, playButton, yipliHub
+
+            ProgressFinalTutorial();
+            ftStatement.transform.GetChild(0).GetComponent<Animator>().SetTrigger("");
+        } else {
+            threeDModelManager.ApplyHeadNodOverride();
+            PlaySound(errorSound);
+            ShakeCircles();
+        } */
+
+        finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(1).GetComponent<Image>().color = Color.white;
+        //finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(2).GetComponent<Image>().color = yipliRedNoS;
+        finalTutParent.transform.GetChild(2).transform.GetChild(currentCircleChildActive).transform.GetChild(2).gameObject.SetActive(true);
+        
+        threeDModelManager.ApplyFistPumpOverride();
+        PlaySound(checkMarkSound);
+
+        ProgressFinalTutorial();
+        //ftStatement.transform.GetChild(0).GetComponent<Animator>().SetTrigger("");
+    }
+
+    public void GoForNextTaskInFT() {
+        SelectCircleChild();
+    }
+
     private void ProgressFinalTutorial() {
         switch (requiredCHildElement) {
             case 0:
                 MakeAllCircleChildrenNormal();
+
+                ftStatement.text = "Again select";
+                ftStatement.transform.GetChild(0).GetComponent<Image>().sprite = playFromMM_S;
+
                 MarkCircleAsRequiredToSelect(finalTutParent.transform.GetChild(2).transform.GetChild(1).gameObject);
                 requiredCHildElement = 1;
                 TraverseThroughAllCirclesLikeButtons();
@@ -670,6 +833,10 @@ public class SecondTutorialManager : MonoBehaviour
 
             case 2:
                 MakeAllCircleChildrenNormal();
+
+                ftStatement.text = "Now select";
+                ftStatement.transform.GetChild(0).GetComponent<Image>().sprite = switchPlayerS;
+
                 MarkCircleAsRequiredToSelect(finalTutParent.transform.GetChild(2).transform.GetChild(0).gameObject);
                 requiredCHildElement = 0;
                 TraverseThroughAllCirclesLikeButtons();
@@ -798,11 +965,12 @@ public class SecondTutorialManager : MonoBehaviour
 
         if (!startIntroDone) {
             if (DetectedAction == YipliUtils.PlayerActions.LEFT_TAP) {
-                EndMatTutorial();
+                //EndMatTutorial(); // uncomment to allow skip from mat
                 return;
-            } else if (DetectedAction == YipliUtils.PlayerActions.RIGHT_TAP) {
+            } else if (DetectedAction == YipliUtils.PlayerActions.JUMP) {
                 startIntroDone = true;
                 ManagePlayerActions();
+                DisableMatActionListener();
             } else {
                 return;
             }
@@ -868,6 +1036,9 @@ public class SecondTutorialManager : MonoBehaviour
             MarkTryItBox();
 
             threeDModelManager.ResetAllTriggers();
+
+            threeDModelManager.SetMainChracterAndMatToProperPostions();
+            //threeDModelManager.ResetAllRotationManagerTriggers();
             threeDModelManager.ApplyMainIdleOverride();
         }
 
@@ -879,7 +1050,8 @@ public class SecondTutorialManager : MonoBehaviour
                 currentCircleChildActive = GetNextCircleChild();
                 TraverseThroughAllCirclesLikeButtons();
             } else if (DetectedAction == YipliUtils.PlayerActions.JUMP) {
-                SelectCircleChild();
+                //SelectCircleChild();
+                ProcessFinalTutJumpAction();
             }
         }
     }
@@ -927,5 +1099,24 @@ public class SecondTutorialManager : MonoBehaviour
     public void ContinueToTutorialButton() {
         DetectedAction = YipliUtils.PlayerActions.RIGHT_TAP;
         ManagePlayerActions();
+    }
+
+    // Enable Disable mat controls
+    public void EnableMatActionListener() {
+        listenToMatActions = true;
+    }
+
+    public void DisableMatActionListener() {
+        listenToMatActions = false;
+    }
+
+    // Tutorial Instructions Audio Management
+    public void PlayInstructionAudio(AudioClip clip) {
+        tutorialAudioSource.clip = clip;
+        tutorialAudioSource.Play();
+    }
+
+    public void FinalClapsSound() {
+        PlayInstructionAudio(finalClaps);
     }
 }

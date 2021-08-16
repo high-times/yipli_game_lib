@@ -19,6 +19,7 @@ namespace yipli.Windows
         static string userIdInFile = null;
         static string skippedVersion = null;
         static bool driverInstalledFinished = false;
+        static string currentPlayerID = string.Empty;
 
         static string[] otherPorcessList = { 
             "Metro Rush",
@@ -34,6 +35,7 @@ namespace yipli.Windows
         public static string SkippedVersion { get => skippedVersion; set => skippedVersion = value; }
         public static bool DriverInstalledFinished { get => driverInstalledFinished; set => driverInstalledFinished = value; }
         public static string[] OtherPorcessList { get => otherPorcessList; set => otherPorcessList = value; }
+        public static string CurrentPlayerID { get => currentPlayerID; set => currentPlayerID = value; }
 
         public static string ReadFromFile()
         {
@@ -87,14 +89,28 @@ namespace yipli.Windows
 
                                 case 4:
                                     break;
+                                */
 
+                                case 5:
+                                    if (allLines[i].Substring(19) != null || allLines[i].Substring(19) != "")
+                                    {
+                                        CurrentPlayerID = allLines[i].Substring(19);
+                                    }
+                                    else
+                                    {
+                                        CurrentPlayerID = string.Empty;
+                                    }
+                                    break;
+
+                                /*
                                 default:
                                     UserIdInFile = null;
                                     LogOutFlag = true;
                                     SkippedVersion = null;
                                     DriverInstalledFinished = false;
+                                    CurrentPlayerID = string.Empty;
                                     break;
-                                */
+                                    */
                             }
                         }
                     }

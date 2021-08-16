@@ -12,6 +12,7 @@ public class NewMatInputController : MonoBehaviour
     [SerializeField] private Image matLeftButton = null;
     [SerializeField] private Image matRightButton = null;
     [SerializeField] private Image matCentreButton = null;
+    [SerializeField] private Image matFullButton = null;
     [SerializeField] private Canvas matCanvasComponent = null;
 
     [SerializeField] private GameObject matParentObj = null;
@@ -32,6 +33,9 @@ public class NewMatInputController : MonoBehaviour
     [SerializeField] private Color yipliBlue;
     [SerializeField] private Color originalButtonColor;
 
+    [Header("Legs part")]
+    [SerializeField] private GameObject legsParent = null;
+
     [Header("Required script objects")]
     [SerializeField] private SecondTutorialManager secondTutorialManager = null;
     [SerializeField] private MatInputController matInputController = null;
@@ -48,16 +52,20 @@ public class NewMatInputController : MonoBehaviour
         matLeftButton.GetComponent<Animator>().enabled = false;
         matRightButton.GetComponent<Animator>().enabled = false;
 
+        //matFullButton.gameObject.SetActive(false);
+
         //HideTextButtons();
         //HideChevrons();
     }
 
     public void EnableMatLeftButtonAnimator() {
-        matLeftButton.GetComponent<Animator>().enabled = true;
+        // matLeftButton.GetComponent<Animator>().enabled = true;
+        legsParent.GetComponent<Animator>().SetTrigger("lefttap");
     }
 
     public void EnableMatRightButtonAnimator() {
-        matRightButton.GetComponent<Animator>().enabled = true;
+        // matRightButton.GetComponent<Animator>().enabled = true;
+        legsParent.GetComponent<Animator>().SetTrigger("righttap");
     }
 
     public void EnableMatParentButtonAnimator() {
@@ -108,10 +116,12 @@ public class NewMatInputController : MonoBehaviour
     }
 
     public void DisplayChevrons() {
+        matFullButton.gameObject.SetActive(true);
         chevronParent.SetActive(true);
     }
 
     public void HideChevrons() {
+        matFullButton.gameObject.SetActive(false);
         chevronParent.SetActive(false);
     }
 
@@ -134,6 +144,7 @@ public class NewMatInputController : MonoBehaviour
     public void DisplayMatForSwitchPlayerPanel() {
         textButtonsParent.transform.GetChild(0).transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "Change";
 
+        HideLegs();
         DisplayTextButtons();
 
         SetMatSwitchPlayerPosition();
@@ -161,5 +172,15 @@ public class NewMatInputController : MonoBehaviour
         } else {
             matInputController.ManualRightButton();
         }
+    }
+    
+    // legs management
+    public void DisplayLegs() {
+        legsParent.SetActive(true);
+    }
+
+    public void HideLegs() {
+        matFullButton.gameObject.SetActive(false);
+        legsParent.SetActive(false);
     }
 }

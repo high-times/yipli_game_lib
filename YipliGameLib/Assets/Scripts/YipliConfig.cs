@@ -43,7 +43,6 @@ public class YipliConfig : ScriptableObject
     [HideInInspector]
     public DataSnapshot gameDataForCurrentPlayer;
 
-    [HideInInspector]
     public bool bIsChangePlayerCalled = false;
 
     public bool onlyMatPlayMode = true;
@@ -77,4 +76,10 @@ public class YipliConfig : ScriptableObject
     public bool isDeviceAndroidTV = false;
 
     public bool skipNormalUpdateClicked = false;
+
+    public string getMatUrlIn = string.Empty;
+
+    public string getMatUrlUS = string.Empty;
+
+    public bool allowMainGameSceneToLoad = true;
 }

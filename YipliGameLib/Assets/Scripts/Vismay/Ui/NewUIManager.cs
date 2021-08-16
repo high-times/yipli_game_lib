@@ -8,6 +8,8 @@ public class NewUIManager : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private Button mainCommonButton = null;
     [SerializeField] private TextMeshProUGUI commonButtonText = null;
+    [SerializeField] private Sprite errorSprite = null;
+    [SerializeField] private Sprite regularSprite = null;
 
     // current yipli config
     [Header("Scriptables requirements")]
@@ -16,6 +18,11 @@ public class NewUIManager : MonoBehaviour
     [Header("Required Script objects")]
     [SerializeField] private PlayerSelection playerSelection = null;
     [SerializeField] private MatSelection matSelection = null;
+
+    [Header("Required Script objects")]
+    [SerializeField] private Color yipliRed;
+    [SerializeField] private Color yipliMarine;
+    [SerializeField] private Color yipliBubble;
 
     public string currentPanelTag = string.Empty;
     private bool currentIsMainTanenceModeOn = false;
@@ -36,9 +43,12 @@ public class NewUIManager : MonoBehaviour
 
     const string mainCommonButtonTag = "mainCommonButton";
 
-    void Start() {
-        TurnOffMainCommonButton();
-    }
+    // void Start() {
+    //     TurnOffMainCommonButton();
+    // }
+
+    // panels with buttons
+    // noInternetPanel, noMatPanel(Guest User panel), maintanencePanel, noMatConnectionPanel, phoneHolderTutorialPanel, minimum2Player
 
     public void UpdateButtonDisplay(string panelTag, bool isMainTanenceModeOn = false) {
         switch(panelTag) {
@@ -50,7 +60,8 @@ public class NewUIManager : MonoBehaviour
                 currentPanelTag = noInternetPanel;
 
                 commonButtonText.text = "Try Again";
-                TurnOnMainCommonButton();
+                ChangeToErrorSprite();
+                //TurnOnMainCommonButton();
                 TurnMainButtonScaleToOne();
                 break;
 
@@ -58,7 +69,7 @@ public class NewUIManager : MonoBehaviour
                 currentPanelTag = noMatPanel;
 
                 commonButtonText.text = "Get Mat"; // check if we can use BUY as button text // Minimum2Player
-                TurnOnMainCommonButton();
+                //TurnOnMainCommonButton();
                 TurnMainButtonScaleToOne();
                 break;
 
@@ -73,11 +84,12 @@ public class NewUIManager : MonoBehaviour
 
                 if (isMainTanenceModeOn) {
                     commonButtonText.text = "Quit";
+                    ChangeToErrorSprite();
                 } else {
                     commonButtonText.text = "Update";
                 }
 
-                TurnOnMainCommonButton();
+                //TurnOnMainCommonButton();
                 TurnMainButtonScaleToOne();
                 break;
 
@@ -85,7 +97,8 @@ public class NewUIManager : MonoBehaviour
                 currentPanelTag = noMatConnectionPanel;
 
                 commonButtonText.text = "Recheck";
-                TurnOnMainCommonButton();
+                ChangeToErrorSprite();
+                //TurnOnMainCommonButton();
                 TurnMainButtonScaleToOne();
                 break;
 
@@ -93,7 +106,7 @@ public class NewUIManager : MonoBehaviour
                 currentPanelTag = phoneHolderTutorialPanel;
 
                 commonButtonText.text = "Jump";
-                TurnOnMainCommonButton();
+                //TurnOnMainCommonButton();
                 TurnMainButtonScaleToZero();
                 break;
 
@@ -101,7 +114,7 @@ public class NewUIManager : MonoBehaviour
                 currentPanelTag = minimum2Player;
 
                 commonButtonText.text = "Create";
-                TurnOnMainCommonButton();
+                //TurnOnMainCommonButton();
                 TurnMainButtonScaleToOne();
                 break;
 
@@ -120,10 +133,18 @@ public class NewUIManager : MonoBehaviour
                 break;
 
             case noMatPanel:
-                if (System.Globalization.RegionInfo.CurrentRegion.ToString().Equals("IN", System.StringComparison.OrdinalIgnoreCase)) {
-                    Application.OpenURL(ProductMessages.GetMatUrlIn);
+                if (currentyipliConfig.getMatUrlIn == null || currentyipliConfig.getMatUrlUS == null) {
+                    if (System.Globalization.RegionInfo.CurrentRegion.ToString().Equals("IN", System.StringComparison.OrdinalIgnoreCase)) {
+                        Application.OpenURL(currentyipliConfig.getMatUrlIn);
+                    } else {
+                        Application.OpenURL(currentyipliConfig.getMatUrlUS);
+                    }
                 } else {
-                    Application.OpenURL(ProductMessages.GetMatUrlUS);
+                    if (System.Globalization.RegionInfo.CurrentRegion.ToString().Equals("IN", System.StringComparison.OrdinalIgnoreCase)) {
+                        Application.OpenURL(ProductMessages.GetMatUrlIn);
+                    } else {
+                        Application.OpenURL(ProductMessages.GetMatUrlUS);
+                    }
                 }
                 break;
 
@@ -163,6 +184,7 @@ public class NewUIManager : MonoBehaviour
     }
 
     public void TurnOffMainCommonButton() {
+        ChangeToRegularSprite();
         mainCommonButton.gameObject.SetActive(false);
     }
 
@@ -172,5 +194,17 @@ public class NewUIManager : MonoBehaviour
 
     public void TurnMainButtonScaleToOne() {
         mainCommonButton.transform.localScale = new Vector3(1f, 1f, 1f);
+    }
+
+    private void ChangeToErrorSprite() {
+        mainCommonButton.GetComponent<Image>().sprite = errorSprite;
+        mainCommonButton.transform.GetChild(0).GetComponent<Image>().sprite = errorSprite;
+        mainCommonButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = yipliMarine;
+    }
+
+    private void ChangeToRegularSprite() {
+        mainCommonButton.GetComponent<Image>().sprite = regularSprite;
+        mainCommonButton.transform.GetChild(0).GetComponent<Image>().sprite = regularSprite;
+        mainCommonButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.white;
     }
 }
