@@ -62,7 +62,7 @@ public class PlayerSession : MonoBehaviour
     private void Awake()
     {
         SetMatPlayMode();
-
+        
         if (_instance != null && _instance != this)
         {
             Debug.Log("Destroying current instance of playersession and reinitializing");

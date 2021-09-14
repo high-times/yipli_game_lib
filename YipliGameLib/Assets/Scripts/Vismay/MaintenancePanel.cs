@@ -177,6 +177,7 @@ public class MaintenancePanel : MonoBehaviour
         else if (notAllowedVersionCode < gameVersionCode && currentStoreCode > gameVersionCode) {
             // Debug.LogError("versions : TimeDifferenceManager() : " + TimeDifferenceManager());
 
+            // update below 6 with firebase entries
             if (currentYipliConfig.skipNormalUpdateClicked || TimeDifferenceManager() < 6) return;
             
             message.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";

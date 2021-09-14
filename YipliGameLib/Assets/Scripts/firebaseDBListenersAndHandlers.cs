@@ -123,7 +123,7 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         }
         else
         {
-            Debug.Log("Invalid Game. Nothing found at specified path.");
+            Debug.Log("onlyMatPlayMode : Invalid Game. Nothing found at specified path.");
         }
         getGameInfoQueryStatus = global::QueryStatus.Completed;
     }

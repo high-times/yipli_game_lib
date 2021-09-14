@@ -681,6 +681,44 @@ public class PlayerSelection : MonoBehaviour
             yield return new WaitForSecondsRealtime(0.1f);
         }
 
+        // set only mat play mode
+// #if UNITY_EDITOR
+//         currentYipliConfig.onlyMatPlayMode = false;
+// #elif UNITY_ANDROID || UNITY_IOS
+//         currentYipliConfig.onlyMatPlayMode = true;
+// #elif UNITY_STANDALONE_WIN
+//         currentYipliConfig.onlyMatPlayMode = true;   
+// #endif
+
+        // new code
+        // Debug.LogError("onlyMatPlayMode : Executing allOS string : " + currentYipliConfig.gameInventoryInfo.onlyMatPlayMode);
+        // string[] allOSForOnlyMatPlay = currentYipliConfig.gameInventoryInfo.onlyMatPlayMode.Split(',');
+
+        // if (currentYipliConfig.gameInventoryInfo.onlyMatPlayMode != ",") {
+        //     for (int i = 0; i < allOSForOnlyMatPlay.Length; i++) {
+        //         if (allOSForOnlyMatPlay[i] == "a" && Application.platform == RuntimePlatform.Android) {
+        //             //Debug.LogError("Executing a");
+        //             currentYipliConfig.onlyMatPlayMode = true;
+        //             break;
+        //         } else if (allOSForOnlyMatPlay[i] == "atv" && Application.platform == RuntimePlatform.Android && currentYipliConfig.isDeviceAndroidTV) {
+        //             //Debug.LogError("Executing atv");
+        //             currentYipliConfig.onlyMatPlayMode = true;
+        //             break;
+        //         } else if (allOSForOnlyMatPlay[i] == "i" && Application.platform == RuntimePlatform.IPhonePlayer) {
+        //             //Debug.LogError("Executing i");
+        //             currentYipliConfig.onlyMatPlayMode = true;
+        //             break;
+        //         } else if (allOSForOnlyMatPlay[i] == "w" && Application.platform == RuntimePlatform.WindowsPlayer) {
+        //             // for testing in editor (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        //             //Debug.LogError("Executing w");
+        //             currentYipliConfig.onlyMatPlayMode = true;
+        //             break;
+        //         }
+        //     }
+        // } else {
+        //     currentYipliConfig.onlyMatPlayMode = false;
+        // }
+
         Debug.LogError("Retake Tutorial : next line is initUserID");
         //Setting User Id in the scriptable Object
         InitUserId();
