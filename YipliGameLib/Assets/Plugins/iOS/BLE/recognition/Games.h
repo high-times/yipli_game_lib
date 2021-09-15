@@ -43,25 +43,25 @@ public:
     //Jump
     int twoLegsDetected { 0 };
     int activateJummpSequence { 0 };
-    long timerHistoryJump{ 0 };
-    long timerHistoryJump2{ 0 };
+    long long timerHistoryJump{ 0 };
+    long long timerHistoryJump2{ 0 };
 
     //Runnning
     int globalStopTimeDifference { 0 };
     int runnningStopFlag { 0 };
-    long timerHistoryRunning1{ 0 };
-    long timerHistoryRunning2{ 0 };
+    long long timerHistoryRunning1{ 0 };
+    long long timerHistoryRunning2{ 0 };
     bool runningStartedFlag = false;
     int singleLegMovedFlag { 0 };
     int singleLegLocation { 0 };
-    long runningStartTime { 0 };
+    long long runningStartTime { 0 };
     int stepsCount { 0 };
     int totalStepsCount { 0 };
     int liftUpStartLocation { 0 };
     bool twoLegFound = false;
-    long twoLegFoundTimestamp { 0 };
+    long long twoLegFoundTimestamp { 0 };
     int stepsCountWhenTwoLegFound { 0 };
-    long timerHistoryRunningJump { 0 };
+    long long timerHistoryRunningJump { 0 };
     bool runningJumpFlag = false;
 
     //Leg Movement
@@ -83,7 +83,7 @@ public:
     int jumpFlag { 0 };
 
     //High Knee
-    long timerHistoryHighKnee { 0 };
+    long long timerHistoryHighKnee { 0 };
     
     /*****************************************
     * Member functions / Constructors

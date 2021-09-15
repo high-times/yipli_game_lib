@@ -77,11 +77,14 @@ public class MatInputController : MonoBehaviour
     void Update()
     {
         // mat and keyboard controls will be stopped when tutorial is active.
-        if (!IsTutorialRunning)
-        {
-            GetMatUIKeyboardInputs();
-            ManageMatActions();
-        }
+        //if (!IsTutorialRunning)
+        //{
+        //    GetMatUIKeyboardInputs();
+        //    ManageMatActions();
+        //}
+
+        GetMatUIKeyboardInputs();
+        ManageMatActions();
     }
 
     public void SetProperClusterID(int clusterID)
@@ -158,15 +161,15 @@ public class MatInputController : MonoBehaviour
         {
             case LEFT:
 
-                if (IsThisSwitchPlayerPanel) {
-                    newMatInputController.SetMatToNormalScale();
-                    newMatInputController.HideTextButtons();
+                //if (IsThisSwitchPlayerPanel) {
+                //    newMatInputController.SetMatToNormalScale();
+                //    newMatInputController.HideTextButtons();
 
-                    IsThisSwitchPlayerPanel = false;
+                //    IsThisSwitchPlayerPanel = false;
 
-                    FindObjectOfType<PlayerSelection>().OnSwitchPlayerPress();
-                    return;
-                }
+                //    FindObjectOfType<PlayerSelection>().OnSwitchPlayerPress();
+                //    return;
+                //}
 
                 currentButtonIndex = GetPreviousButton();
                 ManageCurrentButton(IsThisPlayerSelectionPanel);
@@ -175,15 +178,15 @@ public class MatInputController : MonoBehaviour
 
             case RIGHT:
 
-                if (IsThisSwitchPlayerPanel) {
-                    newMatInputController.SetMatToNormalScale();
-                    newMatInputController.HideTextButtons();
+                //if (IsThisSwitchPlayerPanel) {
+                //    newMatInputController.SetMatToNormalScale();
+                //    newMatInputController.HideTextButtons();
 
-                    IsThisSwitchPlayerPanel = false;
+                //    IsThisSwitchPlayerPanel = false;
 
-                    FindObjectOfType<PlayerSelection>().OnContinuePress();
-                    return;
-                }
+                //    FindObjectOfType<PlayerSelection>().OnContinuePress();
+                //    return;
+                //}
 
                 currentButtonIndex = GetNextButton();
                 ManageCurrentButton(IsThisPlayerSelectionPanel);
@@ -192,13 +195,16 @@ public class MatInputController : MonoBehaviour
 
             case ENTER:
 
-                if (IsThisSwitchPlayerPanel) return;
+                //if (IsThisSwitchPlayerPanel) return;
 
-                if (IsThisPlayerSelectionPanel) {
+                if (IsThisPlayerSelectionPanel)
+                {
                     //currentB.onClick.Invoke();
                     currentPlayerName = playerMiddle.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text;
                     playerMiddle.GetComponent<Button>().onClick.Invoke();
-                } else {
+                }
+                else
+                {
                     mainButton.onClick.Invoke();
                 }
                 break;
@@ -257,7 +263,7 @@ public class MatInputController : MonoBehaviour
 
     private void ManageCurrentButton(bool isPlayerSelectionPanel)
     {
-        Debug.LogError("switchPlayer isPlayerSelectionPanel :  " + isPlayerSelectionPanel);
+        //Debug.LogError("switchPlayer isPlayerSelectionPanel :  " + isPlayerSelectionPanel);
 
         if (isPlayerSelectionPanel)
         {

@@ -81,7 +81,7 @@ bool Games::recogniseTapButtonClicked()
         leftLegLocation = m_persistentBlobs[0].maxy;
         rightLegLocation = m_persistentBlobs[1].maxy;
 
-        if (abs(leftLegLocation - rightLegLocation) > 7)
+        if (abs(leftLegLocation - rightLegLocation) > 10)
         {
 
             if (abs(leftLegLocation - singleLegLocation) < 3)
@@ -101,6 +101,8 @@ bool Games::recogniseTapButtonClicked()
         legMovedFlag = 0;
     }
     return false;
+
+
 }
 
 

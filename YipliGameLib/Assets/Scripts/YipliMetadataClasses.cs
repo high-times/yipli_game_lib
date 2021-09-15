@@ -188,6 +188,8 @@ public class YipliInventoryGameInfo
     public string versionUpdateMessage;
     public string maintenanceMessage;
     public string osListForMaintanence;
+    public int maxDaysWithoutUpdate;
+    public string onlyMatPlayMode = ",";
 
     YipliInventoryGameInfo(string gameId)
     {
@@ -200,7 +202,7 @@ public class YipliInventoryGameInfo
         {
             if (snapshot != null)
             {
-                Debug.Log("filling the GameInfo from Snapshot.");
+                Debug.Log("onlyMatPlayMode : filling the GameInfo from Snapshot.");
                 gameId = snapshot.Key;
                 displayName = snapshot.Child("name").Value?.ToString() ?? "";
                 gamePackageId = snapshot.Child("android-url").Value?.ToString() ?? "";
@@ -219,6 +221,24 @@ public class YipliInventoryGameInfo
 
                 maintenanceMessage = snapshot.Child("maintenance-message").Value.ToString();
                 versionUpdateMessage = snapshot.Child("version-update-message").Value.ToString();
+
+                if (snapshot.HasChild("max-days-without-update"))
+                {
+                    maxDaysWithoutUpdate = (int)snapshot.Child("max-days-without-update").Value;
+                }
+                else
+                {
+                    maxDaysWithoutUpdate = 6;
+                }
+
+                if (snapshot.HasChild("only-mat-play-mode"))
+                {
+                    onlyMatPlayMode = snapshot.Child("only-mat-play-mode").Value.ToString();
+                }
+                else
+                {
+                    onlyMatPlayMode = ",";
+                }
             }
             else
             {

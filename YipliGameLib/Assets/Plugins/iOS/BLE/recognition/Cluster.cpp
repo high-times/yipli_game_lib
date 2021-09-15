@@ -87,7 +87,7 @@ ResponsePackager Cluster::clusterCheckSequence(ResponsePackager& responsePackage
                 }
                 else if (m_matPixelCount > 1)
                 {
-                    long diff = (Utils::getCurrentTimestamp() - m_games.runningStartTime)/1000;
+                    auto diff = (Utils::getCurrentTimestamp() - m_games.runningStartTime)/1000;
 
 
                     if (diff < 5)
@@ -241,7 +241,7 @@ ResponsePackager Cluster::clusterCheckSequence(ResponsePackager& responsePackage
                 }
                 else if (m_matPixelCount > 1)
                 {
-                    long diff = (Utils::getCurrentTimestamp() - m_games.runningStartTime)/1000;
+                    auto diff = (Utils::getCurrentTimestamp() - m_games.runningStartTime)/1000;
 
 
                     if (diff < 5)

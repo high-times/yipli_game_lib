@@ -52,7 +52,7 @@ public class CameraResolutions : MonoBehaviour
         Rect nr = new Rect(0, 0, 1, 1);
  
         Camera.main.rect = nr;
-        GL.Clear(true, true, Color.black);
+        //GL.Clear(true, true, Color.black);
        
         Camera.main.rect = wp;
  

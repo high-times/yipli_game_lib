@@ -28,4 +28,4 @@ MonoBehaviour:
   skipNormalUpdateClicked: 0
   getMatUrlIn: 
   getMatUrlUS: 
-  allowMainGameSceneToLoad: 1
+  allowMainGameSceneToLoad: 0

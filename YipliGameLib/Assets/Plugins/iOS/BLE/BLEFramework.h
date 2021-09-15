@@ -8,8 +8,12 @@ extern NSString *const BLEUnityMessageName_OnBleDidDisconnect;
 extern NSString *const BLEUnityMessageName_OnBleDidReceiveData;
 
 @interface BLEFrameworkDelegate : NSObject
+-(void) scanForPeripherals;
+-(bool) connectPeripheral:(NSString *)peripheralID;
+@property (readonly, strong, nonatomic) NSData *dataRx;
 
-@property (readonly, strong, nonatomic) NSData *dataRx; 
 
 @end
 
+@interface AppDelegate : NSObject
+@end

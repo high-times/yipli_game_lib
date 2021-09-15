@@ -208,7 +208,8 @@ static int FMDATA_LENGTH = 127;
 {
     done = false;
     
-    [self.CM connectPeripheral:self.activePeripheral options:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:CBConnectPeripheralOptionNotifyOnDisconnectionKey]];
+    //Note : Only use below line if you want auto-connection to the peripheral on disonnect
+    //[self.CM connectPeripheral:self.activePeripheral options:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:CBConnectPeripheralOptionNotifyOnDisconnectionKey]];
     
     self.activePeripheral = nil;
     [[self delegate] bleDidDisconnect];

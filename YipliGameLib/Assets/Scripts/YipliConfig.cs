@@ -51,7 +51,7 @@ public class YipliConfig : ScriptableObject
     public bool bIsRetakeTutorialFlagActivated = false;
 
     //[HideInInspector]
-    public bool bIsInternetConnected;
+    public bool bIsInternetConnected = true;
 
     [HideInInspector]
     public YipliInventoryGameInfo gameInventoryInfo;
@@ -81,5 +81,5 @@ public class YipliConfig : ScriptableObject
 
     public string getMatUrlUS = string.Empty;
 
-    public bool allowMainGameSceneToLoad = true;
+    public bool allowMainGameSceneToLoad = false;
 }

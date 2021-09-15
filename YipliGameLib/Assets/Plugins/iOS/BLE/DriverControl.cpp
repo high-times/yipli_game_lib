@@ -28,7 +28,7 @@ bool DriverControl::initDriverProcessing(std::string _FMData) {
 
     bool MAT_ARRAY[ MAT_SIZE ];
     FMData = _FMData;
-     
+
     if( FMData != LastFMData){
 
         //Producing FMData
@@ -37,7 +37,7 @@ bool DriverControl::initDriverProcessing(std::string _FMData) {
         transpose.parseHexString(MAT_ARRAY, FMData);
         getMATArrayBasedOnPlayerType(MAT_ARRAY);
         Utils::ghostMatAlgo(MAT_ARRAY);
-            
+
         // Setting flags
         LastFMData = FMData;
         newFrameFlag = false;
@@ -110,9 +110,9 @@ bool DriverControl::initDriverProcessing(std::string _FMData) {
             //----------------------------------------------------------------
 
 
-            long newPauseTimestamp = Utils::getCurrentTimestamp();
+            auto newPauseTimestamp = Utils::getCurrentTimestamp();
 
-            long diff =  (newPauseTimestamp - pauseTimestamp);
+            auto diff =  (newPauseTimestamp - pauseTimestamp);
             FMLOG(VERBOSE, "FMResponse",("Pause Stats-"+std::to_string(getActiveMATPixelCount())+ std::string(" ")+std::to_string(diff)).c_str());
 
             if (diff >= static_cast<long>(Threshold::GAME_PAUSE_TIMESTAMP) && !gamePaused && getClusterID() != 0) {
@@ -120,7 +120,7 @@ bool DriverControl::initDriverProcessing(std::string _FMData) {
                 if(getActiveMATPixelCount() < static_cast<int>(Threshold::ALLOWED_SHORTED_PIXELS) ) {
 
                     gamePaused = true;
-                    FMLOG(2, "FMResponse :", "Pause Stats-GAME PAUSED");
+                    FMLOG(2, "FMResponse :", "GAME PAUSED");
                     responsePackager.setResponsePackager(ActionIdentifierTable::PAUSE);
                     responsePackager.setPlayerData(playerID);
                     responseCount++;
@@ -191,11 +191,9 @@ void DriverControl::setActiveMATPixelCount(int pixels) {
     MATPixelCount = pixels;
 }
 
-std::string DriverControl::getFMDriverVersion() { 
+std::string DriverControl::getFMDriverVersion() {
     return DRIVER_VERSION;;
 }
-
-
 
 
 

@@ -3,31 +3,31 @@
     using UnityEngine;
     using System.Collections;
     using System.Collections.Generic;
-    
+
     public class BLEControllerEventHandler : MonoBehaviour
     {
         //native events
         public delegate void OnBleDidConnectEventDelegate(string error);
         public static event OnBleDidConnectEventDelegate OnBleDidConnectEvent;
-        
+
         public delegate void OnBleDidDisconnectEventDelegate(string error);
         public static event OnBleDidDisconnectEventDelegate OnBleDidDisconnectEvent;
-        
+
         public delegate void OnBleDidReceiveDataEventDelegate(byte[] data, int numOfBytes);
         public static event OnBleDidReceiveDataEventDelegate OnBleDidReceiveDataEvent;
-        
+
         public delegate void OnBleDidInitializeEventDelegate(string error);
         public static event OnBleDidInitializeEventDelegate OnBleDidInitializeEvent;
-        
+
         public delegate void OnBleDidCompletePeripheralScanEventDelegate(string peripherals, string error);
         public static event OnBleDidCompletePeripheralScanEventDelegate OnBleDidCompletePeripheralScanEvent = HandleOnBleDidCompletePeripheralScanEvent;
-        
+
         //Instance methods used by iOS Unity Send Message
         void OnBleDidInitializeMessage(string message)
         {
             BLEControllerEventHandler.OnBleDidInitialize(message);
         }
-        
+
         public static void OnBleDidInitialize(string message)
         {
             string errorMessage = message != "Success" ? message : null;
@@ -38,7 +38,7 @@
             OnBleDidInitializeEvent?.Invoke(errorMessage);
 #endif
         }
-        
+
         void OnBleDidConnectMessage(string message)
         {
             BLEControllerEventHandler.OnBleDidConnect(message);
@@ -53,7 +53,7 @@
 #endif
             OnBleDidConnectEvent?.Invoke(errorMessage);
         }
-        
+
         void OnBleDidDisconnectMessage(string message)
         {
             BLEControllerEventHandler.OnBleDidDisconnect(message);
@@ -68,7 +68,7 @@
 #endif
             OnBleDidDisconnectEvent?.Invoke(errorMessage);
         }
-        
+
         void OnBleDidReceiveDataMessage(string message)
         {
             BLEControllerEventHandler.OnBleDidReceiveData(message);
@@ -92,17 +92,17 @@
                 }
             }
         }
-        
+
         void OnBleDidCompletePeripheralScanMessage(string message)
         {
             BLEControllerEventHandler.OnBleDidCompletePeripheralScan(message);
         }
-        
+
         public static void OnBleDidCompletePeripheralScan(string message)
         {
             string errorMessage = message != "Success" ? message : null;
             string peripheralJsonList = (errorMessage == null) ? InitBLE.GetListOfDevices() : null;
-            
+
             /*
             if (peripheralJsonList != null)
             {
@@ -115,12 +115,12 @@
                 }
             }
             */
-            
+
             Debug.LogError("peripheralJsonList from ble controller : " + peripheralJsonList);
-            
+
             OnBleDidCompletePeripheralScanEvent?.Invoke(peripheralJsonList, errorMessage);
         }
-        
+
         static void HandleOnBleDidCompletePeripheralScanEvent(string peripherals, string errorMessage)
         {
             if (errorMessage == null)
@@ -135,20 +135,24 @@
                     for (int i = 0; i < allBleDevices.Length; i++)
                     {
                         string[] tempSplits = allBleDevices[i].Split('|');
-                        
-                        Debug.Log("Mac : " + tempSplits[0] + " Device Name:" + tempSplits[1]);
+
+                        Debug.Log("Mac : " + tempSplits[0] + " | Device Name: " + tempSplits[1] + " | Contains : " + tempSplits[1].Contains("YIPLI") + " | Length : " + tempSplits[1].Length);
                         if (tempSplits[1].Contains("YIPLI") && tempSplits[1].Length > 5)
                         {
                             string[] matID = tempSplits[1].Split('-');
-                            
+
                             /***********************************
                             // FOR Batch of 250 
                             // MAT NAME - YIPLI-001
                             /**********************************/
-                            
+
                             //Check for the Mat name you want to connect against the scanned list
                             if (tempSplits[1] == InitBLE.MAT_NAME)
+                            {
+                                InitBLE.MAT_UUID = tempSplits[0];
                                 InitBLE.ConnectPeripheral(tempSplits[0]);
+                                break;
+                            }
 
                         }
                         else if (tempSplits[1].Contains("YIPLI") && tempSplits[1].Length == 5)
@@ -157,25 +161,36 @@
                             // FOR NRF Boards and Batch 1 boards
                             // MAT NAME - YIPLI
                             /**********************************/
-                            
+
                             //----------
                             // Directly connect to MAT ID if valid mac address 
                             // FOR BATCH-1 BOARDS
                             //----------
+                            Debug.LogError("from batch 1 boards else if");
                             string macAddress = tempSplits[0];
-                            
+
                             //----------
                             // Get MacAddress from GATT 
                             // FOR NRF BOARDS
                             //----------
                             // ~ TODO ~​
-                            
-                            
+
+
                             Debug.Log(macAddress + " " + InitBLE.MAC_ADDRESS);
-                            if (InitBLE.MAC_ADDRESS == macAddress)
-                            {
-                                InitBLE.ConnectPeripheral(tempSplits[0]);
-                            }
+                            InitBLE.MAT_UUID = tempSplits[0];
+                            InitBLE.ConnectPeripheral(tempSplits[0]);
+                            break;
+
+                            // ---------OLDER  CHECK [NOT WORKING] FOLLOW -----
+                            // if (InitBLE.MAC_ADDRESS == macAddress)
+                            // {
+                            //     Debug.LogError("from batch 1 boards else if, next line will start connection");
+                            //     InitBLE.ConnectPeripheral(tempSplits[0]);
+                            // }
+                        }
+                        else
+                        {
+                            Debug.LogError("from final else as above all conditions have failed");
                         }
                     }
                 }

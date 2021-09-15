@@ -1,3 +1,4 @@
+#import <Foundation/Foundation.h>
 #import "BLE.h"
 #import "BLEFramework.h"
 #import "parseHexString.m"
@@ -249,6 +250,7 @@ void processForMP(std::string _data) {
     
     return false;
 }
+
 - (bool)connectPeripheralAtIndex:(NSInteger)index
 {
     if (index >= self.ble.peripherals.count)
@@ -274,6 +276,7 @@ void processForMP(std::string _data) {
 - (void)disconnect {
     [self.ble disconnect];
 }
+
 
 #pragma mark Class Methods
 

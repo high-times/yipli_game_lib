@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using System;
+using UnityEngine.UI;
 
 public class MaintenancePanel : MonoBehaviour
 {
@@ -8,7 +9,6 @@ public class MaintenancePanel : MonoBehaviour
     //[SerializeField] TextMeshProUGUI title;
 
     [SerializeField] GameObject maintenancePanel;
-    [SerializeField] GameObject skipButton;
 
     [SerializeField] YipliConfig currentYipliConfig;
 
@@ -19,6 +19,16 @@ public class MaintenancePanel : MonoBehaviour
     [SerializeField] PlayerSelection playerSelection = null;
 
     [SerializeField] MatSelection matSelection = null;
+
+    [Header("UI objects")]
+    [SerializeField] GameObject skipButton = null;
+    [SerializeField] GameObject updateButton = null;
+    [SerializeField] Sprite errorSprite = null;
+
+    [Header("Required Script objects")]
+    [SerializeField] private Color yipliRed;
+    [SerializeField] private Color yipliMarine;
+    [SerializeField] private Color yipliBubble;
 
     private void Start()
     {
@@ -34,13 +44,13 @@ public class MaintenancePanel : MonoBehaviour
 
         // Debug.LogError("versions : maintenancePanel.activeSelf : " + maintenancePanel.activeSelf);
 
-        if (maintenancePanel.activeSelf || playerSelection.noNetworkPanel.activeSelf || playerSelection.GuestUserPanel.activeSelf || playerSelection.phoneHolderInfo.activeSelf || playerSelection.Minimum2PlayersPanel.activeSelf || matSelection.NoMatPanel.activeSelf) {
-            newUIManager.TurnOnMainCommonButton();
-            newMatInputController.MakeSortLayerZero();
-        } else {
-            newUIManager.TurnOffMainCommonButton();
-            newMatInputController.MakeSortLayerTen();
-        }
+        //if (maintenancePanel.activeSelf || playerSelection.noNetworkPanel.activeSelf || playerSelection.GuestUserPanel.activeSelf || playerSelection.phoneHolderInfo.activeSelf || playerSelection.Minimum2PlayersPanel.activeSelf || matSelection.NoMatPanel.activeSelf) {
+        //    newUIManager.TurnOnMainCommonButton();
+        //    newMatInputController.MakeSortLayerZero();
+        //} else {
+        //    newUIManager.TurnOffMainCommonButton();
+        //    newMatInputController.MakeSortLayerTen();
+        //}
 
         ManageManitanenceOrBlocking();
         //BlockIfTroubleShootingIsOn();
@@ -142,8 +152,12 @@ public class MaintenancePanel : MonoBehaviour
         message.text = currentYipliConfig.gameInventoryInfo.maintenanceMessage;
         //title.text = "Maintenance Notice";
 
-        newUIManager.UpdateButtonDisplay(maintenancePanel.tag, true);
-        newMatInputController.MakeSortLayerZero();
+        //newUIManager.UpdateButtonDisplay(maintenancePanel.tag, true);
+        //newMatInputController.MakeSortLayerZero();
+        updateButton.GetComponent<Image>().sprite = errorSprite;
+        updateButton.transform.GetChild(0).GetComponent<Image>().sprite = errorSprite;
+        updateButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>().color = yipliMarine;
+        updateButton.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = "Quit";
         maintenancePanel.SetActive(true);
 
         currentYipliConfig.allowMainGameSceneToLoad = false;
@@ -170,13 +184,14 @@ public class MaintenancePanel : MonoBehaviour
             maintenancePanel.SetActive(true);
             newMatInputController.MakeSortLayerZero();
 
-            newUIManager.UpdateButtonDisplay(maintenancePanel.tag);
+            //newUIManager.UpdateButtonDisplay(maintenancePanel.tag);
 
             currentYipliConfig.allowMainGameSceneToLoad = false;
         }
         else if (notAllowedVersionCode < gameVersionCode && currentStoreCode > gameVersionCode) {
             // Debug.LogError("versions : TimeDifferenceManager() : " + TimeDifferenceManager());
 
+            // update below 6 with firebase entries
             if (currentYipliConfig.skipNormalUpdateClicked || TimeDifferenceManager() < 6) return;
             
             message.text = "A new version of " + currentYipliConfig.gameInventoryInfo.displayName + " is available.\nUpdate recommended";
@@ -185,7 +200,7 @@ public class MaintenancePanel : MonoBehaviour
             newMatInputController.MakeSortLayerZero();
             skipButton.SetActive(true);
 
-            newUIManager.UpdateButtonDisplay(maintenancePanel.tag);
+            //newUIManager.UpdateButtonDisplay(maintenancePanel.tag);
 
             currentYipliConfig.allowMainGameSceneToLoad = false;
         }
@@ -249,5 +264,19 @@ public class MaintenancePanel : MonoBehaviour
         Debug.LogError("difference : " + (int)(todaysDate - skippedDate).TotalDays);
 
         return (int)(todaysDate - skippedDate).TotalDays;
+    }
+
+    public void UpdateButtonFunction()
+    {
+        if (updateButton.transform.GetChild(0).GetComponent<Image>().sprite == errorSprite)
+        {
+            // quit application.
+            Application.Quit();
+        }
+        else
+        {
+            // update game
+            playerSelection.OnUpdateGameClick();
+        }
     }
 }

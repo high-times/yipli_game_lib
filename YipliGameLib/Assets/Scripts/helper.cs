@@ -192,7 +192,7 @@ public static class YipliHelper
 
         versionCode = int.Parse(finalVersion);
 
-        Debug.Log("Returning version Code : " + versionCode);
+        //Debug.Log("Returning version Code : " + versionCode);
 
         return versionCode;
     }

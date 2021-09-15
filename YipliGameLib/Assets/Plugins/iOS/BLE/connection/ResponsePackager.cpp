@@ -85,3 +85,5 @@ void ResponsePackager::resestVariables()
     m_player = "";
     m_properties = {};
 }
+
+

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using Firebase.DynamicLinks;
+using GL.UI.PanelManagers;
 
 public enum QueryStatus
 {
@@ -123,13 +124,15 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
         }
         else
         {
-            Debug.Log("Invalid Game. Nothing found at specified path.");
+            Debug.Log("onlyMatPlayMode : Invalid Game. Nothing found at specified path.");
         }
         getGameInfoQueryStatus = global::QueryStatus.Completed;
     }
 
     private IEnumerator TrackNetworkConnectivity()
     {
+        //yield return new WaitForSecondsRealtime(8f);
+
         yield return anonAuthenticate();
         FirebaseDatabase.DefaultInstance.GetReference(".info/connected").ValueChanged += HandleConnectedChanged;
 
@@ -146,6 +149,8 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     {
         Debug.Log("Network : " + e.Snapshot.Value);
         currentYipliConfig.bIsInternetConnected = e.Snapshot.Value.Equals(true);
+
+        //FindObjectOfType<NoInternetPanelManager>().ManageNoInternetPanel();
     }
 
 /*
@@ -290,10 +295,10 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
 
     private async void addGameDataListener()
     {
-        Debug.Log("addGameDataListener invoked");
+        //Debug.Log("addGameDataListener invoked");
         await anonAuthenticate();
 
-        Debug.LogError("player id : " + currentYipliConfig.playerInfo.playerId);
+        //Debug.LogError("player id : " + currentYipliConfig.playerInfo.playerId);
 
         if (!currentYipliConfig.gameId.Equals("default") || currentYipliConfig.gameId.Length > 1)
             FirebaseDatabase.DefaultInstance

@@ -9,9 +9,12 @@ EditorBuildSettings:
     path: Assets/DemoGameScene.unity
     guid: 9fbc78e5ea815c94b809e86ccd264809
   - enabled: 1
-    path: Assets/yipli_lib_scene.unity
+    path: Assets/GL/Scenes/yipli_lib_scene.unity
     guid: 74ba795358342f24fa7753aa486a54d5
   - enabled: 1
     path: Assets/TroubleshootingModule/Troubleshooting.unity
     guid: f3d10143928070a43a86264cfd5fbd4d
+  - enabled: 1
+    path: Assets/GL/Scenes/gameLibTutorial.unity
+    guid: 2894fadde865d31488af78939afe685a
   m_configObjects: {}

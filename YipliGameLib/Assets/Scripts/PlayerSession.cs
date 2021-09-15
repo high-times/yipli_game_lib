@@ -59,10 +59,14 @@ public class PlayerSession : MonoBehaviour
     public delegate void OnDefaultMatChanged();
     public static event OnDefaultMatChanged NewMatFound;
 
+    [Header("InformationPanel")]
+    [SerializeField] private GameObject yipliInfoPanel = null;
+    [SerializeField] private TextMeshProUGUI infoPaneltext = null;
+
     private void Awake()
     {
-        SetMatPlayMode();
-
+        //SetMatPlayMode();
+        
         if (_instance != null && _instance != this)
         {
             Debug.Log("Destroying current instance of playersession and reinitializing");
@@ -127,7 +131,11 @@ public class PlayerSession : MonoBehaviour
     public void Update()
     {
         Debug.Log("Game Cluster Id : " + YipliHelper.GetGameClusterId());
-        CheckMatConnection();
+        
+        if (currentYipliConfig.onlyMatPlayMode)
+        {
+            CheckMatConnection();
+        }
     }
 
     public string GetCurrentPlayer()
@@ -180,6 +188,12 @@ public class PlayerSession : MonoBehaviour
     //Call in case of exception while playing game.
     public void CloseSPSession()
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         //Destroy current player session data
         Calories = 0;
         FitnesssPoints = 0;
@@ -320,6 +334,12 @@ public class PlayerSession : MonoBehaviour
 
     public void ReInitializeSPSession()
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         gamePoints = 0;
         duration = 0;
         bIsPaused = false;
@@ -391,6 +411,12 @@ public class PlayerSession : MonoBehaviour
 
     public void StartSPSession()
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         Debug.Log("Starting current player session.");
         playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
         gamePoints = 0;
@@ -401,6 +427,12 @@ public class PlayerSession : MonoBehaviour
 
     public void StoreSPSession(float gamePoints)
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         Debug.Log("Storing current player session to backend database.");
         this.gamePoints = gamePoints;
 
@@ -455,6 +487,12 @@ public class PlayerSession : MonoBehaviour
     }
     public void PauseSPSession()
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         Debug.Log("Pausing current player session.");
         bIsPaused = true; // only set the paused flat to true. Fixed update will take care of halting the time counter
                           //Ble check
@@ -471,11 +509,23 @@ public class PlayerSession : MonoBehaviour
     }
     public void ResumeSPSession()
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         Debug.Log("Resuming current player session.");
         bIsPaused = false;
     }
     public void AddPlayerAction(YipliUtils.PlayerActions action, int count = 1)
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         if (count < 1) return;
 
         Debug.Log("Adding action in current player session.");
@@ -543,6 +593,12 @@ public class PlayerSession : MonoBehaviour
     }
     public void StartMPSession()
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         Debug.Log("Starting multi player session.");
         currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
         currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.playerActionCounts = new Dictionary<YipliUtils.PlayerActions, int>();
@@ -565,6 +621,12 @@ public class PlayerSession : MonoBehaviour
     }
     public void StoreMPSession(float playerOneGamePoints, float playerTwoGamePoints)
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         Debug.LogError("Duration is " + duration);
         currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.duration = duration;
         currentYipliConfig.MP_GameStateManager.playerData.PlayerTwoDetails.duration = duration;
@@ -634,14 +696,32 @@ public class PlayerSession : MonoBehaviour
     }
     public void PauseMPSession()
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         PauseSPSession();
     }
     public void ResumeMPSession()
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         ResumeSPSession();
     }
     public void AddMultiPlayerAction(YipliUtils.PlayerActions action, PlayerDetails playerDetails, int count = 1)
     {
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            Debug.LogError("onlyMatPlayMode is on, returning");
+            return;
+        }
+
         Debug.Log("Adding action in current player session.");
         if (playerDetails.playerActionCounts.ContainsKey(action))
             playerDetails.playerActionCounts[action] = playerDetails.playerActionCounts[action] + count;
@@ -715,9 +795,26 @@ public class PlayerSession : MonoBehaviour
     // retake tutorial
     public void RetakeMatControlsTutorial()
     {
-        _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
-        currentYipliConfig.bIsRetakeTutorialFlagActivated = true;
-        SceneManager.LoadScene("yipli_lib_scene");
+        if (currentYipliConfig.onlyMatPlayMode)
+        {
+            _instance.currentYipliConfig.callbackLevel = SceneManager.GetActiveScene().name;
+            //currentYipliConfig.bIsRetakeTutorialFlagActivated = true;
+            //SceneManager.LoadScene("yipli_lib_scene");
+            SceneManager.LoadScene("gameLibTutorial");
+        }
+        else
+        {
+            // info panel text management
+            infoPaneltext.text = "Mat Tutorial is not available in preview mode.";
+            yipliInfoPanel.SetActive(true);
+        }
+    }
+
+    public void YipliInfoPanleOkayButton()
+    {
+        // info panel text management
+        infoPaneltext.text = "";
+        yipliInfoPanel.SetActive(false);
     }
 
     // set mat play mode
@@ -762,6 +859,23 @@ public class PlayerSession : MonoBehaviour
             #endif
         }
     //#endif
+
+    // Application State Management
+    void OnApplicationFocus(bool focus)
+    {
+#if UNITY_IOS
+        if (focus)
+        {
+            Debug.LogError("Test Poc is in focus : " + focus + " .. Reconnecting mat");
+            InitBLE.ConnectPeripheral(InitBLE.MAT_UUID);
+        }
+        else
+        {
+            Debug.LogError("Test Poc is in focus : " + focus + " .. Disconnecting mat");
+            InitBLE.DisconnectMat();
+        }
+#endif
+    }
 
     // Test functions
     public void PrintBundleIdentifier() {

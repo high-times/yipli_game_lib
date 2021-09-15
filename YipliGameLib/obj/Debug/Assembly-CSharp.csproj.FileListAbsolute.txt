@@ -344,3 +344,5 @@ C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\IKVM.Reflection.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\IKVM.Runtime.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\IKVM.Runtime.JNI.dll
 C:\Yipli\yipli_game_lib\YipliGameLib\Temp\bin\Debug\PCFMDriver.dll
+D:\F\yipli_game_lib\YipliGameLib\obj\Debug\Assembly-CSharp.csproj.AssemblyReference.cache
+D:\F\yipli_game_lib\YipliGameLib\obj\Debug\Assembly-CSharp.csproj.CoreCompileInputs.cache

@@ -18,7 +18,8 @@ public class InitBLE
     public static bool isInitActive = false;
     public static string MAC_ADDRESS = "";
     public static string MAT_NAME = "";
-    
+    public static string MAT_UUID = "";
+
     //required variables
     static string peripheralJsonList = null;
     
@@ -483,9 +484,10 @@ public class InitBLE
         return result;
     }
 
-    public static void DisconnectMat() {
+    public static void DisconnectMat()
+    {
 #if UNITY_IOS
-    _Disconnect();
+        _Disconnect();
 #endif
     }
 }

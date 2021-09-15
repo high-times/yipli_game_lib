@@ -6,8 +6,8 @@
 #ifndef FMINTERFACE_DRIVERCONTROL_H
 #define FMINTERFACE_DRIVERCONTROL_H
 
-#define DRIVER_VERSION "0.2.6"
-
+//#define DRIVER_VERSION "CPP_TV_0.0.10"
+#define DRIVER_VERSION "2.7.4"
 
 #include "blobprocessor/Processor.h"
 #include "blobprocessor/Blob.h"
@@ -38,7 +38,7 @@ public:
     int responseCount{ 0 };
     bool newFrameFlag{ false };
     bool gamePaused{ false };
-    long pauseTimestamp{ 0 };
+    long long pauseTimestamp{ 0 };
 
     Processor processor;
     Cluster cluster = Cluster(persistentBlobs, MATPixelCount);
