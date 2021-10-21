@@ -82,4 +82,8 @@ public class YipliConfig : ScriptableObject
     public string getMatUrlUS = string.Empty;
 
     public bool allowMainGameSceneToLoad = false;
+
+    public bool sceneLoadedDirectly = false;
+
+    public bool onlyMatPlayModeIsSet = false;
 }

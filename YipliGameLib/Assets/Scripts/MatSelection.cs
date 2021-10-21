@@ -224,7 +224,7 @@ public class MatSelection : MonoBehaviour
 
     public void LoadMainGameSceneIfMatIsConnected()
     {
-        if (!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase) || currentYipliConfig.onlyMatPlayMode)
+        if (!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase) || !currentYipliConfig.onlyMatPlayMode)
         {
             StartCoroutine(LoadMainGameScene());
         }
@@ -236,7 +236,13 @@ public class MatSelection : MonoBehaviour
 
     public void LoadMainGameSceneDirectly()
     {
-        StartCoroutine(LoadMainGameScene());
+        if (currentYipliConfig.sceneLoadedDirectly) return;
+
+        currentYipliConfig.sceneLoadedDirectly = true;
+
+        Debug.LogError("onlyMatPlayMode : From LoadMainGameSceneDirectly");
+        //StartCoroutine(LoadMainGameScene());
+        SceneManager.LoadScene(currentYipliConfig.callbackLevel);
     }
 
     public void ReCheckMatConnection()
@@ -410,9 +416,12 @@ public class MatSelection : MonoBehaviour
         tick.SetActive(true);
         yield return new WaitForSecondsRealtime(2f);
         */
+        Debug.LogError("onlyMatPlayMode : From LoadMainGameScene");
         bIsGameMainSceneLoading = true;
         //loadingPanel.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "launching game..";
         loadingPanel.SetActive(true);
+
+        Debug.LogError("onlyMatPlayMode : From loading panel is ativated");
 
         if (currentYipliConfig.gameType != GameType.MULTIPLAYER_GAMING)
         {
@@ -425,6 +434,7 @@ public class MatSelection : MonoBehaviour
 
 
         //yield return null;
+        Debug.LogError("onlyMatPlayMode : From next line is StartCoroutine(LoadSceneAfterDisplayingDriverAndGameVersion());");
         StartCoroutine(LoadSceneAfterDisplayingDriverAndGameVersion());
     }
 
@@ -436,6 +446,7 @@ public class MatSelection : MonoBehaviour
 
         yield return null;
 
+        Debug.LogError("onlyMatPlayMode : From LoadSceneAfterDisplayingDriverAndGameVersion after yield return");
         if (currentYipliConfig.bIsChangePlayerCalled)
         {
             // this check has to be false for every game scene load.
@@ -444,10 +455,9 @@ public class MatSelection : MonoBehaviour
         }
 
         //load last Scene
-        Debug.LogError("Time to launch the scene : " + currentYipliConfig.allowMainGameSceneToLoad);
-        if (currentYipliConfig.allowMainGameSceneToLoad)
+        Debug.LogError("onlyMatPlayMode : Time to launch the scene : " + currentYipliConfig.allowMainGameSceneToLoad);
+        if (currentYipliConfig.allowMainGameSceneToLoad || !currentYipliConfig.onlyMatPlayMode)
         {
-
             SceneManager.LoadScene(currentYipliConfig.callbackLevel);
         }
     }

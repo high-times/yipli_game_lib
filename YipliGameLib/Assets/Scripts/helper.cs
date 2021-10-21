@@ -59,7 +59,12 @@ public static class YipliHelper
 
     public static string GetMatConnectionStatus()
     {
-        if(!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            return "Connected";
+        }
+
+        if (!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
             return "Connected";
         Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getMatConnectionStatus());
         return InitBLE.getMatConnectionStatus();

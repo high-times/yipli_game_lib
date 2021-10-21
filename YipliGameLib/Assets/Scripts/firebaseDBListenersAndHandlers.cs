@@ -133,41 +133,31 @@ public class firebaseDBListenersAndHandlers : MonoBehaviour
     {
         //yield return new WaitForSecondsRealtime(8f);
 
+        //if (Application.internetReachability == NetworkReachability.NotReachable)
+        //{
+        //    Debug.Log("Network from if : " + Application.internetReachability);
+        //    currentYipliConfig.bIsInternetConnected = false;
+        //}
+        //else
+        //{
+        //    Debug.Log("Network from else : " + Application.internetReachability + " : " + currentYipliConfig.bIsInternetConnected);
+        //    currentYipliConfig.bIsInternetConnected = true;
+        //}
+
+        //if (!currentYipliConfig.bIsInternetConnected)
+        //{
+        //    yield break;
+        //}
+
         yield return anonAuthenticate();
         FirebaseDatabase.DefaultInstance.GetReference(".info/connected").ValueChanged += HandleConnectedChanged;
-
-/*
-#if UNITY_ANDROID || UNITY_IOS
-        FirebaseDatabase.DefaultInstance.GetReference(".info/connected").ValueChanged += HandleConnectedChanged;
-#else
-        StartCoroutine(CheckPingResult());
-#endif
-*/
     }
 
     private void HandleConnectedChanged(object sender, ValueChangedEventArgs e)
     {
         Debug.Log("Network : " + e.Snapshot.Value);
         currentYipliConfig.bIsInternetConnected = e.Snapshot.Value.Equals(true);
-
-        //FindObjectOfType<NoInternetPanelManager>().ManageNoInternetPanel();
     }
-
-/*
-    private IEnumerator CheckPingResult() {
-        while(true) {
-            yield return new WaitForSecondsRealtime(1f);
-            
-            if (Application.internetReachability == NetworkReachability.NotReachable) {
-                Debug.Log("Network from if : " + Application.internetReachability);
-                currentYipliConfig.bIsInternetConnected =false;
-            } else {
-                Debug.Log("Network from else : " + Application.internetReachability);
-                currentYipliConfig.bIsInternetConnected = true;
-            }
-        }
-    }
-*/
 
     void OnDisable()
     {

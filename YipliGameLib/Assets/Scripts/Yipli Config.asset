@@ -29,3 +29,5 @@ MonoBehaviour:
   getMatUrlIn: 
   getMatUrlUS: 
   allowMainGameSceneToLoad: 0
+  sceneLoadedDirectly: 0
+  onlyMatPlayModeIsSet: 0

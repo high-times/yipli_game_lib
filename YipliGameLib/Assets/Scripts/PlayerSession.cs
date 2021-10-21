@@ -78,6 +78,8 @@ public class PlayerSession : MonoBehaviour
             _instance = this;
         }
 
+        if (currentYipliConfig.onlyMatPlayModeIsSet && !currentYipliConfig.onlyMatPlayMode) return;
+
         if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)
         {
             if (currentYipliConfig.userId == null || currentYipliConfig.userId.Length < 1)
@@ -106,6 +108,9 @@ public class PlayerSession : MonoBehaviour
     public void Start()
     {
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+        if (currentYipliConfig.onlyMatPlayModeIsSet && !currentYipliConfig.onlyMatPlayMode) return;
+
         //You are here, means PlayerInfo is found.
         //Invoke the player found event, to get the player data.
         if (currentYipliConfig.gameId.Length > 1 && (Application.platform == RuntimePlatform.Android))
@@ -130,6 +135,8 @@ public class PlayerSession : MonoBehaviour
 
     public void Update()
     {
+        if (currentYipliConfig.onlyMatPlayModeIsSet && !currentYipliConfig.onlyMatPlayMode) return;
+
         Debug.Log("Game Cluster Id : " + YipliHelper.GetGameClusterId());
         
         if (currentYipliConfig.onlyMatPlayMode)

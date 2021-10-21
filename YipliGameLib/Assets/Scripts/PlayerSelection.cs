@@ -111,7 +111,7 @@ public class PlayerSelection : MonoBehaviour
     private bool phoneHolderTUTPlayed = false;
     private bool psFlowForCPcalled = false;
     private bool startDataManagement = false;
-    private bool onlyMatPlayModeIsSet = false;
+    //private bool onlyMatPlayModeIsSet = false;
     private bool matConnectionStarted = false;
 
     public void OnEnable()
@@ -133,7 +133,7 @@ public class PlayerSelection : MonoBehaviour
 
         TurnOffAllDeviceSpecificTextObject();
 
-        //StartCoroutine(CheckNoInternetConnection());
+        StartCoroutine(CheckNoInternetConnection());
 
         //Todo: Can shift this to onEnable ?
         UpdateGameAndDriverVersionText();
@@ -145,24 +145,26 @@ public class PlayerSelection : MonoBehaviour
         //Todo: Shift the following code to llistner basis. Avoid a get call.
         //Data could be ready already before reaching here.
 #if UNITY_STANDALONE_WIN
-        //keep yipli app Download Url ready
-        FileReadWrite.YipliAppDownloadUrl = await FirebaseDBHandler.GetYipliWinAppUpdateUrl();
+        if (currentYipliConfig.bIsInternetConnected)
+        {
+            //keep yipli app Download Url ready
+            FileReadWrite.YipliAppDownloadUrl = await FirebaseDBHandler.GetYipliWinAppUpdateUrl();
 
-        FetchUserDetailsForWindowsAndEditor();
+            FetchUserDetailsForWindowsAndEditor();
+        }
 
         //FetchUserAndInitializePlayerEnvironment();
 #endif
 
-
         // comment below part is current platform is not UNITY_STANDALONE_WIN
-#if UNITY_EDITOR
-        //FetchUserDetailsForWindowsAndEditor();
+//#if UNITY_EDITOR
+//        //FetchUserDetailsForWindowsAndEditor();
 
-        if (!currentYipliConfig.bIsChangePlayerCalled)
-        {
-            FetchUserDetailsForWindowsAndEditor();
-        }
-#endif
+//        if (!currentYipliConfig.bIsChangePlayerCalled)
+//        {
+//            FetchUserDetailsForWindowsAndEditor();
+//        }
+//#endif
 
 
 #if UNITY_ANDROID || UNITY_IOS
@@ -188,9 +190,26 @@ public class PlayerSelection : MonoBehaviour
 
     private void Update()
     {
-        if (!onlyMatPlayModeIsSet)
+        if (!currentYipliConfig.bIsInternetConnected) return;
+
+        // TO DO : Move below operation in another file. Look for executions start(). - use flag -> get game info query completed
+        if (!currentYipliConfig.onlyMatPlayModeIsSet)
         {
             SetOnlyMatPlayMode();
+        }
+
+        // wait for only matplay mode to be set
+        if (!currentYipliConfig.onlyMatPlayModeIsSet) return;
+
+        Debug.LogError("onlyMatPlayMode : only mat play mode : " + currentYipliConfig.onlyMatPlayMode);
+
+        if (!currentYipliConfig.onlyMatPlayMode)
+        {
+            if (currentYipliConfig.sceneLoadedDirectly) return;
+
+            Debug.LogError("onlyMatPlayMode : next line is matSelectionScript.LoadMainGameSceneDirectly();");
+            matSelectionScript.LoadMainGameSceneDirectly();
+            return;
         }
 
         if (allowPhoneHolderAudioPlay)
@@ -214,7 +233,7 @@ public class PlayerSelection : MonoBehaviour
 
         if (startDataManagement)
         {
-            ManageDataMaintanence();
+            InitializeAndStartPlayerSelectionNoCoroutine();
         }
 
         // panels with buttons
@@ -708,12 +727,12 @@ public class PlayerSelection : MonoBehaviour
 
 #if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
         // currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
-        currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
-        currentYipliConfig.pId = "-MSX--0uyqI7KgKmNOIY"; // vismay player
+        //currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
+        //currentYipliConfig.pId = "-MSX--0uyqI7KgKmNOIY"; // vismay player
         // currentYipliConfig.userId = "rKE4pP03qwdZtRsIw0QjrYpYyXm1"; // vismay test only for vismay
         // currentYipliConfig.pId = "-MbGAzHTOONlQefgKklU"; // vismay player // smae above comment
         //currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg", 1); // vismay user
-        currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54", "YIPLI");
+        //currentYipliConfig.matInfo = new YipliMatInfo("-MUMyYuLTeqXB_K7RT_L", "A4:DA:32:4F:C2:54", "YIPLI");
 
         //SetLinkData();
 
@@ -761,7 +780,7 @@ public class PlayerSelection : MonoBehaviour
             currentYipliConfig.onlyMatPlayMode = true;
         }
 
-        onlyMatPlayModeIsSet = true;
+        currentYipliConfig.onlyMatPlayModeIsSet = true;
     }
 
     private void ManageChangePlayer()
@@ -777,9 +796,21 @@ public class PlayerSelection : MonoBehaviour
         }
     }
 
-    private void ManageDataMaintanence()
+    private void InitializeAndStartPlayerSelectionNoCoroutine()
     {
         if (currentYipliConfig.bIsChangePlayerCalled) return;
+
+        //// wait for only matplay mode to be set
+        //if (!onlyMatPlayModeIsSet) return;
+
+        //Debug.LogError("onlyMatPlayMode : only mat play mode : " + currentYipliConfig.onlyMatPlayMode);
+
+        //if (!currentYipliConfig.onlyMatPlayMode)
+        //{
+        //    Debug.LogError("onlyMatPlayMode : next line is matSelectionScript.LoadMainGameSceneDirectly();");
+        //    matSelectionScript.LoadMainGameSceneDirectly();
+        //    return;
+        //}
 
         // game info status check
         if (firebaseDBListenersAndHandlers.GetGameInfoQueryStatus() != QueryStatus.Completed) return;
@@ -800,11 +831,6 @@ public class PlayerSelection : MonoBehaviour
         {
             InitDefaultPlayer();
         }
-
-        // wait for only matplay mode to be set
-        if (!onlyMatPlayModeIsSet) return;
-
-        Debug.LogError("stut : only mat play mode : " + currentYipliConfig.onlyMatPlayMode);
 
         // only once start the connection flow
         if (!matConnectionStarted && currentYipliConfig.onlyMatPlayMode)
@@ -1266,13 +1292,13 @@ public class PlayerSelection : MonoBehaviour
     // This function is attached to Continue button on Tutorial panel. This will be the end of tutorial.
     public void OnTutorialContinuePress()
     {
-        if (currentYipliConfig.bIsRetakeTutorialFlagActivated)
-        {
-            currentYipliConfig.bIsRetakeTutorialFlagActivated = false;
-            //matSelectionScript.MatConnectionFlow();
-            matSelectionScript.LoadMainGameSceneIfMatIsConnected();
-            return;
-        }
+        //if (currentYipliConfig.bIsRetakeTutorialFlagActivated)
+        //{
+        //    currentYipliConfig.bIsRetakeTutorialFlagActivated = false;
+        //    //matSelectionScript.MatConnectionFlow();
+        //    matSelectionScript.LoadMainGameSceneIfMatIsConnected();
+        //    return;
+        //}
 
 
         if (currentYipliConfig.playerInfo != null)
@@ -1526,11 +1552,6 @@ public class PlayerSelection : MonoBehaviour
     // redirect to yipli id userid is notfound after 10 seconds
     private IEnumerator RelaunchgameFromYipliApp()
     {
-        //if (!currentYipliConfig.onlyMatPlayMode)
-        //{
-        //    yield break;
-        //}
-
 #if UNITY_EDITOR
         if (currentYipliConfig.userId != null)
         {
@@ -1542,6 +1563,11 @@ public class PlayerSelection : MonoBehaviour
 
         while (totalTime < 10)
         {
+            if (!currentYipliConfig.onlyMatPlayMode)
+            {
+                matSelectionScript.LoadMainGameSceneIfMatIsConnected();
+                yield break;
+            }
 
             if (firebaseDBListenersAndHandlers.dynamicLinkIsReceived)
             {
