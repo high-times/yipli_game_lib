@@ -11018,18 +11018,18 @@ MonoBehaviour:
   errorSound: {fileID: 8300000, guid: 34eff24797b59384ea87c3a7c5bb5d11, type: 3}
   skipButton: {fileID: 1447956206}
   tutorialPanelAudioSource: {fileID: 965241490}
-  congratsChamp: {fileID: 8300000, guid: f6a0d497428f2e648ac284cfe4434104, type: 3}
-  doJumps: {fileID: 8300000, guid: c9a1a89e25ee32b46b3f50e6ac56e4db, type: 3}
-  doLefttaps: {fileID: 8300000, guid: 3f55351c21c49da4495c05fab873ebdd, type: 3}
-  doRightTaps: {fileID: 8300000, guid: c8b3954c7face66488bb854d0d29eddc, type: 3}
-  letsPractise: {fileID: 8300000, guid: 9c10c4919a006ba41ac20ea963faa042, type: 3}
-  pauseGame: {fileID: 8300000, guid: 7366fb75a96f43d46b24a9717fdbf528, type: 3}
-  thisIsAGoodHeadStart: {fileID: 8300000, guid: e58f113561a39a542b2f7e3d71d2aa88,
+  congratsChamp: {fileID: 8300000, guid: 9b232c2a7935c674dbfa27905f6a6b6e, type: 3}
+  doJumps: {fileID: 8300000, guid: c693e5dc32e1c8c438f64c29721d5e2a, type: 3}
+  doLefttaps: {fileID: 8300000, guid: d42ced23af0fb0a47b9ecdd6638ef6f9, type: 3}
+  doRightTaps: {fileID: 8300000, guid: 6528abb603d79d945845091b71bf58a3, type: 3}
+  letsPractise: {fileID: 8300000, guid: 0a316a012c0dbe04b8f1afebf2ef36e2, type: 3}
+  pauseGame: {fileID: 8300000, guid: 7643ba61c8758e44ba31705ddab8499e, type: 3}
+  thisIsAGoodHeadStart: {fileID: 8300000, guid: fdba49825dde13e47975e2031b225796,
     type: 3}
-  toResumeStepOnTheMatAndJump: {fileID: 8300000, guid: fde59eae6143e5747aebce150ff84f80,
+  toResumeStepOnTheMatAndJump: {fileID: 8300000, guid: 6ee556744420eff44a4cda6d71bbd01d,
     type: 3}
-  tryTheExtensive: {fileID: 8300000, guid: 28563def9f62315489dc33621ab10af0, type: 3}
-  finalClaps: {fileID: 8300000, guid: ba46d77bc3fe31a41ac66258153f6c2d, type: 3}
+  tryTheExtensive: {fileID: 8300000, guid: 5670133c7b475c441b508db5446a1662, type: 3}
+  finalClaps: {fileID: 8300000, guid: 68cd84fb2f4d08042bf92fc3c5cdceb0, type: 3}
   requiredCHildElement: -1
   phoneHolderPanel: {fileID: 1990651382}
   phoneAnimationOBJ: {fileID: 660278547}

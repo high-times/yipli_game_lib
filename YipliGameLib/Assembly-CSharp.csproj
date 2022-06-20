@@ -47,7 +47,7 @@
   <PropertyGroup>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <UnityProjectGenerator>Package</UnityProjectGenerator>
-    <UnityProjectGeneratorVersion>2.0.11</UnityProjectGeneratorVersion>
+    <UnityProjectGeneratorVersion>2.0.14</UnityProjectGeneratorVersion>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>2021.1.18f1</UnityVersion>
@@ -58,35 +58,37 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\SacaleOutApprearance.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\ETFXLoopScript.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TroubleshootScripts\TroubleShootSystem.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\TroubleshootScripts\TroubleShootSystem.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Scripts\ETFXPitchRandomizer.cs" />
     <Compile Include="Assets\loadingBar\scripts\simplerotate.cs" />
     <Compile Include="Assets\Scripts\FileReadWrite.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Ui\UIEventActivator.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Ui\UIEventActivator.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\ETFXFireProjectile.cs" />
-    <Compile Include="Assets\Scripts\Vismay\TutorialNew\ModelEventActivator.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\TutorialNew\ModelEventActivator.cs" />
     <Compile Include="Assets\GL\NS\UI\MatConnectionManager.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Display\CameraResolutions.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TroubleshootScripts\PracticalTask.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Display\CameraResolutions.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\TroubleshootScripts\PracticalTask.cs" />
     <Compile Include="Assets\Scripts\MultiPlayerSelection.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Scripts\ETFXLightFade.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\ETFXButtonScript.cs" />
     <Compile Include="Assets\Scripts\YipliUtils.cs" />
-    <Compile Include="Assets\Scripts\Vismay\MatInputController.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TroubleshootScripts\TroubleShootManagerS.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\MatInputController.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\TroubleshootScripts\TroubleShootManagerS.cs" />
     <Compile Include="Assets\loadingBar\scripts\YipliLoaderEx.cs" />
-    <Compile Include="Assets\Scripts\Vismay\ControlManagers\NewMatInputController.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\ControlManagers\NewMatInputController.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Demo\Scripts\DemoController.cs" />
     <Compile Include="Assets\Scripts\BLEControllerEventHandler.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\VFX Library\ParticleEffectsLibrary.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\TicketSystem\FreshDeskManager.cs" />
-    <Compile Include="Assets\Scripts\Vismay\MaintenancePanel.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\TicketSystem\FreshDeskManager.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\MaintenancePanel.cs" />
     <Compile Include="Assets\Scripts\PlayerSelection.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Ui\PlayerSelectionScroller.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Ui\PlayerSelectionScroller.cs" />
+    <Compile Include="Assets\Scripts\HTTPModule\RequestManager.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\ETFXMouseOrbit.cs" />
     <Compile Include="Assets\Scripts\AndroidTV\DetectAndroidTV.cs" />
     <Compile Include="Assets\GameInitializer.cs" />
     <Compile Include="Assets\Scripts\YipliMetadataClasses.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\CCS\CentralControlSystem.cs" />
     <Compile Include="Assets\Scripts\MultiPlayerData.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Media\Scripts\InfiniteWheelMouseScroll.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\VFX Library\UICanvasManager.cs" />
@@ -95,18 +97,19 @@
     <Compile Include="Assets\Scripts\PostPlayerSessions.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\ETFXTarget.cs" />
     <Compile Include="Assets\Scripts\ScaleUpdownAnimation.cs" />
-    <Compile Include="Assets\Scripts\Vismay\TutorialNew\SecondTutorialManager.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\TutorialNew\SecondTutorialManager.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Scripts\ETFXRotation.cs" />
     <Compile Include="Assets\Scripts\GamelibSounds.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\FileManagement\FmResponseFile.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\FileManagement\FmResponseFile.cs" />
     <Compile Include="Assets\Scripts\LibConsts.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Ui\NewUIManager.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Ui\NewUIManager.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Media\Scripts\InfiniteWheelController.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Media\Scripts\InfiniteWheelCollider.cs" />
     <Compile Include="Assets\Scripts\ActionAndGameInfo.cs" />
-    <Compile Include="Assets\Scripts\Vismay\TutorialNew\ModelAnimationEventManager.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Display\AnimationFunctionActivator.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\ProblemModel.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\TutorialNew\ModelAnimationEventManager.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Display\AnimationFunctionActivator.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\QuestionTrees\ProblemModel.cs" />
+    <Compile Include="Assets\Scripts\HTTPModule\HTTPMetaDataClasses.cs" />
     <Compile Include="Assets\Scripts\YipliAudioManager.cs" />
     <Compile Include="Assets\Scripts\YipliConfig.cs" />
     <Compile Include="Assets\Scripts\firebaseDBListenersAndHandlers.cs" />
@@ -114,34 +117,34 @@
     <Compile Include="Assets\Scripts\ProductMessages.cs" />
     <Compile Include="Assets\Scripts\helper.cs" />
     <Compile Include="Assets\Scripts\PlayerSession.cs" />
-    <Compile Include="Assets\Scripts\Vismay\AnimationEvents.cs" />
-    <Compile Include="Assets\Scripts\Vismay\TutorialManagerGL.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\AnimationEvents.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\TutorialManagerGL.cs" />
     <Compile Include="Assets\Scripts\InitBLE.cs" />
     <Compile Include="Assets\GL\NS\UI\GuestUserPanelManager.cs" />
     <Compile Include="Assets\loadingBar\scripts\loadingtext.cs" />
     <Compile Include="Assets\Scripts\AndroidTV\awu.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\Questions.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\QuestionTrees\Questions.cs" />
     <Compile Include="Assets\Scripts\UserDataPersistence.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Media\Scripts\InfiniteWheelItem.cs" />
     <Compile Include="Assets\Scripts\MatSelection.cs" />
-    <Compile Include="Assets\Scripts\Vismay\PortTestings.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Tes\swipe.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\PortTestings.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Tes\swipe.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\ETFXProjectileScript.cs" />
     <Compile Include="Assets\loadingBar\scripts\loadingcolorful.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Media\Scripts\CurveConfig.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\ETFXSceneManager.cs" />
     <Compile Include="Assets\loadingBar\scripts\rotatetotate.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Demo\Scripts\DemoScroller.cs" />
-    <Compile Include="Assets\Scripts\Vismay\UiButtonSelection.cs" />
-    <Compile Include="Assets\Scripts\Vismay\TutorialNew\ThreeDModelManager.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\AllQuestions.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\UiButtonSelection.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\TutorialNew\ThreeDModelManager.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\QuestionTrees\AllQuestions.cs" />
     <Compile Include="Assets\Scripts\MP_GameStateManager.cs" />
-    <Compile Include="Assets\Scripts\Vismay\Troubleshooting\QuestionTrees\BlobData.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\QuestionTrees\BlobData.cs" />
     <Compile Include="Assets\loadingBar\scripts\loadingbar.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\VFX Library\PEButtonScript.cs" />
     <Compile Include="Assets\GL\NS\UI\NoInternetPanelManager.cs" />
-    <Compile Include="Assets\Scripts\Vismay\SetOnClickButtonName.cs" />
-    <Compile Include="Assets\Scripts\Vismay\TroubleShootGL.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\SetOnClickButtonName.cs" />
+    <Compile Include="Assets\Scripts\NewScripts\TroubleShootGL.cs" />
     <Compile Include="Assets\dummyGameScript.cs" />
     <Compile Include="Assets\Scripts\MiniJSON.cs" />
   </ItemGroup>

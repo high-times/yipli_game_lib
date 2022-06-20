@@ -157,14 +157,14 @@ public class PlayerSelection : MonoBehaviour
 #endif
 
         // comment below part is current platform is not UNITY_STANDALONE_WIN
-//#if UNITY_EDITOR
-//        //FetchUserDetailsForWindowsAndEditor();
+#if UNITY_EDITOR
+        //FetchUserDetailsForWindowsAndEditor();
 
-//        if (!currentYipliConfig.bIsChangePlayerCalled)
-//        {
-//            FetchUserDetailsForWindowsAndEditor();
-//        }
-//#endif
+        if (!currentYipliConfig.bIsChangePlayerCalled)
+        {
+            FetchUserDetailsForWindowsAndEditor();
+        }
+#endif
 
 
 #if UNITY_ANDROID || UNITY_IOS
@@ -727,8 +727,8 @@ public class PlayerSelection : MonoBehaviour
 
 #if UNITY_EDITOR // uncoment following lines to test in editor. only one user id uncomment.
         // currentYipliConfig.userId = "F9zyHSRJUCb0Ctc15F9xkLFSH5f1"; // saurabh
-        //currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
-        //currentYipliConfig.pId = "-MSX--0uyqI7KgKmNOIY"; // vismay player
+        // currentYipliConfig.userId = "lC4qqZCFEaMogYswKjd0ObE6nD43"; // vismay
+        // currentYipliConfig.pId = "-MSX--0uyqI7KgKmNOIY"; // vismay player
         // currentYipliConfig.userId = "rKE4pP03qwdZtRsIw0QjrYpYyXm1"; // vismay test only for vismay
         // currentYipliConfig.pId = "-MbGAzHTOONlQefgKklU"; // vismay player // smae above comment
         //currentYipliConfig.playerInfo = new YipliPlayerInfo("-MSX--0uyqI7KgKmNOIY", "Nasha Mukti kendra", "07-01-1990", "172", "64", "-MSX--0uyqI7KgKmNOIY.jpg", 1); // vismay user
@@ -771,7 +771,7 @@ public class PlayerSelection : MonoBehaviour
         // else if (currentYipliConfig.gameInventoryInfo.onlyMatPlayMode.Contains("a") && Application.platform == RuntimePlatform.WindowsEditor)
         else if (Application.platform == RuntimePlatform.WindowsEditor)
         {
-            currentYipliConfig.onlyMatPlayMode = false;
+            currentYipliConfig.onlyMatPlayMode = true;
         }
         else
         {

@@ -399,7 +399,7 @@ public class PlayerSession : MonoBehaviour
         //x.Add("mat-id", currentYipliConfig.matInfo.matId);
         //x.Add("mac-address", currentYipliConfig.matInfo.macAddress);
 
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
         if (currentYipliConfig.isDeviceAndroidTV) {
             x.Add("os", "atv");
         } else {

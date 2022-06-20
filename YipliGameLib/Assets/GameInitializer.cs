@@ -8,6 +8,6 @@ public class GameInitializer : MonoBehaviour
     private void Awake()
     {
         currentYipliConfig.gameType = GameType.FITNESS_GAMING;
-        currentYipliConfig.gameId = "skateroverdrive";
+        currentYipliConfig.gameId = "trapped";
     }
 }
