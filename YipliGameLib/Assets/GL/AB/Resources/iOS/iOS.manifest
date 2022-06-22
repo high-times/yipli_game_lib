@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 2382370895
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: scene_t
+      Dependencies:
+        Dependency_0: fonts
+        Dependency_1: scene_t_ls
+    Info_1:
+      Name: scene_ygl
+      Dependencies: {}
+    Info_2:
+      Name: fonts
+      Dependencies: {}
+    Info_3:
+      Name: scene_ygl_ls
+      Dependencies: {}
+    Info_4:
+      Name: scene_t_ls
+      Dependencies: {}
