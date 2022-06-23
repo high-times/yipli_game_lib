@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aa0b1b710bfd7843a1285fc94dffc37, type: 3}
+  m_Name: GameQuestions
+  m_EditorClassIdentifier: 
+  questions:
+  - id: 1
+    question: Is game/ app crashing ?
+    solutions:
+    - Check OS settings
+    choices:
+    - Yes
+    - No
+  - id: 2
+    question: Is OS Updated to the latest ?
+    solutions:
+    - Device Issue
+    - Update OS
+    choices:
+    - Yes
+    - No
+  - id: 3
+    question: Are you stuck on Player fetching screen ?
+    solutions: []
+    choices:
+    - Yes
+    - No
+  - id: 5
+    question: Is Internet available ?
+    solutions:
+    - Turn on internet
+    - Backend Curruption
+    choices:
+    - Yes
+    - No
+  - id: 10
+    question: Is your yipli  app and games on  latest version?
+    solutions:
+    - Update all applications
+    choices:
+    - Yes
+    - No
+  - id: 4
+    question: Are you  stuck to  no mat  connection  page ?
+    solutions: []
+    choices:
+    - Yes
+    - No
+  - id: 7
+    question: Is Phone  BLE on ?
+    solutions:
+    - Turn on Bluetooth
+    choices:
+    - Yes
+    - No
+  - id: 8
+    question: Have you added  the Mat to your  account that  you are using ?
+    solutions:
+    - Add Mat in Yipli app
+    - Please make the current mat active in yipli app to connect
+    choices:
+    - Yes
+    - No
+  - id: 9
+    question: Are there any  apps or games  running in the  background  during gameplay
+      ?
+    solutions:
+    - Kill all the yipli games and restart the game
+    choices:
+    - Yes
+    - No
+  - id: 11
+    question: Is the behaviour  same in all  the games ?
+    solutions: []
+    choices:
+    - Yes
+    - No
+  - id: 12
+    question: Is the behaviour  same on all the platforms ?
+    solutions: []
+    choices:
+    - Yes
+    - No
+  - id: 13
+    question: Is the behavoir persistent  or random ?
+    solutions: []
+    choices:
+    - Yes
+    - No
+  - id: 6
+    question: Is mat connected to USB ?
+    solutions:
+    - Connect Mat via USB
+    choices:
+    - Yes
+    - No

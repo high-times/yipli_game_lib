@@ -1,0 +1,131 @@
+ManifestFileVersion: 0
+CRC: 3948350551
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 95d21efbed30cf642b2360a8a24ab091
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: ae101a50a8bcb112848a3a78caa126f9
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 20
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 81
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 104
+  Script: {instanceID: 0}
+- Class: 108
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 594c75c0672d34a46ba536b2907319dc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: efb8d8ec30413c742a04d82f756d56a1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f713115f9047f7443b8749337669f779, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c678f05efcc169a4586405d8ca73c665, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 8fd01b40ad69bec4085ddd85e18fd900, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b80d52b9f149da745aa040db28243440, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 01505bd9be4bea445999795f2e1c2a95, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4d0390bd8b8ffd640b34fe25065ff1df, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: a099bbb9b0df13841a42aa71075f722f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: ce9436afc25329f40941eb6355b8c15f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5d10dc2adea3c2f40b931dbb31fdbaea, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f40c8c606cc173f4eb200ee27aa3e131, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3f8fd368864828d4d827f8e8b5b3d8de, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: b22ce8f9f0c6e5240ba0be79633432f3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f2b1211bfced8344aad0c194de0cc0dd, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 25998cc1b4d55d5469a8afe9c9368491, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 157
+  Script: {instanceID: 0}
+- Class: 196
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 221
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+- Class: 850595691
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/GL/Scenes/gameLibTutorial.unity
+Dependencies:
+- /Users/yipli-m1/FW/UP/yipli_game_lib/YipliGameLib/Assets/GL/AB/Resources/iOS/fonts
+- /Users/yipli-m1/FW/UP/yipli_game_lib/YipliGameLib/Assets/GL/AB/Resources/iOS/scene_t_ls
