@@ -1,0 +1,17 @@
+ManifestFileVersion: 0
+CRC: 2835528557
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 6f1ee19f1a7302d6b040c5530e792f85
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: bb1c98fd3fd2df8fe937870a85fedf92
+HashAppended: 0
+ClassTypes:
+- Class: 850595691
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/GL/Scenes/yipli_lib_sceneSettings.lighting
+Dependencies: []

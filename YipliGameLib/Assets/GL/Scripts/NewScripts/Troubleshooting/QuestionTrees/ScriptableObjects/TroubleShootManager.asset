@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ffff054b73ec204a8040c01d0b928e8, type: 3}
+  m_Name: TroubleShootManager
+  m_EditorClassIdentifier: 
+  currentAlgorithmID: 3
+  osUpdateCheck: 0
+  playerFetchingCheckDone: 0
+  noMatPanelCheckDone: 0
+  internetConnectionTest: 0
+  matUsbConnectionTest: 0
+  phoneBleTest: 0
+  matInYipliAccountCheckDone: 0
+  backgroundAppsRunningCheckDone: 0
+  gamesAndAppUpdateCheckDone: 0
+  sameBehaviourGamesAsked: 0
+  sameBehaviourPlatformAsked: 0
+  behaviourRondomOrPersistentAsked: 0
+  sameBehaviourGamessolutionProvided: 0
+  sameBehaviourPlatformsolutionProvided: 0
+  behaviourRondomOrPersistentProvided: 0
+  matOnCheck: 1
+  colorOfLED: 1
+  charginglightVisibility: 0
+  bleListHasYipliCheckDone: 0
+  siliconDriverInstallCheck: 0
+  siliconPortAvailability: 0
+  matConnectionToOtherDeviceCheckDone: 0
+  sameMatFromYipliCheckDone: 0
+  isMatConnectedToOtherDeviceCheckDone: 0
+  isMatOnSolutionProvided: 1
+  redLedSolutionProvided: 1
+  sameMatFromYipliSolutionProvided: 0
+  isMatConnectedToOtherDeviceSolutionProvided: 0
+  bleScannedMacAddress: 

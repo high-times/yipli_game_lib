@@ -1,0 +1,43 @@
+ManifestFileVersion: 0
+CRC: 3161069194
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a38822c557943f66adf3ce7bf152cec2
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9db9c8a49153c293e34c0b5cdb0f9910
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/GL/fonts/Lato-BlackItalic.ttf
+- Assets/GL/fonts/Lato-ThinItalic.ttf
+- Assets/GL/fonts/AvenirLTStd-Medium.otf
+- Assets/GL/fonts/Lato-Thin.ttf
+- Assets/GL/fonts/Lato-Regular.ttf
+- Assets/GL/fonts/Lato-Black SDF.asset
+- Assets/GL/fonts/Lato-Light.ttf
+- Assets/GL/fonts/Lato-BoldItalic.ttf
+- Assets/GL/fonts/Lato-LightItalic.ttf
+- Assets/GL/fonts/AvenirLTStd-Roman.otf
+- Assets/GL/fonts/Lato-Bold.ttf
+- Assets/GL/fonts/AvenirLTStdBookSDFasset.asset
+- Assets/GL/fonts/AvenirLTStd-Book.otf
+- Assets/GL/fonts/Lato-Regular SDF.asset
+- Assets/GL/fonts/Lato-Bold SDF.asset
+- Assets/GL/fonts/Lato-Black.ttf
+- Assets/GL/fonts/Lato-Italic.ttf
+Dependencies: []
