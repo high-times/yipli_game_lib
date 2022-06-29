@@ -1,0 +1,247 @@
+{
+  "contact-no": "7874579889",
+  "country-code": "+91",
+  "created-on": 1630136077054,
+  "current-mat-id": "-N0FBaBdH_MiOgPkWIjz",
+  "current-player-id": "-MSX--0uyqI7KgKmNOIY",
+  "display-name": "Vismay Patel",
+  "email": "vismay@playyipli.com",
+  "has-subcribed": false,
+  "mats": {
+    "-N0FBaBdH_MiOgPkWIjz": {
+      "display-name": "Black yipli F4",
+      "mac-address": "A4:DA:32:4F:BF:F4",
+      "mac-name": "YIPLI-C8",
+      "registered-on": "2022-04-22T13:05:21.129734",
+      "status": "Active"
+    }
+  },
+  "players": {
+    "-MSX--0uyqI7KgKmNOIY": {
+      "activity-statistics": {
+        "games-statistics": {
+          "eggcatcher": {
+            "calories-burnt": 12,
+            "duration": 626,
+            "fitness-points": 2506,
+            "game-points": 3970,
+            "last-played": 1628771278091
+          },
+          "joyfuljumps": {
+            "calories-burnt": 75,
+            "duration": 1179,
+            "fitness-points": 7598,
+            "game-points": 340245,
+            "last-played": 1628751972621
+          },
+          "metrorush": {
+            "calories-burnt": 40,
+            "duration": 583,
+            "fitness-points": 926,
+            "game-points": 14067,
+            "last-played": 1631095140153
+          },
+          "multiplayermayhem": {
+            "calories-burnt": 144,
+            "duration": 8164,
+            "fitness-points": 20549,
+            "game-points": 3836,
+            "last-played": 1632826377645,
+            "minigames-stats": {
+              "beachball": {
+                "calories-burnt": 12,
+                "duration": 502,
+                "fitness-points": 1300,
+                "game-points": 22,
+                "last-played": 1632824879811
+              },
+              "boomerang": {
+                "calories-burnt": 9,
+                "duration": 401,
+                "fitness-points": 1075,
+                "game-points": 96,
+                "last-played": 1628790700313
+              },
+              "dragonbreath": {
+                "calories-burnt": 7,
+                "duration": 338,
+                "fitness-points": 1148,
+                "game-points": 16,
+                "last-played": 1632826034371
+              },
+              "fishtrap": {
+                "calories-burnt": 2,
+                "duration": 445,
+                "fitness-points": 509,
+                "game-points": 27,
+                "last-played": 1632826377645
+              },
+              "fruitblast": {
+                "calories-burnt": 14,
+                "duration": 225,
+                "fitness-points": 1523,
+                "game-points": 36,
+                "last-played": 1632824387345
+              },
+              "icehopper": {
+                "calories-burnt": 19,
+                "duration": 1058,
+                "fitness-points": 2437,
+                "game-points": 13,
+                "last-played": 1632824026492
+              },
+              "pingpong": {
+                "calories-burnt": 4,
+                "duration": 683,
+                "fitness-points": 887,
+                "game-points": 83,
+                "last-played": 1632826115520
+              },
+              "spacetower": {
+                "calories-burnt": 1,
+                "duration": 211,
+                "fitness-points": 216,
+                "game-points": 2,
+                "last-played": 1632825499348
+              },
+              "tugofwar": {
+                "calories-burnt": 58,
+                "duration": 240,
+                "fitness-points": 6009,
+                "game-points": 6,
+                "last-played": 1632824450375
+              }
+            }
+          },
+          "rollingball": {
+            "calories-burnt": 4,
+            "duration": 37,
+            "fitness-points": 126,
+            "game-points": 192,
+            "last-played": 1623509677467
+          },
+          "skater": {
+            "calories-burnt": 32321,
+            "duration": 10940,
+            "fitness-points": 3179402,
+            "game-points": 25151,
+            "last-played": 1632390695179
+          },
+          "skateroverdrive": {
+            "calories-burnt": 16,
+            "duration": 813,
+            "fitness-points": 1124,
+            "game-points": 1030,
+            "last-played": 1631790023493
+          },
+          "trapped": {
+            "calories-burnt": 10,
+            "duration": 128,
+            "fitness-points": 1089,
+            "game-points": 1060,
+            "last-played": 1626081682071
+          },
+          "yipfit": {
+            "calories-burnt": 136,
+            "duration": 7031,
+            "fitness-points": 12587,
+            "game-points": 32,
+            "last-played": 1651061917843
+          }
+        },
+        "last-played": 1651061917843,
+        "redeemed-fitness-points": 0,
+        "total-calories-burnt": 32758,
+        "total-duration": 29501,
+        "total-fitness-points": 3495149,
+        "total-xp": 0
+      },
+      "added-on": 1612256903290,
+      "dob": "07-01-1990",
+      "gender": "Female",
+      "height": "172",
+      "mat-tut-done": 1,
+      "name": "Elden ring",
+      "profile-pic-url": "-MSX--0uyqI7KgKmNOIY.jpg",
+      "user-id": "lC4qqZCFEaMogYswKjd0ObE6nD43",
+      "weight": "54"
+    },
+    "-McOT0IRqqePtNBbBL89": {
+      "activity-statistics": {
+        "games-statistics": {
+          "skater": {
+            "calories-burnt": 5,
+            "duration": 195,
+            "fitness-points": 558,
+            "game-points": 4850,
+            "last-played": 1632390962935
+          }
+        },
+        "last-played": 1632390962935,
+        "redeemed-fitness-points": 0,
+        "total-calories-burnt": 5,
+        "total-duration": 195,
+        "total-fitness-points": 558,
+        "total-xp": 0
+      }
+    },
+    "-MjrtRgMTnUdPqspWVBv": {
+      "activity-statistics": {
+        "games-statistics": {
+          "metrorush": {
+            "calories-burnt": 1,
+            "duration": 14,
+            "fitness-points": 20,
+            "game-points": 2100,
+            "last-played": 1632305190692
+          },
+          "skater": {
+            "calories-burnt": 2,
+            "duration": 122,
+            "fitness-points": 302,
+            "game-points": 3200,
+            "last-played": 1632390390543
+          }
+        },
+        "last-played": 1632305190692,
+        "redeemed-fitness-points": 0,
+        "total-calories-burnt": 3,
+        "total-duration": 136,
+        "total-fitness-points": 322,
+        "total-xp": 0
+      }
+    },
+    "-MzpCjARFpSBzkPalPrr": {
+      "activity-statistics": {
+        "games-statistics": {
+          "yipfit": {
+            "calories-burnt": 7,
+            "duration": 1604,
+            "fitness-points": 709,
+            "game-points": 1,
+            "last-played": 1649851703472
+          }
+        },
+        "last-played": 1649851703472,
+        "redeemed-fitness-points": 0,
+        "total-calories-burnt": 7,
+        "total-duration": 1604,
+        "total-fitness-points": 709,
+        "total-xp": 0
+      },
+      "added-on": 1649086493404,
+      "dob": "01-01-1987",
+      "gender": "Male",
+      "height": "161",
+      "name": "Hogwargs Legacy",
+      "profile-pic-url": "-MzpCjARFpSBzkPalPrr.jpg",
+      "user-id": "lC4qqZCFEaMogYswKjd0ObE6nD43",
+      "weight": "39"
+    }
+  },
+  "profile-pic-url": "f6bdea10-bf6f-4fd1-b8f1-fc6b91bcff12",
+  "remote-play": {
+    "remote-code": "023578",
+    "timestamp": 1602590748959
+  }
+}

@@ -8,66 +8,78 @@ namespace Yipli.HttpMpdule.Classes
     // Full json
     public class RequestedJson
     {
-        public int status;
-        public JsonBody body;
+        public int Status;
+        public JsonBody Body;
     }
 
     // Full Body
     public class JsonBody
     {
-        public string query;
-        public BodyResponse response;
+        public string Query;
+        public UserData Response;
     }
 
     // Response
-    public class BodyResponse
+    [System.Serializable]
+    public class UserData
     {
         // string data
-        public string contact_no;
-        public string country_code;
-        public string current_mat_id;
+        public string UserID;
+        public string ContactNo;
+        public string CountryCode;
+        public string CurrentMatId;
         public string current_player_id;
         public string display_name;
         public string email;
         public string profile_pic_url;
 
         // int or numbers data
-        public int created_on;
+        public long created_on;
 
         // Boolean data
         public bool has_subcribed;
 
         // class data
-        public RemotePlay remote_play;
-        public Mat[] mats;
-        public Player[] players;
+        //public RemotePlay remote_play;
+        //public Mat[] mats;
+        //public Player[] players;
+
+        // Methods
+        public static UserData CreateFromJSON(string jsonString)
+        {
+            return JsonUtility.FromJson<UserData>(jsonString);
+        }
     }
     
     // Remote Play data
     public class RemotePlay
     {
-        public string remote_code;
-        public long timestamp;
+        public string RemoteCode;
+        public long Timestamp;
     }
 
     // Mat Class
-    public class Mat
+    [System.Serializable]
+    public class MatData
     {
-        public string display_name;
-        public string mac_ddress;
-        public string mac_name;
-        public string registered_on;
-        public string status;
+        public string MatFbId;
+        public string DisplayName;
+        public string MacAddress;
+        public string MacName;
+        public string RegisteredOn;
+        public string Status;
     }
 
     // Player Class
-    public class Player
+    [System.Serializable]
+    public class PlayerData
     {
         // number data
         public long added_on;
         public int mat_tut_done;
 
         // string data
+        public string playerID;
         public string dob;
         public string gender;
         public string height;
@@ -77,12 +89,32 @@ namespace Yipli.HttpMpdule.Classes
         public string weight;
 
         // activity statistics
-        public ActivityStatistics activity_statistics;
+        //public ActivityStatistics activity_statistics;
     }
 
-    // Activity statics
-    public class ActivityStatistics
+    // Game Data
+    [System.Serializable]
+    public class GameData
     {
-        // number data
+        public string AndroidMinVersion;
+        public string AndroidTvMinVersion;
+        public string CurrentVersion;
+        public string IconImgUrl;
+        public string IosCurrentVersion;
+        public string IosMinVersion;
+        public string MaintenanceMessage;
+        public string Name;
+        public string OnlyMatPlayMode;
+        public string OsListForMaintanence;
+        public string StorageExeName;
+        public string VersionUpdateMessage;
+        public string WinMinVersion;
+        public string WinRegistryKey;
+        public string WinVersion;
+        
+        public GameType Type;
+
+        public int DaysBeforeNextUpdatePrompt;
+        public int IsGameUnderMaintenance;
     }
 }
