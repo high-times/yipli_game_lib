@@ -7,151 +7,217 @@ namespace Yipli.HttpMpdule
 {
     public class HTTPPlayerSession : MonoBehaviour
     {
+        [Header("Required Scriptable Objects")]
+        [SerializeField] private HTTPYipliConfig currentYipliConfig = null;
+
         // static variables
         private static HTTPPlayerSession _instance;
         public static HTTPPlayerSession Instance { get { return _instance; } }
 
-        internal void AddMultiPlayerAction(YipliUtils.PlayerActions action, PlayerDetails playerDetails, int count)
+        // Getters and Setters
+        public HTTPYipliConfig CurrentYipliConfig { get => currentYipliConfig; set => currentYipliConfig = value; }
+
+        public void AddMultiPlayerAction(YipliUtils.PlayerActions action, PlayerDetails playerDetails, int count)
         {
             throw new NotImplementedException();
         }
 
-        internal void AddPlayerAction(YipliUtils.PlayerActions action, int count)
+        public void AddPlayerAction(YipliUtils.PlayerActions action, int count)
         {
             throw new NotImplementedException();
         }
 
-        internal void ChangePlayer()
+        public void ChangePlayer()
         {
             throw new NotImplementedException();
         }
 
-        internal void CloseSPSession()
+        public void CloseSPSession()
         {
             throw new NotImplementedException();
         }
 
-        internal string GetCurrentPlayer()
+        public float GetCaloriesBurned()
         {
             throw new NotImplementedException();
         }
 
-        internal string GetCurrentPlayerId()
+        public string GetCurrentPlayer()
         {
             throw new NotImplementedException();
         }
 
-        internal IDictionary<YipliUtils.PlayerActions, int> getMultiPlayerActionCounts(PlayerDetails playerDetails)
+        public string GetCurrentPlayerId()
         {
             throw new NotImplementedException();
         }
 
-        internal Dictionary<string, dynamic> GetMultiPlayerSessionDataJsonDic(PlayerDetails playerDetails, string mpSessionUUID)
+        public string GetDriverAndGameVersion()
         {
             throw new NotImplementedException();
         }
 
-        internal IDictionary<YipliUtils.PlayerActions, int> getPlayerActionCounts()
+        public float GetFitnessPoints()
         {
             throw new NotImplementedException();
         }
 
-        internal Dictionary<string, dynamic> GetPlayerSessionDataJsonDic()
+        public IDictionary<YipliUtils.PlayerActions, int> getMultiPlayerActionCounts(PlayerDetails playerDetails)
         {
             throw new NotImplementedException();
         }
 
-        internal void GotoYipli()
+        public Dictionary<string, dynamic> GetMultiPlayerSessionDataJsonDic(PlayerDetails playerDetails, string mpSessionUUID)
         {
             throw new NotImplementedException();
         }
 
-        internal void HTTPAwakeOperations()
+        public int GetOldFMResponseCount()
         {
             throw new NotImplementedException();
         }
 
-        internal void LoadingScreenSetActive(bool bOn)
+        public IDictionary<YipliUtils.PlayerActions, int> getPlayerActionCounts()
         {
             throw new NotImplementedException();
         }
 
-        internal void PauseMPSession()
+        public Dictionary<string, dynamic> GetPlayerSessionDataJsonDic()
         {
             throw new NotImplementedException();
         }
 
-        internal void PauseSPSession()
+        public void GotoYipli()
         {
             throw new NotImplementedException();
         }
 
-        internal void ReInitializeSPSession()
+        public void HTTPAwakeOperations()
         {
             throw new NotImplementedException();
         }
 
-        internal void ResumeMPSession()
+        public void LoadingScreenSetActive(bool bOn)
         {
             throw new NotImplementedException();
         }
 
-        internal void ResumeSPSession()
+        public void PauseMPSession()
         {
             throw new NotImplementedException();
         }
 
-        internal void SetGameId(string gameName)
+        public void PauseSPSession()
         {
             throw new NotImplementedException();
         }
 
-        internal void StartCoroutineForBleReConnection()
+        public void ReInitializeSPSession()
         {
             throw new NotImplementedException();
         }
 
-        internal void StartMPSession()
+        public void ResumeMPSession()
         {
             throw new NotImplementedException();
         }
 
-        internal void StartOperations()
+        public void ResumeSPSession()
         {
             throw new NotImplementedException();
         }
 
-        internal void StartSPSession()
+        public void RetakeMatControlsTutorial()
         {
             throw new NotImplementedException();
         }
 
-        internal void StoreMPSession(float playerOneGamePoints, float playerTwoGamePoints)
+        public void SetGameId(string gameName)
         {
             throw new NotImplementedException();
         }
 
-        internal void StoreSPSession(float gamePoints)
+        public void SetMatPlayMode()
         {
             throw new NotImplementedException();
         }
 
-        internal void UpdateDuration()
+        public void SetMultiplayerGameInfo(string strGameName, string intensityLevel, int clusterId)
         {
             throw new NotImplementedException();
         }
 
-        internal void UpdateGameData(Dictionary<string, string> update)
+        public void SetOldFMResponseCount(int count)
         {
             throw new NotImplementedException();
         }
 
-        internal void UpdateOperations()
+        public void SetSinglePlayerGameInfo(string intensityLevel, int clusterId)
         {
             throw new NotImplementedException();
         }
 
-        internal void UpdateStoreData(Dictionary<string, object> dStoreData)
+        public void StartCoroutineForBleReConnection()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartMPSession()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartOperations()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StartSPSession()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StoreMPSession(float playerOneGamePoints, float playerTwoGamePoints)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void StoreSPSession(float gamePoints)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TroubleShootSystem()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateCurrentTicketData(Dictionary<string, object> currentTicketData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateDuration()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateGameData(Dictionary<string, string> update)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateOperations()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateStoreData(Dictionary<string, object> dStoreData)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateCurrentPlayersMatTutStatus()
         {
             throw new NotImplementedException();
         }

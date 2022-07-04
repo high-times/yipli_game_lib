@@ -398,19 +398,40 @@ public class PlayerSession : MonoBehaviour
     // get game and driver version
     public string GetDriverAndGameVersion()
     {
-        return PlayerSessionFB.Instance.GetDriverAndGameVersion();
+        if (HttpOrFirebase)
+        {
+            return HTTPPlayerSession.Instance.GetDriverAndGameVersion();
+        }
+        else
+        {
+            return PlayerSessionFB.Instance.GetDriverAndGameVersion();
+        }
     }
 
     // get fitness poins
     public float GetFitnessPoints()
     {
-        return PlayerSessionFB.Instance.GetFitnessPoints();
+        if (HttpOrFirebase)
+        {
+            return HTTPPlayerSession.Instance.GetFitnessPoints();
+        }
+        else
+        {
+            return PlayerSessionFB.Instance.GetFitnessPoints();
+        }
     }
 
     // get calories
     public float GetCaloriesBurned()
     {
-        return PlayerSessionFB.Instance.GetCaloriesBurned();
+        if (HttpOrFirebase)
+        {
+            return HTTPPlayerSession.Instance.GetCaloriesBurned();
+        }
+        else
+        {
+            return PlayerSessionFB.Instance.GetCaloriesBurned();
+        }
     }
 
     // quit from playersession canvas
@@ -422,7 +443,14 @@ public class PlayerSession : MonoBehaviour
     // retake tutorial
     public void RetakeMatControlsTutorial()
     {
-        PlayerSessionFB.Instance.RetakeMatControlsTutorial();
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.RetakeMatControlsTutorial();
+        }
+        else
+        {
+            PlayerSessionFB.Instance.RetakeMatControlsTutorial();
+        }
     }
 
     public void YipliInfoPanleOkayButton()
@@ -435,20 +463,41 @@ public class PlayerSession : MonoBehaviour
     // set mat play mode
     public void SetMatPlayMode()
     {
-        PlayerSessionFB.Instance.SetMatPlayMode();
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.SetMatPlayMode();
+        }
+        else
+        {
+            PlayerSessionFB.Instance.SetMatPlayMode();
+        }
     }
 
     // TroubleShoot System
     public void TroubleShootSystem()
     {
-        PlayerSessionFB.Instance.TroubleShootSystem();
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.TroubleShootSystem();
+        }
+        else
+        {
+            PlayerSessionFB.Instance.TroubleShootSystem();
+        }
     }
 
     // Ticket system
     // Update current ticket data.
     public void UpdateCurrentTicketData(Dictionary<string, object> currentTicketData)
     {
-        PlayerSessionFB.Instance.UpdateCurrentTicketData(currentTicketData);
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.UpdateCurrentTicketData(currentTicketData);
+        }
+        else
+        {
+            PlayerSessionFB.Instance.UpdateCurrentTicketData(currentTicketData);
+        }
     }
 
    // #if UNITY_STANDALONE_WIN
@@ -502,22 +551,50 @@ public class PlayerSession : MonoBehaviour
 
     public void SetSinglePlayerGameInfo(string intensityLevel, int clusterId)
     {
-        PlayerSessionFB.Instance.SetSinglePlayerGameInfo(intensityLevel, clusterId);
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.SetSinglePlayerGameInfo(intensityLevel, clusterId);
+        }
+        else
+        {
+            PlayerSessionFB.Instance.SetSinglePlayerGameInfo(intensityLevel, clusterId);
+        }
     }
 
     public void SetMultiPlayerGameInfo(string strGameName, string intensityLevel, int clusterId)
     {
-        PlayerSessionFB.Instance.SetMultiplayerGameInfo(strGameName, intensityLevel, clusterId);
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.SetMultiplayerGameInfo(strGameName, intensityLevel, clusterId);
+        }
+        else
+        {
+            PlayerSessionFB.Instance.SetMultiplayerGameInfo(strGameName, intensityLevel, clusterId);
+        }
     }
 
     public void SetOldFMResponseCount(int count)
     {
-        PlayerSessionFB.Instance.SetOldFMResponseCount(count);
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.SetOldFMResponseCount(count);
+        }
+        else
+        {
+            PlayerSessionFB.Instance.SetOldFMResponseCount(count);
+        }
     }
 
     public int GetOldFMResponseCount()
     {
-        return PlayerSessionFB.Instance.GetOldFMResponseCount();
+        if (HttpOrFirebase)
+        {
+            return HTTPPlayerSession.Instance.GetOldFMResponseCount();
+        }
+        else
+        {
+            return PlayerSessionFB.Instance.GetOldFMResponseCount();
+        }
     }
 
     #endregion
@@ -526,17 +603,38 @@ public class PlayerSession : MonoBehaviour
 
     public bool GetOnlyMatPlayModeStatus()
     {
-        return PlayerSessionFB.Instance.currentYipliConfig.onlyMatPlayMode;
+        if (HttpOrFirebase)
+        {
+            return HTTPPlayerSession.Instance.CurrentYipliConfig.OnlyMatPlayMode;
+        }
+        else
+        {
+            return PlayerSessionFB.Instance.currentYipliConfig.onlyMatPlayMode;
+        }
     }
 
     public int GetPlayersMatTutDoneStatus()
     {
-        return PlayerSessionFB.Instance.currentYipliConfig.playerInfo.isMatTutDone;
+        if (HttpOrFirebase)
+        {
+            return HTTPPlayerSession.Instance.CurrentYipliConfig.CurrentPlayer.MatTutDone;
+        }
+        else
+        {
+            return PlayerSessionFB.Instance.currentYipliConfig.playerInfo.isMatTutDone;
+        }
     }
 
     public void UpdateCurrentPlayersMatTutStatus()
     {
-        PlayerSessionFB.Instance.UpdateCurrentPlayersMatTutStatus();
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.UpdateCurrentPlayersMatTutStatus();
+        }
+        else
+        {
+            PlayerSessionFB.Instance.UpdateCurrentPlayersMatTutStatus();
+        }
     }
 
     #endregion

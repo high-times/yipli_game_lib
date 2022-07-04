@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\NewScripts\Ui\UIEventActivator.cs" />
     <Compile Include="Assets\GL\EA\Epic Toon FX\Demo\Scripts\ETFXFireProjectile.cs" />
     <Compile Include="Assets\Scripts\HTTPModule\HTTPMaintenanceManager.cs" />
+    <Compile Include="Assets\Scripts\HTTPModule\HTTPPlayerSession.cs" />
     <Compile Include="Assets\Scripts\NewScripts\TutorialNew\ModelEventActivator.cs" />
     <Compile Include="Assets\GL\NS\UI\MatConnectionManager.cs" />
     <Compile Include="Assets\Scripts\NewScripts\Display\CameraResolutions.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Assets\Scripts\NewScripts\MatInputController.cs" />
     <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\TroubleshootScripts\TroubleShootManagerS.cs" />
     <Compile Include="Assets\Scripts\HTTPModule\HTTPMatController.cs" />
+    <Compile Include="Assets\Scripts\PlayerSessionFB.cs" />
     <Compile Include="Assets\loadingBar\scripts\YipliLoaderEx.cs" />
     <Compile Include="Assets\Scripts\HTTPModule\HTTPMatManager.cs" />
     <Compile Include="Assets\Scripts\NewScripts\ControlManagers\NewMatInputController.cs" />
@@ -157,8 +159,6 @@
     <Compile Include="Assets\Scripts\NewScripts\TroubleShootGL.cs" />
     <Compile Include="Assets\dummyGameScript.cs" />
     <Compile Include="Assets\Scripts\MiniJSON.cs" />
-    <Compile Include="Assets\Scripts\HTTPModule\HTTPPlayerSession.cs" />
-    <Compile Include="Assets\Scripts\PlayerSessionFB.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Firebase\Plugins\iOS\Firebase.Functions.dll" />
