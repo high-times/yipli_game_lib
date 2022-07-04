@@ -78,20 +78,20 @@ public class MultiPlayerSelection : MonoBehaviour
         }
         generatedObjects.Clear();
         playerButtons.Clear();
-        PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Clear();
+        PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Clear();
 
         Quaternion spawnrotation = Quaternion.identity;
         Vector3 playerTilePosition = PlayersContainerOne.transform.localPosition;
         for (int i = 0; i < currentYipliConfig.allPlayersInfo.Count; i++)
         {
             // Generate new button for each player
-            PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Add(currentYipliConfig.allPlayersInfo[i].playerName);
+            PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Add(currentYipliConfig.allPlayersInfo[i].playerName);
             playerButton = Instantiate(PlayerButtonPrefab, playerTilePosition, spawnrotation) as GameObject;
             playerButton.name = currentYipliConfig.allPlayersInfo[i].playerName;
             playerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = currentYipliConfig.allPlayersInfo[i].playerName;
             playerButton.transform.SetParent(PlayersContainerOne.transform, false);
 
-            if (currentYipliConfig.allPlayersInfo[i].playerName == PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
+            if (currentYipliConfig.allPlayersInfo[i].playerName == PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
             {
                 playerOneIndex = i;
                 playerOneButton = playerButton;
@@ -118,28 +118,28 @@ public class MultiPlayerSelection : MonoBehaviour
         }
         generatedObjects.Clear();
         playerButtons.Clear();
-        PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Clear();
+        PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Clear();
 
         Quaternion spawnrotation = Quaternion.identity;
         Vector3 playerTilePosition = PlayersContainerTwo.transform.localPosition;
         for (int i = 0; i < currentYipliConfig.allPlayersInfo.Count; i++)
         {
             // Generate new button for each player
-            PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Add(currentYipliConfig.allPlayersInfo[i].playerName);
+            PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerNames.Add(currentYipliConfig.allPlayersInfo[i].playerName);
             playerButton = Instantiate(PlayerButtonPrefab, playerTilePosition, spawnrotation) as GameObject;
             playerButton.name = currentYipliConfig.allPlayersInfo[i].playerName;
             playerButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = currentYipliConfig.allPlayersInfo[i].playerName;
             playerButton.transform.SetParent(PlayersContainerTwo.transform, false);
 
             // Do not generate button to select player one's player
-            if (currentYipliConfig.allPlayersInfo[i].playerName == PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
+            if (currentYipliConfig.allPlayersInfo[i].playerName == PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
             {
                 playerOneIndex = i;
                 playerOneButton = playerButton;
                 Destroy(playerButton);
                 continue;
             }
-            else if (currentYipliConfig.allPlayersInfo[i].playerName == PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerTwo)
+            else if (currentYipliConfig.allPlayersInfo[i].playerName == PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerTwo)
             {
                 playerTwoIndex = i;
                 playerTwoButton = playerButton;
@@ -168,10 +168,10 @@ public class MultiPlayerSelection : MonoBehaviour
         Debug.LogError("Button P1");
 
         // If player two's player is selected, clear selection for player two
-        PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerOne(EventSystem.current.currentSelectedGameObject.name);
-        if (EventSystem.current.currentSelectedGameObject.name == PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerTwo)
+        PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerOne(EventSystem.current.currentSelectedGameObject.name);
+        if (EventSystem.current.currentSelectedGameObject.name == PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerTwo)
         {
-            PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerTwo(null);
+            PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerTwo(null);
         }
 
         // Special case- If there are only two players, then after selecting player one, other player should be selected as playre two
@@ -179,9 +179,9 @@ public class MultiPlayerSelection : MonoBehaviour
         {
             for (int i = 0; i < currentYipliConfig.allPlayersInfo.Count; i++)
             {
-                if(currentYipliConfig.allPlayersInfo[i].playerName != PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
+                if(currentYipliConfig.allPlayersInfo[i].playerName != PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerOne)
                 {
-                    PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerTwo(currentYipliConfig.allPlayersInfo[i].playerName);
+                    PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerTwo(currentYipliConfig.allPlayersInfo[i].playerName);
                     UserDataPersistence.SaveMultiplayerToDevice();
                     playerTwoNameObject.GetComponent<Animator>().SetTrigger("DefaultSelected");
                     //MM_UIController.instance.BackToPlayersPanel(2);
@@ -202,7 +202,7 @@ public class MultiPlayerSelection : MonoBehaviour
     public void SelectSecondPlayer()
     {
         playerTwoButton = EventSystem.current.currentSelectedGameObject;
-        PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerTwo(EventSystem.current.currentSelectedGameObject.name);
+        PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.SetPlayerTwo(EventSystem.current.currentSelectedGameObject.name);
         // Save selected player data to data store
         UserDataPersistence.SaveMultiplayerToDevice();
         // Return back to players panel

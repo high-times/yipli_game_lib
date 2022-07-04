@@ -19,7 +19,7 @@ public class SecondTutorialManager : MonoBehaviour
     [SerializeField] private GameObject finalTutParent = null;
 
     [Header("Script objects")]
-    [SerializeField] private YipliConfig currentYipliConfig = null;
+    //[SerializeField] private YipliConfig currentYipliConfig = null;
     [SerializeField] private NewMatInputController newMatInputController = null;
     //[SerializeField] private MatInputController matInputController = null;
     [SerializeField] private ThreeDModelManager threeDModelManager = null;
@@ -252,17 +252,14 @@ public class SecondTutorialManager : MonoBehaviour
         // update player' status
         if (YipliHelper.checkInternetConnection())
         {
-            if (currentYipliConfig.playerInfo != null)
+            if (PlayerSession.Instance.GetPlayersMatTutDoneStatus() == 0)
             {
-                if (currentYipliConfig.playerInfo.isMatTutDone == 0)
-                {
-                    FirebaseDBHandler.UpdateTutStatusData(currentYipliConfig.userId, currentYipliConfig.playerInfo.playerId, 1);
-                    //UserDataPersistence.SavePropertyValue("player-tutDone", 1.ToString());
-                }
+                PlayerSession.Instance.UpdateCurrentPlayersMatTutStatus();
+                //UserDataPersistence.SavePropertyValue("player-tutDone", 1.ToString());
             }
         }
 
-        SceneManager.LoadScene(currentYipliConfig.callbackLevel);
+        PlayerSession.Instance.LaunchCallBackLevel();
     }
 
     public void ManageMatTutorial()
@@ -1034,13 +1031,13 @@ public class SecondTutorialManager : MonoBehaviour
 
         Debug.LogError("stut : single player response is not null");
 
-        Debug.LogError("stut : currentYipliConfig.oldFMResponseCount : " + currentYipliConfig.oldFMResponseCount);
+        Debug.LogError("stut : currentYipliConfig.oldFMResponseCount : " + PlayerSession.Instance.GetOldFMResponseCount());
         Debug.LogError("stut : singlePlayerResponse.count : " + singlePlayerResponse.count);
 
-        if (currentYipliConfig.oldFMResponseCount != singlePlayerResponse.count)
+        if (PlayerSession.Instance.GetOldFMResponseCount() != singlePlayerResponse.count)
         {
             Debug.LogError("stut : from if");
-            PlayerSession.Instance.currentYipliConfig.oldFMResponseCount = singlePlayerResponse.count;
+            PlayerSession.Instance.SetOldFMResponseCount(singlePlayerResponse.count);
 
             Debug.LogError("stut : next line is to detect action");
             DetectedAction = ActionAndGameInfoManager.GetActionEnumFromActionID(singlePlayerResponse.playerdata[0].fmresponse.action_id);
@@ -1115,7 +1112,7 @@ public class SecondTutorialManager : MonoBehaviour
 
         Debug.LogError("stut : connection status is : " + YipliHelper.GetMatConnectionStatus());
         Debug.LogError("stut : current cluster id is : " + YipliHelper.GetGameClusterId());
-        Debug.LogError("stut : only mat play mode is : " + currentYipliConfig.onlyMatPlayMode);
+        Debug.LogError("stut : only mat play mode is : " + PlayerSession.Instance.GetOnlyMatPlayModeStatus());
         Debug.LogError("stut : Detected action is : " + DetectedAction.ToString());
 
         if (!startIntroDone)

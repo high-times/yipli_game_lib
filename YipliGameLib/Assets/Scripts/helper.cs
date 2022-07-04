@@ -48,7 +48,7 @@ public static class YipliHelper
     {
         try
         {
-            return PlayerSession.Instance.currentYipliConfig.bIsInternetConnected;
+            return PlayerSessionFB.Instance.currentYipliConfig.bIsInternetConnected;
         }
         catch(Exception e )
         {
@@ -64,7 +64,7 @@ public static class YipliHelper
             return "Connected";
         }
 
-        if (!PlayerSession.Instance.currentYipliConfig.onlyMatPlayMode)
+        if (!PlayerSessionFB.Instance.currentYipliConfig.onlyMatPlayMode)
             return "Connected";
         Debug.Log("GetBleConnectionStatus returning : " + InitBLE.getMatConnectionStatus());
         return InitBLE.getMatConnectionStatus();

@@ -1,8 +1,6 @@
 {
-    "mat_fb_id" : "-N0FBaBdH_MiOgPkWIjz",
-    "display_name": "Black yipli F4",
-    "mac_address": "A4:DA:32:4F:BF:F4",
-    "mac_name": "YIPLI-C8",
-    "registered_on": "2022-04-22T13:05:21.129734",
-    "status": "Active"
+    "MatFbId" : "-N0FBaBdH_MiOgPkWIjz",
+    "DisplayName": "Black yipli F4",
+    "MacAddress": "A4:DA:32:4F:BF:F4",
+    "MacName": "YIPLI-C8"
 }

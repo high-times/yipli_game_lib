@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Yipli.HttpMpdule
 {
@@ -16,10 +14,15 @@ namespace Yipli.HttpMpdule
         [Header("Scriptable Objects")]
         [SerializeField] private HTTPYipliConfig currentYipliConfig = null;
         [SerializeField] private NewMatInputController newMatInputController = null;
+        [SerializeField] private HTTPPlayerSelection playerSelection = null;
 
         [Header("UI Panel")]
         [SerializeField] private GameObject NoMatPanel = null;
         [SerializeField] private GameObject loadingPanel = null;
+
+        // private variables
+        private bool bIsMatFlowInitialized = false;
+        private int retriesDone = 0;
 
         // Custom Operations
         public void LoadMainGameSceneDirectly()
@@ -30,7 +33,7 @@ namespace Yipli.HttpMpdule
 
             Debug.LogError("onlyMatPlayMode : From LoadMainGameSceneDirectly");
             //StartCoroutine(LoadMainGameScene());
-            SceneManager.LoadScene(currentYipliConfig.CallbackLevel);
+            playerSelection.DataManagementIsFinished();
         }
 
         public void MatConnectionFlow()
@@ -125,7 +128,7 @@ namespace Yipli.HttpMpdule
 
         public void LoadMainGameSceneIfMatIsConnected()
         {
-            if (!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase) || !currentYipliConfig.OnlyMatPlayMode)
+            if (HTTPHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase) || !currentYipliConfig.OnlyMatPlayMode)
             {
                 LoadMainGameScene();
             }
@@ -140,10 +143,56 @@ namespace Yipli.HttpMpdule
             loadingPanel.SetActive(true);
 
             //load last Scene
-            if (!currentYipliConfig.OnlyMatPlayMode)
+            playerSelection.DataManagementIsFinished();
+        }
+
+        // recheck Mat connection
+        public void ReCheckMatConnection()
+        {
+            //newUIManager.TurnOffMainCommonButton();
+
+            Debug.Log("ReCheckMatConnection() called");
+            if (bIsMatFlowInitialized)
+                MatConnectionFlow();
+            else
+                EstablishMatConnection();
+
+            retriesDone++;
+        }
+
+        public void EstablishMatConnection()
+        {
+            NoMatPanel.SetActive(false);
+            newMatInputController.MakeSortLayerTen();
+
+        #if UNITY_ANDROID
+            if (currentYipliConfig.CurrentActiveMatData != null || currentYipliConfig.IsDeviceAndroidTV)
             {
-                SceneManager.LoadScene(currentYipliConfig.CallbackLevel);
+                //Load Game scene if the mat is already connected.
+                if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+                {
+                    StartCoroutine(ConnectMat());
+                }
             }
+            else //Current Mat not found in Db.
+            {
+                loadingPanel.SetActive(false);
+                Debug.Log("No Mat found in cache.");
+                newMatInputController.MakeSortLayerZero();
+                NoMatPanel.SetActive(true);
+                FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
+            }
+        #elif UNITY_STANDALONE_WIN
+            if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+            {
+                StartCoroutine(ConnectMat());
+            }
+        #elif UNITY_IOS
+            if (!InitBLE.getMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+            {
+                StartCoroutine(ConnectMat());
+            }
+        #endif
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Yipli.ControlSystem
 
             if (currentYipliConfig.oldFMResponseCount != singlePlayerResponse.count)
             {
-                PlayerSession.Instance.currentYipliConfig.oldFMResponseCount = singlePlayerResponse.count;
+                PlayerSessionFB.Instance.currentYipliConfig.oldFMResponseCount = singlePlayerResponse.count;
 
                 DetectedAction = ActionAndGameInfoManager.GetActionEnumFromActionID(singlePlayerResponse.playerdata[0].fmresponse.action_id);
 

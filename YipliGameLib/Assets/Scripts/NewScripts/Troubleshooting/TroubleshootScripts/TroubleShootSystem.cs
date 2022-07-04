@@ -1179,10 +1179,10 @@ public class TroubleShootSystem : MonoBehaviour
 
         if (singlePlayerResponse == null) return;
 
-        if (PlayerSession.Instance.currentYipliConfig.oldFMResponseCount != singlePlayerResponse.count)
+        if (PlayerSession.Instance.GetOldFMResponseCount() != singlePlayerResponse.count)
         {
             Debug.LogError("FMResponse " + fmActionData);
-            PlayerSession.Instance.currentYipliConfig.oldFMResponseCount = singlePlayerResponse.count;
+            PlayerSession.Instance.SetOldFMResponseCount(singlePlayerResponse.count);
 
             YipliUtils.PlayerActions providedAction = ActionAndGameInfoManager.GetActionEnumFromActionID(singlePlayerResponse.playerdata[0].fmresponse.action_id);
 

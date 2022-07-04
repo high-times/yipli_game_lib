@@ -119,7 +119,7 @@ public class MatInputController : MonoBehaviour
 
         if (currentYipliConfig.oldFMResponseCount != singlePlayerResponse.count)
         {
-            PlayerSession.Instance.currentYipliConfig.oldFMResponseCount = singlePlayerResponse.count;
+            PlayerSession.Instance.SetOldFMResponseCount(singlePlayerResponse.count);
 
             DetectedAction = ActionAndGameInfoManager.GetActionEnumFromActionID(singlePlayerResponse.playerdata[0].fmresponse.action_id);
 

@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 501bc216893736043ac715f249dc291e, type: 3}
+  m_Name: HTTPYipliConfig
+  m_EditorClassIdentifier: 
+  currentGameInfo:
+    AndroidMinVersion: 
+    AndroidTvMinVersion: 
+    CurrentVersion: 
+    IconImgUrl: 
+    IosCurrentVersion: 
+    IosMinVersion: 
+    MaintenanceMessage: 
+    Name: 
+    OnlyMatPlayMode: 
+    OsListForMaintanence: 
+    StorageExeName: 
+    VersionUpdateMessage: 
+    WinMinVersion: 
+    WinRegistryKey: 
+    WinVersion: 
+    Type: 
+    ThisGameType: 0
+    DaysBeforeNextUpdatePrompt: 0
+    IsGameUnderMaintenance: 0
+  currentUserInfo:
+    UserID: 
+    ContactNo: 
+    CountryCode: 
+    CurrentMatId: 
+    CurrentPlayerId: 
+    DisplayName: 
+    Email: 
+    ProfilePicUrl: 
+    CreatedOn: 0
+    TotalPlayers: 0
+    HasSubcribed: 0
+  allPlayersOfThisUser: []
+  allMatsOfThisUser: []
+  currentActiveMatData:
+    MatFbId: 
+    DisplayName: 
+    MacAddress: 
+    MacName: 
+    RegisteredOn: 
+    Status: 
+  currentPlayer:
+    AddedOn: 0
+    MatTutDone: 0
+    PlayerID: 
+    Dob: 
+    Gender: 
+    Height: 
+    Name: 
+    ProfilePicUrl: 
+    UserId: 
+    Weight: 
+  yipliAppDownloadUrl: 
+  callbackLevel: 
+  bAllDataIsReceived: 0
+  bIsInternetConnected: 0
+  onlyMatPlayModeIsSet: 0
+  onlyMatPlayMode: 0
+  isDeviceAndroidTV: 0
+  sceneLoadedDirectly: 0
+  bIsChangePlayerCalled: 0

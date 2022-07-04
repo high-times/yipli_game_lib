@@ -1,6 +1,9 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using Newtonsoft.Json;
+using Yipli.HttpMpdule.Classes;
+using System.Collections.Generic;
 
 // Access a website and use UnityWebRequest.Get to download a page.
 // Also try to download a non-existing page. Display the error.
@@ -8,19 +11,39 @@ namespace Yipli.HttpMpdule
 {
     public class HTTPRequestManager : MonoBehaviour
     {
-        string getUserIDUrl = "https://us-central1-yipli-project.cloudfunctions.net/adminPanel/user/details?userId=lC4qqZCFEaMogYswKjd0ObE6nD43&detail=fullProfile&apiTocken=bfFzw8p9LgZIXc7N";
+        // Required variables
+        [Header("Scriptable Objects")]
+        [SerializeField] private HTTPYipliConfig currentYipliConfig = null;
+        [SerializeField] private YipliConfig fbYipliConfig = null;
+        [SerializeField] private HTTPPlayerSelection playerSelection = null;
 
         // Unity Oprations
-
+        private void Start() {
+            GatherAllData();
+        }
 
 
         // Data Operations
-        public string GetWindowsYipliAppDownloadURL() {
-            return null;
+
+        public void GatherAllData() {
+            currentYipliConfig.ResetData();
+
+            SetGameData();
+            currentYipliConfig.CurrentUserInfo = JsonConvert.DeserializeObject<UserData>(HTTPDataManager.userJsonData);
+            currentYipliConfig.AllPlayersOfThisUser = JsonConvert.DeserializeObject<List<PlayerInfo>>(HTTPDataManager.playerJsonData);
+            currentYipliConfig.CurrentActiveMatData = JsonConvert.DeserializeObject<MatData>(HTTPDataManager.currentMatJson);
+            currentYipliConfig.AllUrls = JsonConvert.DeserializeObject<UrlData>(HTTPDataManager.urlDataJson);
+
+            currentYipliConfig.BAllDataIsReceived = true;
+            currentYipliConfig.BIsInternetConnected = true;
+
+            playerSelection.StartDataManagement = true;
         }
 
-        public void SetGameData() {
-            
+        // Specific Data Operations
+        private void SetGameData() {
+            currentYipliConfig.CurrentGameInfo = JsonConvert.DeserializeObject<GameData>(HTTPDataManager.gameDataJson);
+            currentYipliConfig.CurrentGameInfo.ThisGameType = fbYipliConfig.gameType;
         }
 
         // Request Operations

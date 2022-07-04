@@ -76,7 +76,7 @@ public static class FirebaseDBHandler
     }
 
     // Adds a PlayerSession to the Firebase Database
-    public static void PostPlayerSession(PlayerSession session, PostUserCallback callback)
+    public static void PostPlayerSession(PlayerSessionFB session, PostUserCallback callback)
     {
         //auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password).ContinueWith(task => {
         auth.SignInAnonymouslyAsync().ContinueWith(task => {
@@ -109,7 +109,7 @@ public static class FirebaseDBHandler
     }
 
     // Adds a PlayerSession to the Firebase Database
-    public static void PostMultiPlayerSession(PlayerSession session,PlayerDetails playerDetails,string mpSessionUUID, PostUserCallback callback)
+    public static void PostMultiPlayerSession(PlayerSessionFB session,PlayerDetails playerDetails,string mpSessionUUID, PostUserCallback callback)
     {
         //auth.SignInWithEmailAndPasswordAsync(YipliHelper.userName, YipliHelper.password).ContinueWith(task => {
         auth.SignInAnonymouslyAsync().ContinueWith(task => {

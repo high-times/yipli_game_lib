@@ -52,7 +52,7 @@ public static class UserDataPersistence
     public static void SaveMultiplayerToDevice()
     {
         Debug.Log("Save data test- Starting save data function");
-        MultiPlayerData multiPlayerData = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData;
+        MultiPlayerData multiPlayerData = PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerData;
         try
         {
             if (multiPlayerData.PlayerOneDetails != null)
@@ -83,7 +83,7 @@ public static class UserDataPersistence
 
     public static void SaveMultiplayerUserIdToDevice()
     {
-        SavePropertyValue("MM-user-id", PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.userId);
+        SavePropertyValue("MM-user-id", PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerData.PlayerOneDetails.userId);
     }
 
     public static void DeleteMultiplayerUserIdFromDevice()
@@ -127,12 +127,12 @@ public static class UserDataPersistence
 
             YipliPlayerInfo tempPlayer;
 
-            MultiPlayerData multiPlayerData = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.playerData;
+            MultiPlayerData multiPlayerData = PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.playerData;
             Debug.Log("Save data test- Found scriptable");
 
             multiPlayerData.PlayerOneDetails.playerId = GetPropertyValue("player-one-id");
 
-            tempPlayer = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.GetPlayerInfoFromPlayerId(multiPlayerData.PlayerOneDetails.playerId);
+            tempPlayer = PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.GetPlayerInfoFromPlayerId(multiPlayerData.PlayerOneDetails.playerId);
 
             multiPlayerData.PlayerOneName = tempPlayer.playerName;
             multiPlayerData.PlayerOneDetails.playerAge = tempPlayer.playerAge;
@@ -144,7 +144,7 @@ public static class UserDataPersistence
 
             multiPlayerData.PlayerTwoDetails.playerId = GetPropertyValue("player-two-id");
 
-            tempPlayer = PlayerSession.Instance.currentYipliConfig.MP_GameStateManager.GetPlayerInfoFromPlayerId(multiPlayerData.PlayerTwoDetails.playerId);
+            tempPlayer = PlayerSessionFB.Instance.currentYipliConfig.MP_GameStateManager.GetPlayerInfoFromPlayerId(multiPlayerData.PlayerTwoDetails.playerId);
 
             multiPlayerData.PlayerTwoName = tempPlayer.playerName;
             multiPlayerData.PlayerTwoDetails.playerAge = tempPlayer.playerAge;

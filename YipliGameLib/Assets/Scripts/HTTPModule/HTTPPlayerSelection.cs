@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using Yipli.HttpMpdule.Classes;
+using UnityEngine.SceneManagement;
 
 namespace Yipli.HttpMpdule
 {
@@ -14,9 +15,9 @@ namespace Yipli.HttpMpdule
         [SerializeField] private HTTPYipliConfig currentYipliConfig = null;
         [SerializeField] private HTTPMatManager httpMatManager = null;
         [SerializeField] private HTTPRequestManager httpRequestManager = null;
-        [SerializeField] private MatInputController matInputController = null;
+        [SerializeField] private HTTPMatController matInputController = null;
         [SerializeField] private NewMatInputController newMatInputController = null;
-        [SerializeField] private NewUIManager newUIManager = null;
+        [SerializeField] private HTTPNewUIManager newUIManager = null;
 
         [Header("UI Objects")]
         [SerializeField] private GameObject phoneAnimationOBJ = null;
@@ -52,6 +53,8 @@ namespace Yipli.HttpMpdule
         // Lists
         private List<GameObject> generatedObjects = new List<GameObject>();
 
+        public bool StartDataManagement { get => startDataManagement; set => startDataManagement = value; }
+
         // Unity Operations
         private void OnEnable()
         {
@@ -66,24 +69,12 @@ namespace Yipli.HttpMpdule
             //newMatInputController.DisableMatParentButtonAnimator();
 
             TurnOffAllDeviceSpecificTextObject();
-
-            StartCoroutine(CheckNoInternetConnection());
-
-            //Data could be ready already before reaching here.
-            if (currentYipliConfig.BIsInternetConnected)
-            {
-                // Game info and update check before player selection
-                httpRequestManager.SetGameData();
-
-                if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) {
-                    //keep yipli app Download Url ready
-                    currentYipliConfig.YipliAppDownloadUrl = httpRequestManager.GetWindowsYipliAppDownloadURL();
-                }
-            }
         }
 
         private void Update()
         {
+            if (!currentYipliConfig.BAllDataIsReceived) return;
+
             if (!currentYipliConfig.BIsInternetConnected) return;
 
             // TO DO : Move below operation in another file. Look for executions start(). - use flag -> get game info query completed
@@ -95,13 +86,13 @@ namespace Yipli.HttpMpdule
             // wait for only matplay mode to be set
             if (!currentYipliConfig.OnlyMatPlayModeIsSet) return;
 
-            Debug.LogError("onlyMatPlayMode : only mat play mode : " + currentYipliConfig.OnlyMatPlayMode);
+            //Debug.LogError("onlyMatPlayMode : only mat play mode : " + currentYipliConfig.OnlyMatPlayMode);
 
             if (!currentYipliConfig.OnlyMatPlayMode)
             {
                 if (currentYipliConfig.SceneLoadedDirectly) return;
 
-                Debug.LogError("onlyMatPlayMode : next line is matSelectionScript.LoadMainGameSceneDirectly();");
+                //Debug.LogError("onlyMatPlayMode : next line is matSelectionScript.LoadMainGameSceneDirectly();");
                 httpMatManager.LoadMainGameSceneDirectly();
                 return;
             }
@@ -125,7 +116,7 @@ namespace Yipli.HttpMpdule
                 matInputController.IsThisPlayerSelectionPanel = false;
             }
 
-            if (startDataManagement)
+            if (StartDataManagement)
             {
                 InitializeAndStartPlayerSelectionNoCoroutine();
             }
@@ -151,7 +142,7 @@ namespace Yipli.HttpMpdule
             {
                 yield return new WaitForSecondsRealtime(1f);
 
-                if (YipliHelper.checkInternetConnection()) // update this line with http ping
+                if (HTTPHelper.CheckInternetConnection()) // update this line with http ping
                 {
                     //newUIManager.TurnOffMainCommonButton();
                     noNetworkPanel.SetActive(false);
@@ -216,7 +207,7 @@ namespace Yipli.HttpMpdule
 
         private void PlayComeAndJumpAudio()
         {
-            if (YipliHelper.GetMatConnectionStatus().Equals("connected", System.StringComparison.OrdinalIgnoreCase)) // update this with httphelper
+            if (HTTPHelper.GetMatConnectionStatus().Equals("connected", System.StringComparison.OrdinalIgnoreCase)) // update this with httphelper
             {
                 currentTimePassed += Time.deltaTime;
 
@@ -238,7 +229,7 @@ namespace Yipli.HttpMpdule
         }
 
         private void InitializeAndStartPlayerSelectionNoCoroutine() {
-            if (currentYipliConfig.BIsChangePlayerCalled) return;
+            //if (currentYipliConfig.BIsChangePlayerCalled) return;
 
             // game info status check
             if (currentYipliConfig.CurrentGameInfo == null) return;
@@ -248,10 +239,10 @@ namespace Yipli.HttpMpdule
             //Setting User Id in the scriptable Object
             if (string.IsNullOrEmpty(currentYipliConfig.CurrentUserInfo.UserID)) return;
 
-            //First get all the players
-            if (currentYipliConfig.AllPlayersOfThisUser.Count <= 0) return;
-
-            InitDefaultPlayer();
+            if (currentYipliConfig.CurrentPlayer == null)
+            {
+                InitDefaultPlayer();
+            }
 
             // only once start the connection flow
             if (!matConnectionStarted && currentYipliConfig.OnlyMatPlayMode)
@@ -261,13 +252,10 @@ namespace Yipli.HttpMpdule
             }
 
             // no need to execute further if mat connection is not available
-            if (currentYipliConfig.OnlyMatPlayMode)
-            {
-                if (!YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase)) return;
-            }
+            if (currentYipliConfig.OnlyMatPlayMode && !HTTPHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase)) return;
 
             //Special handling in case of Multiplayer games
-            if (currentYipliConfig.CurrentGameInfo.Type == GameType.MULTIPLAYER_GAMING)
+            if (currentYipliConfig.CurrentGameInfo.ThisGameType == GameType.MULTIPLAYER_GAMING)
             {
                 // Check if atleast 2 players are available for playing the multiplayer game
                 if (currentYipliConfig.AllPlayersOfThisUser.Count < 2)
@@ -288,7 +276,7 @@ namespace Yipli.HttpMpdule
             }
             else
             {
-                if (currentYipliConfig.CurrentPlayer != null && currentYipliConfig.CurrentPlayer.mat_tut_done == 0 && currentYipliConfig.OnlyMatPlayMode)
+                if (currentYipliConfig.CurrentPlayer != null && currentYipliConfig.CurrentPlayer.MatTutDone == 0 && currentYipliConfig.OnlyMatPlayMode)
                 {
                     LoadingPanel.SetActive(false);
                     //Debug.LogError("Retake Tutorial : next line is playdevice specific tutorial");
@@ -299,20 +287,19 @@ namespace Yipli.HttpMpdule
                     SwitchPlayerFlow();
                 }
             }
+
+            Debug.LogError("At the end of InitializeAndStartPlayerSelectionNoCoroutine");
         }
 
         private void InitDefaultPlayer()
         {
-            if (currentYipliConfig.CurrentPlayer != null)
-            {
-                SelectPlayerBasedOnPlayerID(currentYipliConfig.CurrentUserInfo.current_player_id);
-            }
+            SelectPlayerBasedOnPlayerID(currentYipliConfig.CurrentUserInfo.CurrentPlayerId);
         }
 
         private void SelectPlayerBasedOnPlayerID(string currentPlayerId)
         {
-            foreach (PlayerData tempPlayer in currentYipliConfig.AllPlayersOfThisUser) {
-                if (tempPlayer.playerID.Equals(currentPlayerId)) {
+            foreach (PlayerInfo tempPlayer in currentYipliConfig.AllPlayersOfThisUser) {
+                if (tempPlayer.PlayerID.Equals(currentPlayerId)) {
                     currentYipliConfig.CurrentPlayer = tempPlayer;
                     break;
                 }
@@ -330,7 +317,7 @@ namespace Yipli.HttpMpdule
             {
                 //This means we have the default Player info from backend.
                 //In this case we need to call the player change screen and not the player selection screen
-                Debug.Log("Found current player : " + currentYipliConfig.CurrentPlayer.name);
+                Debug.LogError("Found current player : " + currentYipliConfig.CurrentPlayer.Name);
 
                 //Since default player is there, directly go to the mat selection flow
                 //matSelectionScript.MatConnectionFlow();
@@ -347,7 +334,7 @@ namespace Yipli.HttpMpdule
         {
             TurnOffAllPanels();
 
-            if (!YipliHelper.checkInternetConnection())
+            if (HTTPHelper.CheckInternetConnection())
             {
                 PlayerSelectionFlow();
             }
@@ -417,7 +404,7 @@ namespace Yipli.HttpMpdule
             phoneHolderInfo.SetActive(true);
             newUIManager.UpdateButtonDisplay(phoneHolderInfo.gameObject.tag);
 
-            if (YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+            if (HTTPHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
             {
                 phoneHolderInfo.GetComponent<AudioSource>().Play();
             }
@@ -454,6 +441,48 @@ namespace Yipli.HttpMpdule
         void PlayPCTutStartAnimation()
         {
             pcAnimationOBJ.SetActive(true);
+        }
+
+        public void OnJumpOnMat()
+        {
+            allowPhoneHolderAudioPlay = false;
+            SceneManager.LoadScene("gameLibTutorial");
+        }
+
+        // Go to Yipli Stuff
+        public void OnGoToYipliPress()
+        {
+            HTTPHelper.GoToYipli(ProductMessages.noPlayerAdded);
+        }
+        
+        // Game Updates on Androif
+        public void OnUpdateGameClick()
+        {
+            string gameAppId = Application.identifier;
+            Debug.Log("App Id is : " + gameAppId);
+            HTTPHelper.GoToPlaystoreUpdate(gameAppId);
+        }
+
+        // Internet connection Operations
+        public void TryAgainInternetConnection()
+        {
+            if (HTTPHelper.CheckInternetConnection())
+            {
+                noNetworkPanel.SetActive(false);
+            }
+            else
+            {
+                //newUIManager.UpdateButtonDisplay(noNetworkPanel.tag);
+                noNetworkPanel.SetActive(true);
+            }
+        }
+
+        public void DataManagementIsFinished()
+        {
+            StartDataManagement = false;
+            // Disable UI from Here;
+
+            Debug.LogError($"DataManagement is done : {StartDataManagement}");
         }
     }
 }
