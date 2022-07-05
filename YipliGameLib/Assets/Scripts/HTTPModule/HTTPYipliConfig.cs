@@ -15,6 +15,7 @@ namespace Yipli.HttpMpdule
         [SerializeField] private PlayerInfo currentPlayer = null;
         [SerializeField] private UrlData allUrls = null;
 
+        [SerializeField] private string gameID = null;
         [SerializeField] private string yipliAppDownloadUrl = null;
         [SerializeField] private string callbackLevel = null;
 
@@ -29,6 +30,8 @@ namespace Yipli.HttpMpdule
 
         [SerializeField] private int oldFMResponseCount = 0;
 
+        [SerializeField] private MP_GameStateManager mp_GameStateManager;
+
         // getters and setter
         public GameData CurrentGameInfo { get => currentGameInfo; set => currentGameInfo = value; }
         public UserData CurrentUserInfo { get => currentUserInfo; set => currentUserInfo = value; }
@@ -38,6 +41,7 @@ namespace Yipli.HttpMpdule
         public PlayerInfo CurrentPlayer { get => currentPlayer; set => currentPlayer = value; }
         public UrlData AllUrls { get => allUrls; set => allUrls = value; }
 
+        public string GameID { get => gameID; set => gameID = value; }
         public string YipliAppDownloadUrl { get => yipliAppDownloadUrl; set => yipliAppDownloadUrl = value; }
         public string CallbackLevel { get => callbackLevel; set => callbackLevel = value; }
 
@@ -51,6 +55,7 @@ namespace Yipli.HttpMpdule
         public bool SkipNormalUpdateClicked { get => skipNormalUpdateClicked; set => skipNormalUpdateClicked = value; }
 
         public int OldFMResponseCount { get => oldFMResponseCount; set => oldFMResponseCount = value; }
+        public MP_GameStateManager Mp_GameStateManager { get => mp_GameStateManager; set => mp_GameStateManager = value; }
 
         // Custome Operations
         public void ResetData()

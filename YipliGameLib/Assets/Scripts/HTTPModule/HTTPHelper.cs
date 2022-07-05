@@ -72,5 +72,38 @@ namespace Yipli.HttpMpdule
                     Debug.Log("Unsupported os");
             #endif
         }
+
+        public static string GetFMDriverVersion()
+        {
+            return InitBLE.getFMDriverVersion();
+        }
+
+        // age from Dob
+        public static string CalculateAge(string strDob /* 'mm-dd-yyyy' format */)
+        {
+            DateTime now = DateTime.Now;
+            string[] tokens = strDob.Split('-');
+            int month = int.Parse(tokens[0]);
+            int year = int.Parse(tokens[2]);
+            int day = int.Parse(tokens[1]);
+            var years = now.Year - year;
+            if (now.Month < month)
+            {
+                years--;
+            }
+            if (now.Month == month)
+            {
+                if (now.Day < day)
+                {
+                    years--;
+                }
+            }
+            return years.ToString();
+        }
+
+        public static void SetGameClusterId(int clusterId)
+        {
+            InitBLE.setGameClusterID(clusterId);
+        }
     }
 }

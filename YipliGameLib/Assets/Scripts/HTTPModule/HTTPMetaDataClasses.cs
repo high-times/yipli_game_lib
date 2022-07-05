@@ -55,7 +55,7 @@ namespace Yipli.HttpMpdule.Classes
         public string MatFbId;
         public string DisplayName;
         public string MacAddress;
-        public string MacName;
+        public string MatName;
         public string RegisteredOn;
         public string Status;
     }
