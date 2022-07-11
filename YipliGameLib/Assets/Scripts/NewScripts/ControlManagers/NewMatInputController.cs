@@ -39,6 +39,7 @@ public class NewMatInputController : MonoBehaviour
     [Header("Required script objects")]
     [SerializeField] private SecondTutorialManager secondTutorialManager = null;
     [SerializeField] private MatInputController matInputController = null;
+    [SerializeField] private int manualSortingOrderNumber = 110;
 
     public void DisplayMainMat() {
         matParentObj.SetActive(true);
@@ -155,7 +156,7 @@ public class NewMatInputController : MonoBehaviour
     }
 
     public void MakeSortLayerTen() {
-        matCanvasComponent.sortingOrder = 10;
+        matCanvasComponent.sortingOrder = manualSortingOrderNumber;
     }
 
     public void SkipReselectButton() {

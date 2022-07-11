@@ -12,21 +12,27 @@ namespace Yipli.HttpMpdule
 {
     public class HTTPPlayerSession : MonoBehaviour
     {
-        [Header("Required Scriptable Objects")]
+        [Header("Required Scriptable and Script Objects")]
         [SerializeField] private HTTPYipliConfig currentYipliConfig = null;
+        [SerializeField] private HTTPRequestManager httpRequestManager = null;
+        [SerializeField] private YipliAudioManager yipliAudioManager = null;
+        [SerializeField] private HTTPPlayerSelection httpPlayerSelection = null;
 
         [Header("UI Objects")]
-        [SerializeField] private GameObject YipliBackgroundPanel;
-        [SerializeField] private GameObject BleErrorPanel;
-        [SerializeField] private GameObject retryBleConnectionButton;
-        [SerializeField] private GameObject LoadingScreen;
-        [SerializeField] private GameObject netErrorPanel;
+        [SerializeField] private GameObject YipliBackgroundPanel = null;
+        [SerializeField] private GameObject BleErrorPanel = null;
+        [SerializeField] private GameObject retryBleConnectionButton = null;
+        [SerializeField] private GameObject LoadingScreen = null;
+        [SerializeField] private GameObject netErrorPanel = null;
         [SerializeField] private GameObject yipliInfoPanel = null;
+
+        [Header("HTTP Module Objects")]
+        [SerializeField] private GameObject[] primaryObject = null;
 
         [Header("Text Objects")]
         [SerializeField] private TextMeshProUGUI infoPaneltext = null;
         [SerializeField] private TextMeshProUGUI bleErrorText = null;
-        [SerializeField] private TextMeshProUGUI playerNameGreetingText = null;
+        //[SerializeField] private TextMeshProUGUI playerNameGreetingText = null;
 
         // private variables
         // Dictionaries
@@ -50,7 +56,7 @@ namespace Yipli.HttpMpdule
         private bool bIsBleCheckRunning = false;
 
         // static variables
-        private static HTTPPlayerSession _instance;
+        private static HTTPPlayerSession _instance = null;
         public static HTTPPlayerSession Instance { get { return _instance; } }
 
         // Getters and Setters
@@ -65,6 +71,37 @@ namespace Yipli.HttpMpdule
         public string IntensityLevel { get => intensityLevel; set => intensityLevel = value; }
         public bool BIsPaused { get => bIsPaused; set => bIsPaused = value; }
         public bool BIsBleCheckRunning { get => bIsBleCheckRunning; set => bIsBleCheckRunning = value; }
+
+        // Unity operations
+        private void Awake()
+        {
+            if (_instance != null && _instance != this)
+            {
+                Debug.Log("Destroying current instance of http playersession and reinitializing");
+                Destroy(gameObject);
+                _instance = this;
+            }
+            else
+            {
+                _instance = this;
+            }
+        }
+
+        // Custome operations
+        public void HttpAwakeOperations()
+        {
+            httpRequestManager.GatherAllData();
+
+            ChangeStateOfAllPrimaryObjects(true);
+        }
+
+        public void ChangeStateOfAllPrimaryObjects(bool state)
+        {
+            foreach (GameObject obj in primaryObject)
+            {
+                obj.SetActive(state);
+            }
+        }
 
         public void AddMultiPlayerAction(YipliUtils.PlayerActions action, PlayerDetails playerDetails, int count)
         {
@@ -110,7 +147,9 @@ namespace Yipli.HttpMpdule
 
         public void ChangePlayer()
         {
-            throw new NotImplementedException();
+            ChangeStateOfAllPrimaryObjects(true);
+
+            httpPlayerSelection.PlayerSelectionFlow();
         }
 
         public void CloseSPSession()
@@ -279,46 +318,6 @@ namespace Yipli.HttpMpdule
             HTTPHelper.GoToYipli(ProductMessages.openYipliApp);
         }
 
-        public void HTTPAwakeOperations()
-        {
-            if (_instance != null && _instance != this)
-            {
-                Debug.Log("Destroying current instance of playersession and reinitializing");
-                Destroy(gameObject);
-                _instance = this;
-            }
-            else
-            {
-                _instance = this;
-            }
-
-            if (currentYipliConfig.OnlyMatPlayModeIsSet && !currentYipliConfig.OnlyMatPlayMode) return;
-
-            if (currentYipliConfig.CurrentGameInfo.ThisGameType == GameType.MULTIPLAYER_GAMING)
-            {
-                if (string.IsNullOrEmpty(currentYipliConfig.CurrentUserInfo.UserID))
-                {
-                    _instance.currentYipliConfig.CallbackLevel = SceneManager.GetActiveScene().name;
-                    SceneManager.LoadScene("yipli_lib_scene");
-                }
-            }
-            else if (currentYipliConfig.CurrentPlayer == null && currentYipliConfig.CurrentGameInfo.ThisGameType != GameType.MULTIPLAYER_GAMING)
-            {
-                // Call Yipli_GameLib_Scene
-                _instance.currentYipliConfig.CallbackLevel = SceneManager.GetActiveScene().name;
-                Debug.Log("Updating the callBackLevel Value to :" + _instance.currentYipliConfig.CallbackLevel);
-                Debug.Log("Loading Yipli scene for player Selection...");
-
-                //currentYipliConfig.bIsRetakeTutorialFlagActivated = false;
-                if (!_instance.currentYipliConfig.CallbackLevel.Equals("Yipli_Testing_harness"))
-                    SceneManager.LoadScene("yipli_lib_scene");
-            }
-            else
-            {
-                Debug.Log("Current player is not null. Not calling yipli_lib_scene");
-            }
-        }
-
         public void LoadingScreenSetActive(bool bOn)
         {
             Debug.Log("Loading Screen called : " + bOn);
@@ -353,7 +352,7 @@ namespace Yipli.HttpMpdule
                 Debug.Log("In PauseSPSession : Ble disconnected");
                 if (!BleErrorPanel.activeSelf)
                 {
-                    FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
+                    yipliAudioManager.Play("BLE_failure");
                     YipliBackgroundPanel.SetActive(true);
                     BleErrorPanel.SetActive(true);
                 }
@@ -501,11 +500,6 @@ namespace Yipli.HttpMpdule
 
             if (currentYipliConfig.OnlyMatPlayModeIsSet && !currentYipliConfig.OnlyMatPlayMode) return;
 
-            if (currentYipliConfig.CurrentGameInfo.ThisGameType != GameType.MULTIPLAYER_GAMING)
-            {
-                playerNameGreetingText.text = "Hi, " + GetCurrentPlayer();
-            }
-
             Debug.Log("Starting the BLE routine check in PlayerSession Start()");
 
             StartCoroutine(CheckInternetConnection());
@@ -631,7 +625,7 @@ namespace Yipli.HttpMpdule
                 Debug.Log("In UpdateDuration : Ble connected");
                 if (BleErrorPanel.activeSelf)
                 {
-                    FindObjectOfType<YipliAudioManager>().Play("BLE_success");
+                    yipliAudioManager.Play("BLE_success");
                     BleErrorPanel.SetActive(false);
                     YipliBackgroundPanel.SetActive(false);
                 }
@@ -788,7 +782,7 @@ namespace Yipli.HttpMpdule
                 {
                     YipliBackgroundPanel.SetActive(false);
                     BleErrorPanel.SetActive(false);
-                    FindObjectOfType<YipliAudioManager>().Play("BLE_success");
+                    yipliAudioManager.Play("BLE_success");
                 }
             }
             else
@@ -807,7 +801,7 @@ namespace Yipli.HttpMpdule
                     bleErrorText.text = ProductMessages.Err_mat_connection_pc;
 #endif
 
-                    FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
+                    yipliAudioManager.Play("BLE_failure");
                     YipliBackgroundPanel.SetActive(true);
                     BleErrorPanel.SetActive(true);
                 }
@@ -827,7 +821,7 @@ namespace Yipli.HttpMpdule
                     {
                         YipliBackgroundPanel.SetActive(false);
                         netErrorPanel.SetActive(false);
-                        FindObjectOfType<YipliAudioManager>().Play("BLE_success");
+                        yipliAudioManager.Play("BLE_success");
                     }
                 }
                 else
@@ -835,7 +829,7 @@ namespace Yipli.HttpMpdule
                     Debug.Log("Internect connection is lost.");
                     if (!netErrorPanel.activeSelf)
                     {
-                        FindObjectOfType<YipliAudioManager>().Play("BLE_failure");
+                        yipliAudioManager.Play("BLE_failure");
                         YipliBackgroundPanel.SetActive(true);
                         netErrorPanel.SetActive(true);
                     }

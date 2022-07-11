@@ -58,11 +58,9 @@ public class PlayerSessionFB : MonoBehaviour
     [SerializeField] private GameObject yipliInfoPanel = null;
     [SerializeField] private TextMeshProUGUI infoPaneltext = null;
 
-    //awake Related Operations
-    public void PSFirebaseAwake()
+    // Unity Operations
+    private void Awake()
     {
-        //SetMatPlayMode();
-
         if (_instance != null && _instance != this)
         {
             Debug.Log("Destroying current instance of playersession and reinitializing");
@@ -73,7 +71,12 @@ public class PlayerSessionFB : MonoBehaviour
         {
             _instance = this;
         }
+    }
 
+
+    //awake Related Operations
+    public void PSFirebaseAwake()
+    {
         if (currentYipliConfig.onlyMatPlayModeIsSet && !currentYipliConfig.onlyMatPlayMode) return;
 
         if (currentYipliConfig.gameType == GameType.MULTIPLAYER_GAMING)

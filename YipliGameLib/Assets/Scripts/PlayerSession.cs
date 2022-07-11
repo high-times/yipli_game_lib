@@ -31,14 +31,34 @@ public class PlayerSession : MonoBehaviour
     [SerializeField] private GameObject yipliInfoPanel = null;
     [SerializeField] private TextMeshProUGUI infoPaneltext = null;
 
+    [Header("Required Scriptable and scrip objects")]
+    [SerializeField] private HTTPRequestManager httpRequestManager = null;
+
+    // Unity Operations
     private void Awake()
     {
-        if (HttpOrFirebase)
+        if (_instance != null && _instance != this)
         {
-            HTTPPlayerSession.Instance.HTTPAwakeOperations();
+            Debug.Log("Destroying current instance of playersession and reinitializing");
+            Destroy(gameObject);
+            _instance = this;
         }
         else
         {
+            _instance = this;
+        }
+
+        HttpOrFirebase = httpRequestManager.GetHttpServerStatus();
+        callbackLevel = SceneManager.GetActiveScene().name;
+
+        if (HttpOrFirebase)
+        {
+            HTTPPlayerSession.Instance.HttpAwakeOperations();
+        }
+        else
+        {
+            HTTPPlayerSession.Instance.ChangeStateOfAllPrimaryObjects(false);
+
             PlayerSessionFB.Instance.PSFirebaseAwake();
         }
     }
@@ -67,6 +87,7 @@ public class PlayerSession : MonoBehaviour
         }
     }
 
+    // Custome operations
     public string GetCurrentPlayer()
     {
         if (HttpOrFirebase)

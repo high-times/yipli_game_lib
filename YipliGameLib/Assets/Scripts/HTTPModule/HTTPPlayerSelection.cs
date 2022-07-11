@@ -42,10 +42,14 @@ namespace Yipli.HttpMpdule
         [SerializeField] private GameObject PlayersContainer = null;
 
         // private variables
+        // strings
+        public string playerName;
+
         // Booleans
         private bool allowPhoneHolderAudioPlay = false;
         private bool startDataManagement = false;
         private bool matConnectionStarted = false;
+        private bool psFlowForCPcalled = false;
 
         // Floats
         private float currentTimePassed = 0;
@@ -53,7 +57,10 @@ namespace Yipli.HttpMpdule
         // Lists
         private List<GameObject> generatedObjects = new List<GameObject>();
 
+        // getters and setters
         public bool StartDataManagement { get => startDataManagement; set => startDataManagement = value; }
+        public bool PsFlowForCPcalled { get => psFlowForCPcalled; set => psFlowForCPcalled = value; }
+        public string PlayerName { get => playerName; set => playerName = value; }
 
         // Unity Operations
         private void OnEnable()
@@ -289,6 +296,8 @@ namespace Yipli.HttpMpdule
             }
 
             Debug.LogError("At the end of InitializeAndStartPlayerSelectionNoCoroutine");
+            startDataManagement = false;
+            HTTPPlayerSession.Instance.ChangeStateOfAllPrimaryObjects(false);
         }
 
         private void InitDefaultPlayer()
@@ -483,6 +492,88 @@ namespace Yipli.HttpMpdule
             // Disable UI from Here;
 
             Debug.LogError($"DataManagement is done : {StartDataManagement}");
+        }
+
+        // select player for change player
+        public void SelectPlayer()
+        {
+            playerSelectionPanel.SetActive(false);
+            newMatInputController.HideMainMat();
+            
+            PlayerName = matInputController.CurrentPlayerName;
+            //Debug.LogError("switchPlayer matInputController.CurrentPlayerName :  " + matInputController.CurrentPlayerName);
+
+            // first of all destroy all PlayerButton prefabs. This is required to remove stale prefabs.
+            foreach (var obj1 in generatedObjects)
+            {
+                Destroy(obj1);
+            }
+            //Debug.LogError("switchPlayer Selected :  " + PlayerName);
+
+            //Changing the currentSelected player in the Scriptable object
+            //No Making this player persist in the device. This will be done on continue press.
+            currentYipliConfig.CurrentPlayer = GetPlayerInfoFromPlayerName(PlayerName);
+            //Debug.LogError("switchPlayer configured : " + currentYipliConfig.playerInfo);
+
+            //Save the player to device
+            //UserDataPersistence.SavePlayerToDevice(currentYipliConfig.playerInfo);
+
+            //Trigger the GetGameData for new player.
+            // get game data
+            //Debug.LogError("switchPlayer GameData is triggered");
+
+            TurnOffAllPanels();
+            //Debug.LogError("switchPlayer All panels are off : " + learnMatControlIsClicked + " " +  currentYipliConfig.playerInfo.isMatTutDone);
+
+            matInputController.IsThisSwitchPlayerPanel = true;
+
+            matInputController.UpdateSwitchPlayerPanelPlayerObject();
+
+            //switchPlayerPanelText.text = "You have selected " + matInputController.CurrentPlayerName + " as player.";
+
+            newMatInputController.DisplayMainMat();
+            newMatInputController.HideChevrons();
+            newMatInputController.DisplayMatForSwitchPlayerPanel();
+
+            if (currentYipliConfig.BIsChangePlayerCalled)
+            {
+                // currentYipliConfig.bIsChangePlayerCalled = false;
+                PsFlowForCPcalled = false;
+            }
+
+            //switchPlayerPanel.SetActive(true);
+
+            // only until switch player panel gets desiged
+            OnContinuePress();
+        }
+
+        private PlayerInfo GetPlayerInfoFromPlayerName(string playerName)
+        {
+            if (currentYipliConfig.AllPlayersOfThisUser.Count > 0)
+            {
+                foreach (PlayerInfo player in currentYipliConfig.AllPlayersOfThisUser)
+                {
+                    Debug.Log("Found player : " + player.Name);
+                    if (player.Name == playerName)
+                    {
+                        Debug.Log("Found player : " + player.Name);
+                        return player;
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log("No Players found.");
+            }
+            return null;
+        }
+
+        public void OnContinuePress()
+        {
+            Debug.Log("Continue Pressed.");
+            TurnOffAllPanels();
+            //matSelectionScript.MatConnectionFlow();
+            HTTPPlayerSession.Instance.ChangeStateOfAllPrimaryObjects(false);
         }
     }
 }

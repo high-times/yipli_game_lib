@@ -12,8 +12,9 @@ namespace Yipli.HttpMpdule
     public class HTTPMatController : MonoBehaviour
     {
         // required variables
-        [Header("current yipli config")]
+        [Header("current yipli config and other script objects")]
         [SerializeField] HTTPYipliConfig currentYipliConfig = null;
+        [SerializeField] HTTPPlayerSelection httpPlayerSelection = null;
 
         // fix switch cases
         const string LEFT = "left";
@@ -303,19 +304,19 @@ namespace Yipli.HttpMpdule
                 playerObject.transform.GetChild(1).transform.GetChild(0).GetComponent<Image>().sprite = defaultProfilePic;
             }
 
-            playerObject.transform.GetComponent<UnityEngine.UI.Button>().onClick.AddListener(FindObjectOfType<PlayerSelection>().SelectPlayer);
+            playerObject.transform.GetComponent<Button>().onClick.AddListener(httpPlayerSelection.SelectPlayer);
 
             switch(playerInspectorIndex) {
                 case -1:
-                    leftButton.onClick.AddListener(FindObjectOfType<PlayerSelection>().SelectPlayer);
+                    leftButton.onClick.AddListener(httpPlayerSelection.SelectPlayer);
                     break;
 
                 case 0:
-                    middleButton.onClick.AddListener(FindObjectOfType<PlayerSelection>().SelectPlayer);
+                    middleButton.onClick.AddListener(httpPlayerSelection.SelectPlayer);
                     break;
 
                 case 1:
-                    rightButton.onClick.AddListener(FindObjectOfType<PlayerSelection>().SelectPlayer);
+                    rightButton.onClick.AddListener(httpPlayerSelection.SelectPlayer);
                     break;
 
                 default:

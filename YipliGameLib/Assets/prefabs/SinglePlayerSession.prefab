@@ -693,6 +693,60 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Home
+--- !u!1 &1837977087885737394
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2815660519619557253}
+  - component: {fileID: 806110091544527415}
+  m_Layer: 0
+  m_Name: PlayerSessionFB
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2815660519619557253
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837977087885737394}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5910944439154140264}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &806110091544527415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1837977087885737394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48ca44d3fd62bcd48b3e2bfb6d057b41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  intensityLevel: 
+  bleErrorText: {fileID: 1230185053029820647}
+  playerNameGreetingText: {fileID: 7677445177396958193}
+  YipliBackgroundPanel: {fileID: 3847405382504132362}
+  BleErrorPanel: {fileID: 8889714764943057931}
+  retryBleConnectionButton: {fileID: 5215672954488505218}
+  LoadingScreen: {fileID: 3680743141086859179}
+  netErrorPanel: {fileID: 2207673926272579472}
+  currentYipliConfig: {fileID: 11400000, guid: 4f87967ea03eb1743a90e503a6dc0a22, type: 2}
+  yipliInfoPanel: {fileID: 98170470899025585}
+  infoPaneltext: {fileID: 7408123304109165520}
 --- !u!1 &2207673926272579472
 GameObject:
   m_ObjectHideFlags: 0
@@ -2677,6 +2731,7 @@ Transform:
   - {fileID: 6570824715685628576}
   - {fileID: 997318065150339935}
   - {fileID: 5622047715587984252}
+  - {fileID: 2815660519619557253}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2692,15 +2747,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b22ce8f9f0c6e5240ba0be79633432f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intensityLevel: 
-  bleErrorText: {fileID: 1230185053029820647}
-  playerNameGreetingText: {fileID: 7677445177396958193}
-  YipliBackgroundPanel: {fileID: 3847405382504132362}
-  BleErrorPanel: {fileID: 8889714764943057931}
-  retryBleConnectionButton: {fileID: 5215672954488505218}
-  LoadingScreen: {fileID: 3680743141086859179}
-  netErrorPanel: {fileID: 2207673926272579472}
-  currentYipliConfig: {fileID: 11400000, guid: 4f87967ea03eb1743a90e503a6dc0a22, type: 2}
   yipliInfoPanel: {fileID: 98170470899025585}
   infoPaneltext: {fileID: 7408123304109165520}
 --- !u!114 &5172037731901429760

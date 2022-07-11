@@ -1011,37 +1011,37 @@ public class SecondTutorialManager : MonoBehaviour
         //if (!currentYipliConfig.onlyMatPlayMode) return;
 
         string fmActionData = InitBLE.GetFMResponse();
-        Debug.Log("stut : Json Data from Fmdriver in matinput : " + fmActionData);
+        //Debug.Log("stut : Json Data from Fmdriver in matinput : " + fmActionData);
 
         FmDriverResponseInfo singlePlayerResponse = null;
 
-        Debug.LogError("stut : getting single player response");
+        //Debug.LogError("stut : getting single player response");
         try
         {
-            Debug.LogError("stut : from try");
+            //Debug.LogError("stut : from try");
             singlePlayerResponse = JsonUtility.FromJson<FmDriverResponseInfo>(fmActionData);
         }
         catch (System.Exception e)
         {
-            Debug.LogError("stut : singlePlayerResponse is having problem : " + e.Message);
+            //Debug.LogError("stut : singlePlayerResponse is having problem : " + e.Message);
         }
 
-        Debug.LogError("stut : single player responce might be null returning");
+        //Debug.LogError("stut : single player responce might be null returning");
         if (singlePlayerResponse == null) return;
 
-        Debug.LogError("stut : single player response is not null");
+        //Debug.LogError("stut : single player response is not null");
 
-        Debug.LogError("stut : currentYipliConfig.oldFMResponseCount : " + PlayerSession.Instance.GetOldFMResponseCount());
-        Debug.LogError("stut : singlePlayerResponse.count : " + singlePlayerResponse.count);
+        //Debug.LogError("stut : currentYipliConfig.oldFMResponseCount : " + PlayerSession.Instance.GetOldFMResponseCount());
+        //Debug.LogError("stut : singlePlayerResponse.count : " + singlePlayerResponse.count);
 
         if (PlayerSession.Instance.GetOldFMResponseCount() != singlePlayerResponse.count)
         {
-            Debug.LogError("stut : from if");
+            //Debug.LogError("stut : from if");
             PlayerSession.Instance.SetOldFMResponseCount(singlePlayerResponse.count);
 
-            Debug.LogError("stut : next line is to detect action");
+            //Debug.LogError("stut : next line is to detect action");
             DetectedAction = ActionAndGameInfoManager.GetActionEnumFromActionID(singlePlayerResponse.playerdata[0].fmresponse.action_id);
-            Debug.LogError("stut : action is detected" + DetectedAction);
+            //Debug.LogError("stut : action is detected" + DetectedAction);
 
             switch (DetectedAction)
             {

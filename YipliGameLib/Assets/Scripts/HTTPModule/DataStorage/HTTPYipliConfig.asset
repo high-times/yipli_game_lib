@@ -24,7 +24,7 @@ MonoBehaviour:
     OnlyMatPlayMode: 
     OsListForMaintanence: 
     StorageExeName: 
-    VersionUpdateMessage: 
+    VersionUpdateMessage: ','
     WinMinVersion: 
     WinRegistryKey: 
     WinVersion: 
@@ -47,10 +47,10 @@ MonoBehaviour:
   allPlayersOfThisUser: []
   allMatsOfThisUser: []
   currentActiveMatData:
-    MatFbId: 
-    DisplayName: 
-    MacAddress: 
-    MacName: 
+    MatFbId: -N0FBaBdH_MiOgPkWIjz
+    DisplayName: Black yipli F4
+    MacAddress: A4:DA:32:4F:BF:F4
+    MatName: 
     RegisteredOn: 
     Status: 
   currentPlayer:
@@ -64,6 +64,8 @@ MonoBehaviour:
     ProfilePicUrl: 
     UserId: 
     Weight: 
+    PlayerProfilePicIMG: {fileID: 0}
+  gameID: 
   yipliAppDownloadUrl: 
   callbackLevel: 
   bAllDataIsReceived: 0
@@ -73,3 +75,5 @@ MonoBehaviour:
   isDeviceAndroidTV: 0
   sceneLoadedDirectly: 0
   bIsChangePlayerCalled: 0
+  skipNormalUpdateClicked: 0
+  oldFMResponseCount: 0

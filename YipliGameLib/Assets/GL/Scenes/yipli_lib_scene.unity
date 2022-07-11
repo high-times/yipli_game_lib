@@ -18369,6 +18369,7 @@ MonoBehaviour:
   legsParent: {fileID: 1295680580}
   secondTutorialManager: {fileID: 0}
   matInputController: {fileID: 1151333799}
+  manualSortingOrderNumber: 10
 --- !u!114 &1349597366
 MonoBehaviour:
   m_ObjectHideFlags: 0

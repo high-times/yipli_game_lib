@@ -18,12 +18,16 @@ namespace Yipli.HttpMpdule
         [SerializeField] private HTTPPlayerSelection playerSelection = null;
 
         // Unity Oprations
-        private void Start() {
-            GatherAllData();
-        }
 
 
         // Data Operations
+        public bool GetHttpServerStatus()
+        {
+            // update this Function for proper status check
+
+            return true;
+        }
+
 
         public void GatherAllData() {
             currentYipliConfig.ResetData();
