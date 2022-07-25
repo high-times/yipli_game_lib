@@ -60,6 +60,16 @@ namespace Yipli.HttpMpdule.Classes
         public string Status;
     }
 
+    // Test area
+    [System.Serializable]
+    public class TestData
+    {
+        public string status;
+        public string message;
+        public string items;
+        public System.Object players;
+    }
+
     // Player Class
     [System.Serializable]
     public class PlayerInfo

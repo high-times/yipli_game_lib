@@ -6,6 +6,11 @@ namespace Yipli.HttpMpdule
 {
     public class HTTPHelper
     {
+        public static int GetGameClusterId()
+        {
+            return InitBLE.getGameClusterID();
+        }
+     
         public static bool CheckInternetConnection()
         {
             var ping = new System.Net.NetworkInformation.Ping();

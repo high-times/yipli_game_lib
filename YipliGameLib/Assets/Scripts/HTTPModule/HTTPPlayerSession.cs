@@ -774,7 +774,7 @@ namespace Yipli.HttpMpdule
         {
             Debug.Log("Before Processing : BleErrorPanel.activeSelf = " + BleErrorPanel.activeSelf);
 
-            if (YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+            if (HTTPHelper.GetGameClusterId() != 0 && YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
             {
                 Debug.Log("Mat connection is established.");
 

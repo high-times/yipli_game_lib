@@ -234,7 +234,7 @@ public class PlayerSessionFB : MonoBehaviour
     {
         Debug.Log("Before Processing : BleErrorPanel.activeSelf = " + BleErrorPanel.activeSelf);
 
-        if (YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
+        if (YipliHelper.GetGameClusterId() != 0 && YipliHelper.GetMatConnectionStatus().Equals("connected", StringComparison.OrdinalIgnoreCase))
         {
             Debug.Log("Mat connection is established.");
 
@@ -524,6 +524,7 @@ public class PlayerSessionFB : MonoBehaviour
         Debug.Log("Resuming current player session.");
         bIsPaused = false;
     }
+
     public void AddPlayerAction(YipliUtils.PlayerActions action, int count = 1)
     {
         if (!currentYipliConfig.onlyMatPlayMode)

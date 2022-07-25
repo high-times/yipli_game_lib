@@ -24,7 +24,7 @@ MonoBehaviour:
     OnlyMatPlayMode: 
     OsListForMaintanence: 
     StorageExeName: 
-    VersionUpdateMessage: ','
+    VersionUpdateMessage: 
     WinMinVersion: 
     WinRegistryKey: 
     WinVersion: 
@@ -44,12 +44,34 @@ MonoBehaviour:
     CreatedOn: 0
     TotalPlayers: 0
     HasSubcribed: 0
-  allPlayersOfThisUser: []
+  allPlayersOfThisUser:
+  - AddedOn: 0
+    MatTutDone: 0
+    PlayerID: -MctJqmNVf3knUDr87xy
+    Dob: 06-21-2011
+    Gender: Female
+    Height: 140
+    Name: Rhea
+    ProfilePicUrl: https://firebasestorage.googleapis.com/v0/b/yipli-project.appspot.com/o/profile-pics%2F-MctJqmNVf3knUDr87xy.jpg?alt=media
+    UserId: 0py46uoaPJXhHwvJj1VfJ0zZKOa2
+    Weight: 30
+    PlayerProfilePicIMG: {fileID: 0}
+  - AddedOn: 0
+    MatTutDone: 0
+    PlayerID: -MeyrR-C0hXZEQt4BBpz
+    Dob: 10-12-1976
+    Gender: Male
+    Height: 161
+    Name: pavan
+    ProfilePicUrl: https://firebasestorage.googleapis.com/v0/b/yipli-project.appspot.com/o/profile-pics%2F-MeyrR-C0hXZEQt4BBpz.jpg?alt=media
+    UserId: 0py46uoaPJXhHwvJj1VfJ0zZKOa2
+    Weight: 39
+    PlayerProfilePicIMG: {fileID: 0}
   allMatsOfThisUser: []
   currentActiveMatData:
-    MatFbId: -N0FBaBdH_MiOgPkWIjz
-    DisplayName: Black yipli F4
-    MacAddress: A4:DA:32:4F:BF:F4
+    MatFbId: 
+    DisplayName: 
+    MacAddress: 
     MatName: 
     RegisteredOn: 
     Status: 

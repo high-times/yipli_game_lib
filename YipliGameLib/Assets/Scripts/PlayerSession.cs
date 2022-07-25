@@ -87,7 +87,7 @@ public class PlayerSession : MonoBehaviour
         }
     }
 
-    // Custome operations
+    // Custom operations
     public string GetCurrentPlayer()
     {
         if (HttpOrFirebase)

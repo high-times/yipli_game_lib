@@ -112,6 +112,7 @@
     <Compile Include="Assets\Scripts\NewScripts\Troubleshooting\FileManagement\FmResponseFile.cs" />
     <Compile Include="Assets\Scripts\LibConsts.cs" />
     <Compile Include="Assets\Scripts\NewScripts\Ui\NewUIManager.cs" />
+    <Compile Include="Assets\Scripts\HTTPModule\HTTPAnimationFunctionActivator.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Media\Scripts\InfiniteWheelController.cs" />
     <Compile Include="Assets\GL\EA\Pro Infinite Wheel Selector\Media\Scripts\InfiniteWheelCollider.cs" />
     <Compile Include="Assets\Scripts\ActionAndGameInfo.cs" />
@@ -159,7 +160,6 @@
     <Compile Include="Assets\Scripts\NewScripts\TroubleShootGL.cs" />
     <Compile Include="Assets\dummyGameScript.cs" />
     <Compile Include="Assets\Scripts\MiniJSON.cs" />
-    <Compile Include="Assets\Scripts\HTTPModule\HTTPAnimationFunctionActivator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Firebase\Plugins\iOS\Firebase.Functions.dll" />

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using Newtonsoft.Json;
@@ -29,19 +29,29 @@ namespace Yipli.HttpMpdule
         }
 
 
-        public void GatherAllData() {
+        public void GatherAllData()
+        {
             currentYipliConfig.ResetData();
 
-            SetGameData();
-            currentYipliConfig.CurrentUserInfo = JsonConvert.DeserializeObject<UserData>(HTTPDataManager.userJsonData);
-            currentYipliConfig.AllPlayersOfThisUser = JsonConvert.DeserializeObject<List<PlayerInfo>>(HTTPDataManager.playerJsonData);
-            currentYipliConfig.CurrentActiveMatData = JsonConvert.DeserializeObject<MatData>(HTTPDataManager.currentMatJson);
-            currentYipliConfig.AllUrls = JsonConvert.DeserializeObject<UrlData>(HTTPDataManager.urlDataJson);
+            //SetGameData();
+            //currentYipliConfig.CurrentUserInfo = JsonConvert.DeserializeObject<UserData>(HTTPDataManager.userJsonData);
+            ṢetPlayerData();
+            //currentYipliConfig.CurrentActiveMatData = JsonConvert.DeserializeObject<MatData>(HTTPDataManager.currentMatJson);
+            //currentYipliConfig.AllUrls = JsonConvert.DeserializeObject<UrlData>(HTTPDataManager.urlDataJson);
 
-            currentYipliConfig.BAllDataIsReceived = true;
-            currentYipliConfig.BIsInternetConnected = true;
+            //currentYipliConfig.BAllDataIsReceived = true;
+            //currentYipliConfig.BIsInternetConnected = true;
 
-            playerSelection.StartDataManagement = true;
+            //playerSelection.StartDataManagement = true;
+        }
+
+        private void ṢetPlayerData()
+        {
+            TestData td = JsonConvert.DeserializeObject<TestData>(HTTPDataManager.playerJsonData);
+
+            Debug.LogError(td.players.ToString());
+
+            currentYipliConfig.AllPlayersOfThisUser = JsonConvert.DeserializeObject<List<PlayerInfo>>(td.players.ToString());
         }
 
         // Specific Data Operations
